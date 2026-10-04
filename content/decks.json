@@ -1,0 +1,100 @@
+[
+  {
+    "id": "intro",
+    "file": "CourseIntro.pdf",
+    "title": "课程导览",
+    "description": "网站、浏览器与云计算",
+    "count": 36
+  },
+  {
+    "id": "web",
+    "file": "internetwebbasics.pdf",
+    "title": "Internet 与 Web",
+    "description": "基础架构、URL 与 Web 历史",
+    "count": 68
+  },
+  {
+    "id": "html",
+    "file": "HTML.pdf",
+    "title": "HTML",
+    "description": "结构、链接、表格与媒体",
+    "count": 73
+  },
+  {
+    "id": "css",
+    "file": "HTMLStyleSheets.pdf",
+    "title": "CSS",
+    "description": "选择器、层叠与盒模型",
+    "count": 75
+  },
+  {
+    "id": "jsbasics",
+    "file": "jsbasics.pdf",
+    "title": "JavaScript 基础",
+    "description": "类型、作用域、数组与函数",
+    "count": 53
+  },
+  {
+    "id": "json",
+    "file": "json.pdf",
+    "title": "JSON",
+    "description": "数据交换、解析与同源策略",
+    "count": 55
+  },
+  {
+    "id": "python",
+    "file": "python.pdf",
+    "title": "Python 与后端",
+    "description": "语言基础、Flask 与 Web 框架",
+    "count": 82
+  },
+  {
+    "id": "dom",
+    "file": "dom.pdf",
+    "title": "DOM",
+    "description": "节点树、查询、遍历与修改",
+    "count": 50
+  },
+  {
+    "id": "forms",
+    "file": "FormsAndCGIMechanism.pdf",
+    "title": "Forms 与 CGI",
+    "description": "表单提交与服务器交互",
+    "count": 55
+  },
+  {
+    "id": "vibe",
+    "file": "CSCI571_Vibe_Coding.pdf",
+    "title": "Vibe Coding",
+    "description": "提示、测试、调试与迭代",
+    "count": 43
+  },
+  {
+    "id": "ai",
+    "file": "AIbasics.pdf",
+    "title": "AI Basics",
+    "description": "AI 概念、协作与编码原则",
+    "count": 64
+  },
+  {
+    "id": "jsadvanced",
+    "file": "jsadvanced.pdf",
+    "title": "JavaScript 进阶",
+    "description": "浏览器对象、转换与正则",
+    "count": 63
+  },
+  {
+    "id": "http",
+    "file": "HTTPProtocol.pdf",
+    "title": "HTTP 与网络",
+    "description": "报文、缓存、寻址与子网",
+    "count": 89
+  },
+  {
+    "id": "syllabus",
+    "file": "CSCI571_syllabus_Fall_2026_v3.pdf",
+    "title": "考试与课程安排",
+    "description": "范围依据、评分与考试要求",
+    "count": 10
+  }
+]

@@ -1,0 +1,1269 @@
+[
+  {
+    "page": 1,
+    "title": "CSS：给 HTML 定义外观",
+    "section": "CSS 基础与选择器",
+    "priority": "admin",
+    "summary": "本讲讨论样式表如何控制 HTML 的颜色、排版、尺寸与布局，并训练你推导冲突规则的最终结果。",
+    "explanation": [
+      "HTML 说明内容是什么，CSS 说明如何呈现。相同的段落、列表与表格可换用不同样式表，而不改变正文与主要结构。",
+      "复习重点是选择器匹配、层叠与继承、盒模型尺寸，以及代码和截图之间的对应关系；后半部分现代框架用于建立概念联系。"
+    ],
+    "takeaways": [
+      "结构与呈现分离",
+      "先匹配元素，再求最终样式"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "本讲路线：语法、层叠与现代特性",
+    "section": "CSS 基础与选择器",
+    "priority": "admin",
+    "summary": "本页把 CSS 分为引入方式、规则语法和高级功能三组，列出 class、id、specificity 与 CSS3 模块。",
+    "explanation": [
+      "一条基本规则写成 selector { property: value; }。选择器决定影响谁，声明决定改变什么；同一元素可能被多条规则同时匹配，所以后面必须学习冲突决策规则。",
+      "媒体查询决定某组规则是否适用，变量与 calc 减少重复值，动画与转换改变状态呈现。复习可以先把“适用条件、匹配、层叠、计算、布局”连成流程，再把具体语法放进对应步骤。"
+    ],
+    "takeaways": [
+      "选择器与声明职责不同",
+      "匹配不代表一定胜出"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "样式表为何独立于 HTML",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "本页罗列空白、缩进、颜色、字体、定位与多栏布局等 CSS 负责的呈现问题。",
+    "explanation": [
+      "如果每个段落都在 HTML 中重复指定颜色与字号，修改整站设计需要同时编辑很多位置。把共同规则集中为样式表，既减少重复，也让不同页面共享视觉约定，正文结构不必一起变动。",
+      "样式不只是装饰：行高、段落间距、内容宽度会直接影响可读性；定位和布局则决定内容如何占据空间。考试若问 CSS 的目的，可以用“相同内容在屏幕与打印时使用不同排版”举例，而不只回答“让网页变漂亮”。"
+    ],
+    "takeaways": [
+      "CSS 管呈现与布局",
+      "集中规则减少重复维护"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "CSS 的规则语法与发展",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "CSS 是 Cascading Style Sheets，由选择器和声明组成；课件表格概述 CSS1、CSS2、CSS2.1 与模块化发展。",
+    "explanation": [
+      "课件将声明的 property:value 类比 JSON 键值对，便于理解，但 CSS 不是 JSON：声明以分号分隔，通常不把属性名放引号里，并允许单位、函数、选择器和各种 at-rule。",
+      "现代 CSS 按模块演化，某个模块的 Level 4 不等于存在一个全功能统一的“CSS4 版本”。复习时更应该按具体属性和规则理解功能，而不是把所有 CSS3 特性想象成同一天一起加入浏览器。"
+    ],
+    "takeaways": [
+      "CSS 不是 JSON",
+      "现代标准按模块发展"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "CSS 标准与其他样式语言",
+    "section": "CSS 基础与选择器",
+    "priority": "admin",
+    "summary": "本页列出 W3C 的 CSS 规范入口，并提到 XSL，说明样式语言不止 CSS 一种。",
+    "explanation": [
+      "CSS 以选择器匹配元素并指定呈现属性，主要服务于网页及相关文档。XSL 是另一组与 XML 变换、格式化有关的技术，不能因为两者都处理文档样式就认为其语法和执行过程相同。",
+      "对课程复习，规范链接用于查清属性含义和算法，而不是要求背网址。旧 CSS1、CSS2 文档帮助解释早期示例，遇到自定义属性、现代色彩与层叠层等新增内容时则需要查对应的新模块。"
+    ],
+    "takeaways": [
+      "规范定义规则，浏览器实现规则",
+      "不同样式语言不能混用语法"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "CSS 像素、物理像素与 DPR",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "CSS px 是布局使用的抽象单位，物理像素是屏幕硬件的小点，设备像素比连接这两个尺度。",
+    "explanation": [
+      "在简化的 DPR=3 情况下，一条 100 CSS px 宽的线需要约 300 个设备像素表示，一个 1×1 CSS px 方块对应 3×3 个设备像素。高像素密度能让边缘更细腻，却不要求网页按钮在布局上变成三倍宽。",
+      "课件的手机例子混用了尺寸：1179 除以 3 是 393，不是 430；2556 除以 3 是 852，不是 932。考试应掌握关系并自行验算，不能把相互不一致的型号和尺寸组合机械记忆。"
+    ],
+    "takeaways": [
+      "长度乘 DPR，面积乘 DPR²",
+      "CSS 视口用 CSS 像素测量"
+    ],
+    "question": {
+      "prompt": "DPR=2时，一个50×30 CSS px图形覆盖多少物理像素面积？",
+      "answer": "简化映射为100×60=6000物理像素，长度各乘2，面积乘4。"
+    }
+  },
+  {
+    "page": 7,
+    "title": "像素比较表与 3×3 示意图",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "表格再次比较抽象布局像素与物理像素，下方把一个 CSS 像素画成九格，表示 DPR 为 3 时的二维映射。",
+    "explanation": [
+      "“一个 CSS 像素等于三个物理像素”只适用于一维长度；若问覆盖多少硬件像素面积，应算 3×3=9。图片为了在高 DPR 屏幕上清晰，通常需要比 CSS 显示宽度更多的源图像像素。",
+      "表内 430×932 与 1179×2556 不是 DPR=3 的对应值，属于课件错误，应以运算关系校验。浏览器缩放等条件也可影响有效比率，因此 DPR 是环境量，而非所有手机固定相同的常数。"
+    ],
+    "takeaways": [
+      "分清长度比和面积比",
+      "不要把错误设备数字背成规则"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "三种引入 CSS 的方式",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "行内 style、页面内 style 元素，以及 link 引入外部 CSS 都能给 HTML 元素提供样式声明。",
+    "explanation": [
+      "行内写法紧贴单个元素，内部样式适合该页面的规则，外部样式便于多页面复用和缓存。这是组织代码的选择，不是简单的“文件离元素越近就永远越强”。",
+      "层叠会综合来源、重要性、层叠层、选择器权重与顺序等因素。特别是内部 style 与外部 CSS 都属于作者样式，没有天然的内外高低；后面做优先级题时必须看具体选择器和出现位置。"
+    ],
+    "takeaways": [
+      "三种方式影响组织方式",
+      "内部样式不天然高于外部样式"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<link rel=\"stylesheet\" href=\"course.css\">\n<style>p { color: blue; }</style>\n<p style=\"font-weight: bold\">复习段落</p>",
+      "explanation": "三种方式可同时使用；外部样式的具体胜负要看声明和选择器。"
+    }
+  },
+  {
+    "page": 9,
+    "title": "外部样式表的第一个例子",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "special.css 用 p.special 匹配 class 中包含 special 的段落，将文字设为绿色并加红色实线边框。",
+    "explanation": [
+      "p.special 是一个复合选择器，要求同一个元素既是 p 又有 special 类；它不是“p 内部的 special 元素”，也不是所有 p。link 的 rel=\"stylesheet\" 告诉浏览器这个外部资源应作为样式表处理。",
+      "color 作用于文字颜色，border 简写设定边框样式与颜色，遗漏宽度时使用初始值。段落是块级盒，默认会占据可用宽度，因此边框往往比文字本身长得多。"
+    ],
+    "takeaways": [
+      "p.special 的条件作用于同一元素",
+      "color 与 border-color 不同"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "绿色文字与红色段落边框",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "截图中的文字是绿色，细红框横跨较宽区域，分别对应上一页的 color 和 border 声明。",
+    "explanation": [
+      "边框围绕段落的盒子而不是每个字母轮廓，所以句子结束后仍可看到红线延伸。p 默认在正常流中作为块级元素，宽度自动使用父容器可用空间，这是截图的宽框来源。",
+      "如果把选择器换成 span.special，且元素保持默认行内显示，边框几何表现会不同。因此输出题不仅要看声明值，也要结合被选元素的默认 display 和布局上下文。图片中的浏览器工具栏不属于 CSS 结果。"
+    ],
+    "takeaways": [
+      "边框画在元素盒子周围",
+      "默认 display 影响边框范围"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "颜色表示、透明度与现代色彩",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "本页把十六进制、rgb、颜色名称、不同色彩空间与相对颜色语法放在一起，说明颜色可用多种方式表达。",
+    "explanation": [
+      "#f00 是 #ff0000 的三位简写，rgb(255 0 0) 也表示 sRGB 红色；alpha 写成 /0.4 表示 40% 不透明、60% 透明。课件把它标为 60% opacity 是反了，需要明确纠正。",
+      "oklch 的参数涉及明度、彩度、色相，适合有规律地调整配色；在相对颜色中，l 的数值标度也必须搞清，减小 0.2 不等于直接减 20。rgba/hsla 仍是有效语法的别名，不能把“旧式写法”理解成无效。"
+    ],
+    "takeaways": [
+      "alpha 0.4 是40%不透明",
+      "不同颜色模型的数值尺度不同"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".note { color: #f00; background: rgb(255 0 0 / 0.4); }",
+      "explanation": "文字为不透明红色，背景为40%不透明红色，背景与底色混合。"
+    },
+    "question": {
+      "prompt": "rgb(255 0 0 / 0.4) 是60%不透明吗？",
+      "answer": "不是。40%不透明、60%透明；alpha越大越不透明。"
+    },
+    "pitfall": "alpha=0.4 是40%不透明；课件60% opacity标注反了。"
+  },
+  {
+    "page": 12,
+    "title": "行内样式示例",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "body 的 style 同时设置 font-size:20pt、绿色 background 与 fuchsia 字色，使页面正文使用统一基础外观。",
+    "explanation": [
+      "style 属性内部写的是声明列表，不写 body 选择器和外层大括号。多个声明以分号分隔；属性名和值用冒号连接。正文中的子元素可能继承字体和文字颜色，但背景通常不是通过继承变绿。",
+      "body 背景的绘制涉及页面画布，因此整片可视背景可能呈现绿色；子元素透明时也会透出该底色。阅读时不要把“看见父背景”和“子元素继承 background”混淆，这是 CSS 继承题常见陷阱。"
+    ],
+    "takeaways": [
+      "style 属性只写声明",
+      "背景可透出但通常不继承"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "行内样式的浏览器输出",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "三个截图都显示绿色页面背景与洋红色大字，说明同一组基础声明可被不同浏览器实现。",
+    "explanation": [
+      "文字在较窄窗口中折行的位置不同，原因可能包括窗口宽度、可用字体和渲染差异，不能因此认为 font-size 属性失效。样式规则相同并不承诺不同系统上的每个像素完全一致。",
+      "本页应对照 body 上的三个声明逐一核验：绿色来自 background，洋红来自 color，较大字号来自 font-size。虽然 screenshot 中看起来子区域也是绿的，仍不能据此推断 background 是默认可继承属性。"
+    ],
+    "takeaways": [
+      "规则一致不代表截图逐像素相同",
+      "逐个声明对照视觉效果"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "内部 style 与带类的 blockquote",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "本页用 blockquote.example 为两个引文段统一设置绿色背景，两个元素各有不同 id 但共享同一个 class。",
+    "explanation": [
+      "共享 class 表示同一类表现规则可以复用，唯一 id 则保留各元素的独立身份。选择器没有用到 id，所以 example-1 与 example-2 的差异不影响这条背景规则是否匹配。",
+      "blockquote 默认具有块级显示与一定缩进，绿色背景绘制在其盒子内，不是覆盖全文。两段之间的介绍文字并非 blockquote，因此不被这一选择器直接选中；这比单独写 body 背景更有局部性。"
+    ],
+    "takeaways": [
+      "class 可在多个元素复用",
+      "未参与选择器的 id 不影响匹配"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "引文背景的输出",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "截图里只有两块引用文本区域呈绿色，其前后的说明文字仍在白色背景上，印证 blockquote.example 的选择范围。",
+    "explanation": [
+      "绿色区域从左侧留出一段空白，是 blockquote 的默认外边距所致，而非 background 自动加了缩进。第二段引文较长，窄窗口可能多换一行，盒子高度随内容增长。",
+      "分析输出时应从“谁被匹配”开始，再看默认样式和可用宽度。两个不同 id 并未产生不同颜色，说明 id 的存在本身不会触发任何特别外观，只有对应 CSS 规则才会改变计算样式。"
+    ],
+    "takeaways": [
+      "背景范围受元素盒子影响",
+      "id 自身没有默认视觉效果"
+    ]
+  },
+  {
+    "page": 16,
+    "title": "用 text-align 居中文字",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "body {text-align:center} 让其后代继承文字水平对齐方式，示例两个段落的行内内容因此居中。",
+    "explanation": [
+      "text-align 对齐的是块容器中的行内内容，而不是把任意块级元素的外部盒子移到父容器正中。若有一个固定宽度的 div，单独给父元素 text-align:center 并不能保证 div 的边框盒居中。",
+      "旧 center 元素不再推荐，应使用明确的 CSS。区分内容居中与盒子居中是关键：文字常用 text-align，固定宽度块盒常用左右 auto margin，Flex/Grid 又有各自对齐方式，不能把它们当成一条通用指令。"
+    ],
+    "takeaways": [
+      "text-align 居中行内内容",
+      "不自动居中所有子元素盒子"
+    ]
+  },
+  {
+    "page": 17,
+    "title": "居中文段的输出",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "三个浏览器截图都把两个段落的文字行放在可用宽度中间，同时保留段落间的垂直间距。",
+    "explanation": [
+      "较长第一段在狭窄窗口会换成多行，每一行按其内容宽度居中，而不是把整段看成一个固定长度的字符串。b 与 i 的粗斜体仍保留，因为 text-align 没有覆盖字体粗细或风格。",
+      "这页体现属性可以同时作用且各司其职：段落默认 margin 管垂直距离，text-align 管水平行内排布，b/i 的默认样式管文字外观。预测输出时不应只找最后一条规则并忽略其他属性。"
+    ],
+    "takeaways": [
+      "不同属性可同时生效",
+      "每个文本行分别居中"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "class、id 与标签选择器",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "p.redtext 仅匹配带 redtext 类的段落，.redtext 匹配任意带该类的元素，strong 则匹配所有 strong。",
+    "explanation": [
+      "点号连接类型名与类名时没有空格，表示同一元素同时满足条件；如果写 p .redtext，空格变成后代组合器，表示 p 内部的另一元素具有该类，含义完全改变。",
+      "id 选择器用 #，class 选择器用点号，HTML 的属性值本身不写这些符号。熟悉语法后，还要把选择器拆成“元素类型、类/id 条件、关系”三个部分，才能准确判断哪些节点被选中。"
+    ],
+    "takeaways": [
+      "p.note 与 p .note 不同",
+      "HTML class 值不带点号"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>p.note{color:red} p .note{font-weight:bold}</style>\n<p class=\"note\">A</p>\n<p><span class=\"note\">B</span></p>",
+      "explanation": "A匹配第一条；B的span匹配第二条。空格改变元素关系。"
+    }
+  },
+  {
+    "page": 19,
+    "title": "Warning 类规则",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "示例只给中间段落 class=\"Warning\"，于是该段变粗、变红并出现红色边框，其余段落保持原样。",
+    "explanation": [
+      ".Warning 在 CSS 中是类选择器，不是创建一个新 HTML 标签。多个元素可以共用这个类，一个元素也可同时带 Warning 和其他类；最后每个属性的值由所有匹配声明一起决策。",
+      "类名通常大小写敏感，因此 .Warning 不应当作与 .warning 相同。边框简写 2px solid red 同时提供宽度、线型与颜色；若只写 border-width 而边框样式仍为 none，可能看不到边框。"
+    ],
+    "takeaways": [
+      "class 名要准确匹配",
+      "可见边框需要非 none 的 style"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "Disclaimer 的 id 规则",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "#Disclaimer 针对具有该唯一 id 的段落，设置字体大小、橙色文字与红色点状边框。",
+    "explanation": [
+      "同一文档应避免重复 id，不是“id 属性全页只能出现一次”，而是同一个 id 值必须唯一；不同元素可以分别使用 header、footer 等不同 id。class 适合可重复类别，id 适合独立定位。",
+      "#Disclaimer 的选择器权重通常高于单纯类选择器，但仍处于完整层叠规则之中，不能跳过 !important、来源或层叠层直接宣称它总赢。文本的橙色与边框的红色来自两个独立属性。"
+    ],
+    "takeaways": [
+      "唯一的是 id 值",
+      "id 选择器不是绝对最高优先级"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "后代选择器与嵌套列表颜色",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "ul、ul ul、ul ul ul 分别让不同深度的列表使用红、灰、黑颜色，示例显示逐层加深的匹配约束。",
+    "explanation": [
+      "ul ul 匹配任意拥有 ul 祖先的 ul，不要求必须直接父子，所以第三层同样会匹配它，也会匹配 ul ul ul。相同来源与重要性下，包含三个类型选择器的规则更具体，因此第三层最终黑色。",
+      "li 的文字通常继承所在 ul 的 color，外层后面的兄弟 li 仍红色。课件嵌套 ul 的标记不够规范，实际写法应将子 ul 放入对应 li 内；正确结构更容易理解继承路径。"
+    ],
+    "takeaways": [
+      "空格表示后代，不限直接子级",
+      "第三层可同时匹配多条规则"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "混合 class、类型与 id",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "本页给不同标题设置绿色字体、实线居中边框与虚线右对齐边框，训练逐元素找匹配规则。",
+    "explanation": [
+      ".biggreen 可用于多种元素，h1.myh1 只作用于同时满足 h1 与类名的元素，#myid 精确匹配标识符。元素未设置的属性保留继承或默认值，不会因为有一条规则就清除全部旧样式。",
+      "课件的 font-size:30、border-width:10、border-width:1 缺少长度单位；在标准模式中这些非零值通常无效，应写 30px、10px、1px。浏览器截图不能证明无单位代码合法，可能受旧模式或版本容错影响。"
+    ],
+    "takeaways": [
+      "非零长度通常必须带单位",
+      "无效声明被忽略而非整份 CSS 全失效"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "混合规则的输出与无效值",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "截图中依次出现普通 h2、绿色大标题、实线框居中标题和虚线框右对齐标题，展示上一页选择器的不同作用范围。",
+    "explanation": [
+      "粗体与默认标题字号有可能来自用户代理样式，不能看到“大字”就断言 font-size:30 已成功。因为该声明缺少单位，现代标准模式会忽略它，标题仍能凭默认规则看起来很大。",
+      "输出分析应先标出每个有效声明，再补默认与继承值。Safari、Chrome、Firefox 的截图大致一致只说明当时测试条件下的结果，不会把非法长度值变成标准写法；修正后才适合作为新的可运行例子。"
+    ],
+    "takeaways": [
+      "默认样式能掩盖声明错误",
+      "视觉相似不等于语法正确"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "div、span 与继承",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "div 默认形成块级容器，span 默认作为行内容器；本页用 div.mypars 把前两个段落的文字右对齐。",
+    "explanation": [
+      "div 与 span 是没有特定业务语义的通用容器，并不是“一个只能包含块，一个只能包含行内”这样绝对的视觉分类。CSS display 能改变显示方式，但 HTML 内容模型与语义要求仍独立存在。",
+      "text-align 默认可继承，所以 div 内的 p 会得到 right；第三个 p 在 div 外，不属于该继承链，保留默认左对齐。margin、border 等多数盒模型属性则不会按同样方式自动传给子元素。"
+    ],
+    "takeaways": [
+      "继承沿祖先链发生",
+      "并非所有 CSS 属性都继承"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "div 继承范围的输出",
+    "section": "CSS 基础与选择器",
+    "priority": "core",
+    "summary": "三个截图中前两段靠右，第三段靠左，与前页 div 的开闭边界完全对应。",
+    "explanation": [
+      "右对齐不是根据文字内容、段落序号或视觉相邻关系传播，而是根据 DOM 祖先关系：前两个 p 的祖先包含带 mypars 类的 div，第三个没有。把第三段移进该 div 才会改变其默认继承结果。",
+      "如果第三段直接写 text-align:right，它也可以右对齐，但原因将变为自身声明。考试常考这种区别：相同外观可以由继承或直接匹配产生，解释时要指出具体来源，而不只写“它在右边”。"
+    ],
+    "takeaways": [
+      "继承取决于 DOM 包含关系",
+      "直接声明与继承可能得到同一外观"
+    ]
+  },
+  {
+    "page": 26,
+    "title": "选择器权重与层叠纠错",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "同一层叠环境下，h1.mypars 比 .biggreen 多一个类型选择器，.biggreen 又比 h1 多一个类条件，因此权重不同。",
+    "explanation": [
+      "可用三元组（id 数、类/属性/伪类数、类型/伪元素数）逐位比较：h1.mypars 为 (0,1,1)，.biggreen 为 (0,1,0)，h1 为 (0,0,1)。不是把所有数字简单相加，很多类型也不能抵过一个 id。",
+      "课件“inline > internal > external”过度简化且后半句错误。内部与外部作者样式没有固有高低，要先比较来源/重要性和层，再比较权重，最后才看顺序。普通行内样式通常优于普通作者规则，但作者 !important 可覆盖普通行内声明。"
+    ],
+    "takeaways": [
+      "internal 不天然胜 external",
+      "specificity 是逐位比较"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>#target { color: blue; } p.note { color: red; }</style>\n<p id=\"target\" class=\"note\">结果为蓝色</p>",
+      "explanation": "同来源同层普通规则中，(1,0,0) 大于 (0,1,1)，id规则胜出。"
+    },
+    "question": {
+      "prompt": "外部 #x {color:red} 与后写内部 p {color:blue} 竞争，p#x 是什么色？",
+      "answer": "同来源、重要性、层等条件相同且无其他声明时红色，id权重更高。"
+    },
+    "links": [
+      {
+        "label": "MDN：CSS 层叠算法",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascade/Introduction"
+      }
+    ],
+    "pitfall": "课件 internal > external 的固定顺序不成立。位置相同的内部/外部作者规则，要按具体层叠条件、权重和顺序判断。"
+  },
+  {
+    "page": 27,
+    "title": "优先级示意图如何读",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "图中将继承、浏览器默认值、样式表、行内样式与 important 连接起来，是帮助理解竞争来源的简化示意。",
+    "explanation": [
+      "真正求值时要针对一个元素的一项属性收集适用声明，不能把某个 class 赢了 color 理解成它也抹掉另一规则的 padding。无直接胜出声明时，可继承属性才可能从父元素取得值。",
+      "图中没有完整覆盖现代层叠层、动画、过渡等规则，因此不可当作所有情况的完整算法。课程常见无层简单题可按 important、普通行内、选择器权重、同权重后出现者处理；遇到额外条件时回到完整层叠定义。"
+    ],
+    "takeaways": [
+      "每个属性独立决策",
+      "继承不是与直接规则同级抢权重"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "Cascade、Specificity 与 Inheritance",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "本页总结三件不同的事：层叠决定竞争声明，权重比较选择器，继承为后代提供某些属性的默认来源。",
+    "explanation": [
+      "两条同来源、同重要性、同层且同权重的规则都设置 color 时，后出现者胜出；若其中一条权重更高，则不必再比较先后。所谓“后写覆盖前写”只有在前面的比较条件已打平时成立。",
+      "父元素 color:red 可能被子元素继承，但子元素哪怕使用低权重的 p {color:blue}，也会直接得到蓝色，不需拿父选择器与子选择器比权重。继承是未由自身声明确定值时的后续机制。"
+    ],
+    "takeaways": [
+      "后写胜出有前提",
+      "子元素自身声明优于来自父级的继承值"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>#box{color:red} p{color:blue}</style>\n<div id=\"box\"><p>蓝色</p></div>",
+      "explanation": "p 的自身声明直接给出蓝色，父级 id 的高权重不会越过元素边界压过它。"
+    },
+    "question": {
+      "prompt": "父级 #a 的color与子级 p 的color哪个优先？",
+      "answer": "子级有自身有效声明时采用自身值，不能跨元素比较父级选择器权重。"
+    }
+  },
+  {
+    "page": 29,
+    "title": "CSS 自定义属性",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "以 -- 开头的自定义属性保存可复用值，var() 引用它们，并可通过继承在子树中形成局部主题。",
+    "explanation": [
+      ":root {--accent:darkblue} 定义全局基础值，某个容器重新设置 --accent 后，其后代会使用新的值。var(--missing,2rem) 的第二部分是后备值，但不是“任何最终类型错误都自动用后备”的万能保险。",
+      "自定义属性保留到浏览器运行时，JavaScript 可以 setProperty 修改，从而影响引用它的规则；这不同于构建时已替换完的预处理器变量。@property 还能登记类型、初值和是否继承，使行为更明确。"
+    ],
+    "takeaways": [
+      "自定义属性运行时存在",
+      "普通 --变量默认可继承"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ":root { --gap: 16px; }\n.card { padding: var(--gap); margin-top: calc(var(--gap) * 2); }\n.compact { --gap: 8px; }",
+      "explanation": "若card位于compact子树，会得到8px内边距与16px上外边距。"
+    }
+  },
+  {
+    "page": 30,
+    "title": "变量继承的四个嵌套盒",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "示例中 one 未定义 --box-color，使用 white 后备；two 定义 cornflowerblue，three 局部改 aquamarine，four 则继承 two 的蓝色。",
+    "explanation": [
+      "four 与 three 是兄弟而不是父子，因此 three 的局部改动不会“流到”four。变量解析沿每个元素自己的祖先链进行，源码先出现的兄弟元素不是后续兄弟的继承来源。",
+      "背景色本身通常不继承，但这里每个 div 都匹配 background-color:var(...)，再从继承的自定义属性求值，所以会出现相同背景。务必区分“背景直接继承”和“变量继承后再计算背景”两种解释。"
+    ],
+    "takeaways": [
+      "four 继承 two，非 three",
+      "相同背景由变量计算产生"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>div{color:var(--ink,black)} .a{--ink:blue}.b{--ink:red}</style>\n<div class=\"a\"><div class=\"b\">红</div><div>蓝</div></div>",
+      "explanation": "第二个子div继承父级蓝色变量，不继承红色兄弟的变量。"
+    },
+    "question": {
+      "prompt": "为什么 .four 与 .two 同色而不是与 .three 同色？",
+      "answer": "four是two的子元素、three的兄弟，因此从two继承变量。"
+    }
+  },
+  {
+    "page": 31,
+    "title": "主题变量、calc 与相对颜色",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "本页把 --accent-color、--gap 等作为主题参数，利用 var、calc 和 oklch 相对颜色同时控制文字、背景、字号与留白。",
+    "explanation": [
+      "--gap 改变后，padding 与 font-size:calc(var(--gap)*1.5) 会一起调整；inverse 容器交换文字和背景的变量，使局部区域形成反转配色。右侧绿、青、红三组截图说明只需调整基础变量即可产生多个方案。",
+      "相对色彩的 calc(l+0.3) 是在明度分量上加 0.3，并非整体 RGB 通道都增大30%。还需注意 CSS 注释应写 /*...*/，课件 :root 后的 //html 不能照抄；变量引用可能在定义元素计算，祖先别名不会总按后代新值重新绑定。"
+    ],
+    "takeaways": [
+      "变量可协调多个属性",
+      "CSS 注释不使用 //"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "简写属性与展开属性",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "font 简写把风格、变体、字重、字号/行高和字体族集中在一个声明中，课件随后将它展开成多个属性。",
+    "explanation": [
+      "font 中字号与字体族是关键部分，字号后的斜杠引入 line-height。Verdana, Arial, Helvetica, sans-serif 是按顺序尝试的后备字体列表，不表示同时用四套字体叠加显示。",
+      "简写并非只设置写出来的子属性，未指定的相关子属性常会重置为初始值。因此先设 font-weight:bold 再写 font:16px sans-serif，粗体可能被重置；margin、padding 的一至四值简写也需要按明确规则展开。"
+    ],
+    "takeaways": [
+      "简写可重置未写子属性",
+      "font-size/line-height 用斜杠分隔"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "DOCTYPE 与标准模式",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "<!DOCTYPE html> 让现代浏览器按标准模式处理布局，而缺失或某些旧声明可能触发 quirks mode。",
+    "explanation": [
+      "标准模式的重要性在于选择较一致的现代规则，特别是旧页面兼容中盒模型等行为可能不同。它不是加载某份 CSS 的命令，也不是让浏览器关闭一切厂商差异的总开关。",
+      "课件承诺“所有浏览器完全一样、字体完全一样”说得太强。系统字体、默认样式、抗锯齿、视口与实现细节仍能造成不同像素结果。复习应回答它减少历史怪异模式差异，而不是保证跨平台截图逐像素一致。"
+    ],
+    "takeaways": [
+      "DOCTYPE 影响文档模式",
+      "标准模式不保证完全一致像素"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "媒体类型：屏幕与打印",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "本页展示按媒体类型选择样式，使同一文档可以在不同输出环境中采用不同呈现。",
+    "explanation": [
+      "例如打印时让 h1 居中，可以写 @media print {h1{text-align:center}}；屏幕浏览时这条规则不适用。它不是创建另一份 HTML，而是让同一文档的某些 CSS 在特定环境参与层叠。",
+      "课件的 projection、aural 与声音 cue 示例属于旧媒体规范背景，不应当作当前通用浏览器都支持的功能。实际复习优先掌握 all、screen、print，以及媒体条件是“先筛选是否相关”，通过筛选后仍要按正常层叠决策。"
+    ],
+    "takeaways": [
+      "媒体条件筛选适用规则",
+      "同一 HTML 可有屏幕与打印样式"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "媒体查询与宽度条件",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "本页把媒体类型与宽度条件组合，说明 link 的 media 与 CSS 内部 @media 都可限制规则适用环境。",
+    "explanation": [
+      "@media all and (min-width:500px) 与 @media (min-width:500px) 在此条件下等价，省略的类型默认为 all。min-width 包含边界值500，所以宽度正好500 CSS px 时也满足条件。",
+      "旧 max-device-width 关注设备宽度，现代响应式布局通常更适合 viewport 的 width，因为用户可缩放窗口、分屏或使用不同浏览环境。媒体查询只是是否应用规则，不会自动把固定宽度布局变得灵活，布局本身仍要能适应空间。"
+    ],
+    "takeaways": [
+      "min/max 包含边界",
+      "viewport width 不等于物理屏幕像素"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".menu { display: block; }\n@media (min-width: 600px) { .menu { display: flex; } }",
+      "explanation": "视口恰好600 CSS px时条件成立；更窄时保持block。"
+    }
+  },
+  {
+    "page": 36,
+    "title": "链接状态伪类",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": ":link、:visited、:hover、:active 分别描述未访问、已访问、悬停和正在激活的链接状态。",
+    "explanation": [
+      "一个链接可以同时处于 visited 与 hover，所以规则可能竞争。相同权重时按书写顺序决定同属性值，常见 LVHA 顺序把 hover/active 放在后面，让交互反馈能够显示出来。",
+      ":active 不是“当前导航项”，也不等于获得键盘焦点；键盘用户常依赖 :focus 或 :focus-visible。浏览器还会限制 visited 的可观察样式以保护历史信息，因此不能把它当成任意行为判断入口。"
+    ],
+    "takeaways": [
+      "同一链接可匹配多个状态",
+      "active、visited、focus 不同"
+    ]
+  },
+  {
+    "page": 37,
+    "title": "伪类与伪元素的区别",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "伪类按元素状态或结构条件选择元素，伪元素则选择元素内部的某一部分或生成的呈现部分。",
+    "explanation": [
+      "p:first-child 要求 p 是其父元素的第一个元素子节点，不是“第一个 p”，后者更接近 p:first-of-type。:lang(en) 按语言规则匹配，也不只是检查元素自己有没有 lang 属性，因为语言可能从祖先继承。",
+      "现代写法用 ::first-line、::first-letter、::before、::after 表示伪元素；before/after 通常需要 content 才能生成可见内容。伪元素不是作者手动添加的新 DOM 子标签，不能把它们当成真实 p 或 span 查询。"
+    ],
+    "takeaways": [
+      "伪类选择条件，伪元素选择部分",
+      "first-child 不等于 first-of-type"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>p:first-child{color:red} p::before{content:\"提示：\"}</style>\n<div><h2>标题</h2><p>正文</p></div>",
+      "explanation": "p 不是第一个元素子节点，所以不变红；它仍会出现“提示：”伪元素。"
+    },
+    "question": {
+      "prompt": "p:first-child 会选择父容器中第一个p吗？",
+      "answer": "只有这个p同时是父容器的第一个元素子节点才匹配；否则应区分first-of-type。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "first-line 示例",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "截图左侧设置 p::first-line 的红色与 small-caps，右侧只把段落视觉上的第一行改成特殊样式。",
+    "explanation": [
+      "第一行由实际布局宽度与字体决定，不是源码中的第一行，也不是第一个句号之前所有文字。调整结果面板宽度后，哪几个词属于第一行会改变，伪元素样式会随之重新作用。",
+      "这页适合训练“源码结构”和“排版后片段”的区别：同一个 p 节点可能跨很多视觉行，first-line 只针对排版结果的一部分。后续行保留其自身或继承的正常样式，不需要为每行另建 span。"
+    ],
+    "takeaways": [
+      "first-line 依赖排版宽度",
+      "不按源代码回车划分"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "盒模型：内容、内边距、边框、外边距",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "图中从内到外依次是 content、padding、border、margin，四条边界对应不同尺寸概念。",
+    "explanation": [
+      "默认 content-box 下 width 只指定内容宽度，实际边框盒宽度还要加左右 padding 和 border。若 width=200px、padding=10px、border=2px，则边框盒为224px；再加左右 margin=5px，外部占位可视作234px。",
+      "border-box 让 width 包含内容、padding 和 border，但仍不包含 margin。margin 默认透明，背景通常铺到 padding 与边框区域；纵向 margin 可能折叠，所以垂直总高度不能在所有场景下机械逐项相加。"
+    ],
+    "takeaways": [
+      "content-box 的 width 不含 padding/border",
+      "border-box 仍不含 margin"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".a { width: 200px; padding: 10px; border: 2px solid; }\n.b { box-sizing: border-box; width: 200px; padding: 10px; border: 2px solid; }",
+      "explanation": "a边框盒宽224px；b边框盒宽200px、内容宽176px。均未包含margin。"
+    },
+    "question": {
+      "prompt": "content-box width=100，左右padding各8、border各2，边框盒宽多少？",
+      "answer": "120px。100+8+8+2+2，margin另算。"
+    },
+    "links": [
+      {
+        "label": "MDN：box-sizing",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/box-sizing"
+      }
+    ]
+  },
+  {
+    "page": 40,
+    "title": "列表的 margin、padding 与 border",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "示例给 ul 绿色背景和3px内边距，给 li 灰色背景、12px外边距，并只让第二个 li 出现黑色虚线框。",
+    "explanation": [
+      "padding:12px 0 12px 12px 按上、右、下、左展开，因此文字离左边有12px缓冲，右边没有内边距。list-style:none 去掉项目符号，但没有移除 ul/li 的结构或让它们停止参与布局。",
+      "li 的 margin 区域透明，所以两块灰色项目间看到父级绿色；li 的 padding 与内容一起呈灰色。第二项更长会自动换行，盒子随文本行数增高；边框还会增加额外尺寸。"
+    ],
+    "takeaways": [
+      "四值简写顺序为上右下左",
+      "margin 透明显示父背景"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".item { padding: 8px 16px 24px 32px; margin: 10px 20px; }",
+      "explanation": "padding上8右16下24左32；margin上下10、左右20。"
+    }
+  },
+  {
+    "page": 41,
+    "title": "盒模型示意与外边距折叠",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "本页的彩色图把列表、条目和内容分层着色，下方标注内容宽度、盒宽度与两个条目之间的 margin。",
+    "explanation": [
+      "图中标注相邻12px纵向外边距折叠后取较大值12px，而不是相加成24px，这说明正常块流中垂直 margin 有特殊规则。水平外边距不会按这个规则折叠，Flex/Grid 项目也不能直接套用。",
+      "ul 的 padding 在内容和外框之间形成缓冲，也会阻隔某些父子 margin 折叠。此图的颜色是为了强调区域，不能直接等同上一页具体绿色与灰色声明；要追踪边界和尺寸标签而非只记配色。"
+    ],
+    "takeaways": [
+      "相邻正纵向 margin 可折叠取较大值",
+      "水平 margin 不这样折叠"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "列表盒模型的实际输出",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "三个浏览器输出中绿色包围两个灰色条目，第二个条目有虚线边框并因文字较长发生换行。",
+    "explanation": [
+      "父级绿色透过子项外边距露出，而子项内边距与文字内容共享灰色背景；这能直观区分 margin 和 padding。取消 list-style 后没有圆点，但 li 仍是独立盒子，条目之间仍有空间。",
+      "不同浏览器窗口宽度导致第二条换行位置不同，不能因此重新计算源代码中的 padding 值。做题可以先画嵌套盒，标出 ul 3px、li 12px、第二项 border，再讨论行折返，避免从截图像素倒猜 CSS。"
+    ],
+    "takeaways": [
+      "内外间距可通过背景区域辨认",
+      "换行不会改变已设定 padding"
+    ]
+  },
+  {
+    "page": 43,
+    "title": "厂商前缀",
+    "section": "CSS 层叠与盒模型",
+    "priority": "support",
+    "summary": "-webkit-、-moz-、-ms-、-o- 等前缀曾帮助浏览器在标准尚未稳定时试验新 CSS 功能。",
+    "explanation": [
+      "前缀声明和标准声明通常并列书写，让旧实现识别自己的版本，而新实现使用标准属性。未知属性通常被忽略，因此一份样式表可以保留多个候选，不会因为某浏览器不认识其中一条就全部失败。",
+      "课件圆角例子属于历史兼容需求，现代常见圆角直接用 border-radius 即可，不能习惯性给所有属性都加四套前缀。浏览器品牌、引擎与历史前缀的映射也会变化，实际应按目标功能的兼容资料处理。"
+    ],
+    "takeaways": [
+      "未知 CSS 属性通常被忽略",
+      "前缀是兼容历史，不是万能必需项"
+    ]
+  },
+  {
+    "page": 44,
+    "title": "观察真实网站的 CSS",
+    "section": "CSS 层叠与盒模型",
+    "priority": "support",
+    "summary": "本页指出新闻、体育与企业网站都依靠 CSS 建立一致外观，建议使用开发者工具检查样式。",
+    "explanation": [
+      "开发者工具中的 Styles 展示匹配规则与被覆盖声明，Computed 展示最终计算值，盒模型面板展示 padding、border 和 margin。三者回答不同问题：从哪里来、最后是什么、占了多少空间。",
+      "复习时可选一个标题，先预测匹配规则，再查实际结果。单看源 CSS 文件很难理解最终外观，因为其中可能存在大量当前页面根本未匹配的规则，还需要考虑媒体条件与继承。"
+    ],
+    "takeaways": [
+      "Styles 看规则来源",
+      "Computed 看最终值"
+    ]
+  },
+  {
+    "page": 45,
+    "title": "Reset CSS 的目的",
+    "section": "CSS 层叠与盒模型",
+    "priority": "support",
+    "summary": "浏览器内置用户代理样式赋予标题、段落、列表和表单初始外观，reset 用作者规则建立更可控的共同起点。",
+    "explanation": [
+      "例如 h1 默认有较大字号，body 通常有外边距，ul 常有缩进。把这些默认值统一后，设计者可以有意识地重新设定，而不必在不同元素上不断抵消隐藏的默认规则。",
+      "reset 不会删除 HTML 语义，也不会使所有平台字体渲染完全一样。过度重置还可能去掉有用的焦点、列表标识或可读行高，所以其作用是建立基线，后面必须补回合适的可读和可操作样式。"
+    ],
+    "takeaways": [
+      "reset 覆盖默认外观而非语义",
+      "重置后仍需重新设计可读性"
+    ]
+  },
+  {
+    "page": 46,
+    "title": "经典 Reset 源码",
+    "section": "CSS 层叠与盒模型",
+    "priority": "support",
+    "summary": "本页代码把大量元素的 margin、padding、border 归零，字体设为继承，并去除列表符号与引文装饰。",
+    "explanation": [
+      "逗号连接的是一组独立选择器：html,body,div 表示三个元素集合，而不是层层后代。font:inherit 让标题等继承字体，因而它们仍保留标题语义却可能看起来像正文。",
+      "table 的 border-collapse:collapse 与 border-spacing:0 改变表格边框模型；旧 HTML5 元素 display:block 是兼容早期浏览器的补丁。分析 reset 时应能指出每条规则改变了哪个默认行为，而不是只背一长串元素名称。"
+    ],
+    "takeaways": [
+      "逗号表示选择器分组",
+      "reset 可改变默认标题大小而不改语义"
+    ]
+  },
+  {
+    "page": 47,
+    "title": "综合样式示例的开始",
+    "section": "CSS 层叠与盒模型",
+    "priority": "admin",
+    "summary": "这是从单个属性转向组合案例的分隔页，后续将外部样式、背景标题、首字下沉与多栏定位结合起来。",
+    "explanation": [
+      "接下来的阅读方法是先从 HTML 找 class/id，再在 CSS 中逐条定位，最后把继承、默认样式与盒模型补进去。",
+      "遇到截图先尝试解释每一种视觉差异的属性来源，无法对应的部分再检查是否是旧浏览器模式或无效语法，避免仅凭外观记答案。"
+    ],
+    "takeaways": [
+      "综合题要逐属性解释",
+      "先结构再样式再布局"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "综合外部样式表",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "mystyle.css 把多个标题设红、body 设灰底与无衬线字体、段落设双倍行高，并定义颜色类与两个 id 规则。",
+    "explanation": [
+      "h1,h2,h3,h4,h5 是选择器分组，因此没有 h6；ul li 是后代选择器，只匹配位于 ul 中的 li。#big 的120%字体相对父元素字号计算，ul li 的70%也可能在嵌套层级中逐次变小。",
+      "#upper 的 text-transform:uppercase 只改变显示时大小写，不会修改源码文本；.blue 只设置 color，因此它可以与 #upper 同时作用。理解“不同属性叠加”比简单找一个全局最高规则更重要。"
+    ],
+    "takeaways": [
+      "逗号分组与空格后代不同",
+      "text-transform 改呈现不改原文本"
+    ]
+  },
+  {
+    "page": 49,
+    "title": "调用综合样式的 HTML",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "页面 link 到 mystyle.css，h2、strong#big 与 span#upper.blue 分别触发上一页不同规则。",
+    "explanation": [
+      "h2 因分组规则变红，strong 同时保留粗体并获得120%字号；span 同时拥有 id 与 class，得到大写转换和蓝色。两条规则设置不同属性，因此不存在需要二选一的冲突。",
+      "段落 line-height:200% 增大行距，body 提供灰背景和后备字体列表。这里 strong 与 span 都默认是行内元素，所以“big”和“uppercase”两段文字仍可能在同一行连接，除非可用宽度迫使换行。"
+    ],
+    "takeaways": [
+      "id 和 class 能共同贡献不同属性",
+      "line-height 调整行间高度"
+    ]
+  },
+  {
+    "page": 50,
+    "title": "综合样式的输出",
+    "section": "CSS 层叠与盒模型",
+    "priority": "core",
+    "summary": "截图中红色标题位于灰背景上，正文先出现较大的粗体，再接蓝色全大写文字，下方段落行距明显较宽。",
+    "explanation": [
+      "红标题对应 h2 匹配的颜色分组；灰背景与字体族来自 body；蓝色和大写是 span 同时匹配 .blue 与 #upper 的结果。这一页正好证明“一个元素可合并多条规则的不同声明”。",
+      "两张截图的换行不同，与可用宽度及字体度量有关。段落变得更高主要由 line-height:200% 产生，而不是 p 自动增加了字符数量或多次插入 br；源码文本和视觉排版要分开分析。"
+    ],
+    "takeaways": [
+      "逐个视觉特征能追溯到声明",
+      "宽行距不等于更多段落"
+    ]
+  },
+  {
+    "page": 51,
+    "title": "标题的背景图片与盒子尺寸",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "本页让两个 h1 共享黑色背景、背景图片、固定宽高和 padding，从而形成一致的章节标题条。",
+    "explanation": [
+      "background:black url(...) no-repeat 同时设置后备颜色、图像与重复方式，图片无法显示时黑底仍存在。width:400px、height:50px 在默认 content-box 下只算内容，加上四边10px padding 后边框盒宽420px、高70px。",
+      "h1 设置 color:white，但内部旧 font 元素直接声明红色，因此文字显示红色，父级的白色不会通过更高选择器权重“压过”子元素自身颜色。现代应移除 font，改用 span 的 class；br 则负责两行标题的换行。"
+    ],
+    "takeaways": [
+      "背景有颜色后备",
+      "子元素自身颜色优先于继承色"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "章节标题条的输出",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "两个截图中 Chapter I 与 Chapter II 都位于黑色横条内，红色文字分成两行，正文段落夹在两条之间。",
+    "explanation": [
+      "两个 h1 共用同一规则，所以尺寸、字体和背景保持一致；内容文字不同不要求重复写两套 CSS。红字不是 h1 的 color:white 失效，而是内部 font 元素具有自己的红色呈现声明。",
+      "截图的标题条可能超出狭窄浏览器窗口，来自固定400px内容宽度再加padding的总尺寸。这个例子提醒复习盒模型时不能只看 width 数字，也说明固定宽度与响应式宽度的行为差异。"
+    ],
+    "takeaways": [
+      "共同规则可复用",
+      "总宽度需包含 padding"
+    ]
+  },
+  {
+    "page": 53,
+    "title": "首字下沉：float 与字体放大",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "本页把段落首字 F 包在 span.dropcap 内，设置红色、300%字号和 float:left，使后续文字环绕。",
+    "explanation": [
+      "300% 相对父段落字号计算，因此10pt正文对应约30pt首字字号。float 将这个盒子移到左侧并让行内文字绕流，效果不是单纯把一个普通行内字母放大；普通大字可能撑高整行。",
+      "课件 span 后的文字有空格，实际写作应注意单词被拆分后的空白。现代也可通过 p::first-letter 创建类似效果，但仍需理解 float、字高、行高与间距共同影响首字下沉形态。"
+    ],
+    "takeaways": [
+      "float 使文字绕流",
+      "百分比字体相对父级计算"
+    ]
+  },
+  {
+    "page": 54,
+    "title": "首字下沉输出",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "截图中大写红色 F 占据左侧较高空间，右边及下方的小字沿它排列，呈现传统书刊首字效果。",
+    "explanation": [
+      "大字附近的前几行变短，是浮动盒占据部分行宽；文本低于浮动盒之后可恢复整段可用宽度。这与 position:absolute 不同，绝对定位通常不会让正文自动绕开它。",
+      "两种浏览器中字母与正文的相对基线可能稍有差异，源于字体与默认度量。考试解释应明确三项声明分别做什么：font 放大并加粗，color 改红，float:left 建立左浮动与绕流，而不是把效果都归给字号。"
+    ],
+    "takeaways": [
+      "浮动影响周围行盒宽度",
+      "绝对定位一般不产生同样绕流"
+    ]
+  },
+  {
+    "page": 55,
+    "title": "绝对定位构造三栏",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "三个带 id 的 span 设为 absolute，使用不同 left 和相同 top，父 div 的 position:relative 提供定位包含块。",
+    "explanation": [
+      "absolute 元素脱离正常流，其位置相对最近建立定位包含块的祖先计算；relative 父元素自身仍保留正常流占位。三个栏宽都是1.5in，但左偏移不同，因此形成并排的新闻、体育和市场信息区域。",
+      "脱离正常流意味着父容器高度不会简单被这三栏撑开，固定物理单位和位置也容易在窄屏重叠或溢出。代码还混合了不合适的 span 内容与错误关闭，现代可改为语义块元素配合 Grid，但绝对定位本身并未失效。"
+    ],
+    "takeaways": [
+      "absolute 相对定位包含块",
+      "脱离正常流影响父级高度"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>.box{position:relative;height:100px}.tag{position:absolute;top:10px;left:20px}</style>\n<div class=\"box\"><span class=\"tag\">定位</span></div>",
+      "explanation": "tag相对box定位；它本身脱离正常流，box的高度在这里由显式100px提供。"
+    }
+  },
+  {
+    "page": 56,
+    "title": "三栏定位输出与课件纠错",
+    "section": "CSS 应用与工具",
+    "priority": "core",
+    "summary": "截图中标题下面并排出现新闻、体育列表和红色市场栏，这是前页三个不同 left 值产生的结果。",
+    "explanation": [
+      "第三栏的字号更小、行高更大且红色，来自它自己的 font 和 color；位置相同并不要求文本样式相同。绝对定位允许精确安排，但内容长短变化不会自动把下方元素推开，需要作者处理尺寸与溢出。",
+      "课件写“HTML5 已废弃，用语义元素替代”不准确：div、span 和 CSS absolute 都仍有效。语义元素负责描述内容角色，Grid/Flexbox 等负责布局，二者不能互相替代；应批评旧布局的局限，而不是宣称定位属性被 HTML5 删除。"
+    ],
+    "takeaways": [
+      "语义元素不是布局算法",
+      "absolute 未被 HTML5 废弃"
+    ],
+    "question": {
+      "prompt": "HTML5 的语义元素是否取代并废弃 position:absolute？",
+      "answer": "没有。语义与布局职责不同，absolute仍是有效CSS。"
+    },
+    "pitfall": "position:absolute、div 与 span 未被 HTML5 废弃；语义元素也不会自动提供多栏布局。"
+  },
+  {
+    "page": 57,
+    "title": "CSS 模块化新功能",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页把 transitions、transforms、media queries、selectors 与 colors 等列为独立规范模块，说明 CSS 持续扩展。",
+    "explanation": [
+      "transition 处理两个状态之间的过渡，transform 处理旋转缩放平移等几何变化，media query 根据环境条件选择规则。它们解决不同问题，不能因为都归入 CSS3 就把语法和触发方式混为一谈。",
+      "课件开头说“四个新模块”但下面列出更多链接，是历史材料累积后的不一致。复习应按模块功能对应具体示例，并把 WD、CR、REC 理解为规范成熟状态标记，而不是简单等同浏览器是否已经支持。"
+    ],
+    "takeaways": [
+      "模块功能各自独立",
+      "规范状态与浏览器实现状态不同"
+    ]
+  },
+  {
+    "page": 58,
+    "title": "CSS3 特性分类",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页把新功能按边框、背景、文字、字体、转换、过渡、动画、多栏与用户界面组织，适合作为复习检查表。",
+    "explanation": [
+      "边框圆角与阴影改善盒子装饰，转换改变元素视觉几何，transition 在属性值变化时插值，animation 可通过关键帧定义多个阶段。多栏则让一段连续文字流进多个栏位，与手动放置独立卡片不同。",
+      "考试分析代码时先识别所属机制：看到 transform 不代表它自动运动，看到 transition 还需有值变化，看到 @keyframes 才能进一步分析动画阶段。理解触发条件比把属性名称背成一串更可靠。"
+    ],
+    "takeaways": [
+      "transform 本身不自动动画",
+      "transition 需要属性变化"
+    ]
+  },
+  {
+    "page": 59,
+    "title": "常见现代 CSS 能力",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页列出 box-sizing、圆角、阴影、颜色透明度、多重背景、转换与媒体查询，强调这些已成为常用能力。",
+    "explanation": [
+      "background-origin 决定背景定位参考区域，background-clip 决定背景可绘制范围，background-size 决定图像缩放尺寸，三者不是同一属性的不同名字。box-sizing 则改变 width/height 对盒模型的解释范围。",
+      "课件对“现代浏览器”的版本列表明显具有历史性，不应按这些旧最小版本保证所有特性。学习重点是知道每项解决的具体问题，并能读懂基础声明；实际兼容性判断仍应按功能逐项查询。"
+    ],
+    "takeaways": [
+      "origin、clip、size 分别管定位、裁切、缩放",
+      "box-sizing 改尺寸含义"
+    ]
+  },
+  {
+    "page": 60,
+    "title": "图片边框：round 与 stretch",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "示例用同一张 border.png 装饰两个 div，区别在于边缘图案按 round 重复还是 stretch 拉伸。",
+    "explanation": [
+      "border-image 先按 slice 参数切分源图，角落和边缘再映射到边框区域。round 会调整重复片段尺寸以容纳完整重复次数，stretch 将边缘片段拉长覆盖整段，所以相同原图产生不同纹理节奏。",
+      "基础 border:15px solid transparent 为边框保留空间，内容宽250px再加左右40px padding与30px边框，总边框盒宽320px。课件的厂商前缀与 IE 提示是历史背景；现代示例优先使用标准 border-image。"
+    ],
+    "takeaways": [
+      "round 重复并调整片段",
+      "stretch 拉伸边缘图案"
+    ]
+  },
+  {
+    "page": 61,
+    "title": "box-shadow 的参数顺序",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "黄色矩形的 box-shadow:10px 10px 5px #888888 在右下方画出灰色模糊阴影。",
+    "explanation": [
+      "第一个长度是水平偏移，第二个是垂直偏移，第三个是模糊半径；正值向右和向下，负偏移则改变方向。还可增加扩张半径或 inset，但本例没有这两项，因此不要把5px误认为向外扩张距离。",
+      "阴影通常是绘制效果，不增加盒模型占位宽高。div 仍按300×100内容尺寸参与布局，旁边元素不会自动为投影留出10px空间；这与 border 或 padding 会影响占用尺寸的行为不同。"
+    ],
+    "takeaways": [
+      "顺序为x偏移、y偏移、模糊",
+      "阴影不增加布局盒尺寸"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".card { width: 200px; height: 80px; box-shadow: 8px 4px 12px #0004; }",
+      "explanation": "阴影向右8px、向下4px、模糊12px，不把布局宽度变成208px。"
+    },
+    "question": {
+      "prompt": "box-shadow 是否增加元素在正常流中的宽度？",
+      "answer": "通常不会。它是视觉绘制效果，不参与盒模型占位计算。"
+    }
+  },
+  {
+    "page": 62,
+    "title": "真正的多栏文字流",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "column-count:3 将同一 div 的连续文字排成三栏，column-gap:40px 控制栏间距，column-rule 画分隔线。",
+    "explanation": [
+      "这里不是三个独立绝对定位盒，而是一份内容由多栏排版算法顺序流入各栏，类似报纸文章。改变容器宽度或文字数量时，浏览器重新分配行和栏，作者不必手动切成三段。",
+      "column-rule:4px outset #ff00ff 定义分隔线的宽、样式、颜色；规则线位于栏间区域，不应简单当成每栏额外加4px边框。课件的 webkit/moz 前缀主要服务旧版本，现代基础示例可使用标准属性。"
+    ],
+    "takeaways": [
+      "多栏是连续内容流",
+      "column-gap 与 column-rule 职责不同"
+    ],
+    "example": {
+      "lang": "css",
+      "code": ".article { column-count: 3; column-gap: 2rem; column-rule: 1px solid #aaa; }",
+      "explanation": "单份文章内容连续流入三栏，栏间保留2rem并画分隔线。"
+    }
+  },
+  {
+    "page": 63,
+    "title": "高级 CSS 练习清单",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页建议练习圆角、边框图片、渐变、阴影、过渡、动画、提示与 Flexbox，作为从基础到应用的延伸。",
+    "explanation": [
+      "圆角和阴影通常只需声明即可绘制，而 tooltip 常需要定位与交互状态配合，Flexbox 则是一种一维布局机制。名称同样出现在 CSS 教程里，并不意味着它们都只是“给元素加外观”。",
+      "面向复习可以每类做一个最小例子：hover 改色配 transition、两个元素用 flex 并排、linear-gradient 作为背景。重点回答触发条件、作用对象与是否影响布局，而不是无限拓展到复杂动画工程。"
+    ],
+    "takeaways": [
+      "高级功能也要分清布局与绘制",
+      "通过最小例子检验理解"
+    ]
+  },
+  {
+    "page": 64,
+    "title": "Tailwind：原子工具类",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "Tailwind 提供许多单一职责的 utility classes，让开发者在 HTML/JSX 中组合间距、颜色、布局与响应式规则。",
+    "explanation": [
+      "p-4、text-center、bg-blue-500 等类最终仍对应 CSS 声明，浏览器不会原生理解这些名字，项目必须生成或加载相应样式。与 style 属性不同，工具类还可以表达 hover 状态、媒体条件等规则。",
+      "课件描述 tailwind.config.js 属于某些版本的配置方式，现代版本流程可能不同，不必把文件名当成框架永恒定义。复习重点是 utility-first、按需求生成样式与响应式变体的概念，它们不会替代对 CSS 层叠和盒模型的理解。"
+    ],
+    "takeaways": [
+      "工具类最终仍是 CSS",
+      "类名本身没有浏览器内建魔法"
+    ],
+    "links": [
+      {
+        "label": "Tailwind：工具类",
+        "url": "https://tailwindcss.com/docs/styling-with-utility-classes"
+      }
+    ]
+  },
+  {
+    "page": 65,
+    "title": "Tailwind 示例与响应式字体",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "第一个 div 组合蓝底、白字、内边距、圆角和阴影；第二个在基础字号上叠加 sm、md、lg 断点变体。",
+    "explanation": [
+      "text-sm 先定义所有尺寸下的基础字号，sm:text-base 在达到 sm 最小宽度后生效，md、lg 在更宽视口覆盖相应字号。sm 通常不是“仅小手机”，而是“从 sm 断点开始”，这正是移动优先的表达方式。",
+      "右侧图示用于比较不同宽度下的结果，但原代码没有 text-center 或固定宽高，不能从示意图反推出它天然生成居中大卡片。默认具体间距值取决于项目主题，理解类的职责比背一个项目的像素数更稳妥。"
+    ],
+    "takeaways": [
+      "断点前缀通常表示从该宽度开始",
+      "图示未必精确包含所有 CSS"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<div class=\"p-4 text-sm md:text-lg bg-blue-500 text-white\">复习提示</div>",
+      "explanation": "需要Tailwind已加载；默认小字号，在md及以上断点使用较大字号。"
+    },
+    "question": {
+      "prompt": "sm:text-base 是否只在小于sm时生效？",
+      "answer": "不是，通常从sm最小宽度开始生效，直至被更高断点或其他规则覆盖。"
+    }
+  },
+  {
+    "page": 66,
+    "title": "shadcn/ui：可复用组件代码",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页引入 Button、Input、Dialog 等组件，与 Tailwind 的细粒度样式类形成不同抽象层次。",
+    "explanation": [
+      "Tailwind 提供视觉原子规则，组件则把结构、交互和可复用接口组织在一起。shadcn/ui 强调可获得并修改组件源码，开发者可以在自己项目里调整，而不是只把它看成不可编辑的黑盒皮肤。",
+      "课件把 shadcn/ui 直接称为“无样式 headless”并不精确：它提供有样式的组件代码，可建立在无样式行为原语之上。可访问性也需要正确使用标签、焦点和交互，不能因为引入组件就假定整个应用自动合格。"
+    ],
+    "takeaways": [
+      "组件封装结构与行为",
+      "shadcn/ui 不只是无样式原语"
+    ],
+    "links": [
+      {
+        "label": "shadcn/ui：官方介绍",
+        "url": "https://ui.shadcn.com/docs"
+      }
+    ]
+  },
+  {
+    "page": 67,
+    "title": "Button 与 Input 的 JSX 示例",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "代码导入两个 React 组件，并用 flex flex-col gap-2 将按钮和输入框竖向排列且保留间距。",
+    "explanation": [
+      "Button 与 Input 大写开头，表示 React 组件，而不是浏览器原生小写 HTML 标签；className 是 JSX 中常用的类属性写法，最终输出通常仍包含 button、input 等实际 DOM 元素。",
+      "图中的“Button + Input”是布局示意，不包含提交或数据保存逻辑。只渲染一个按钮不会自动调用服务器，placeholder 只是输入提示也不是 value。复习时将“组件显示”“事件处理”“数据提交”分成三层。"
+    ],
+    "takeaways": [
+      "大写标签是组件",
+      "渲染按钮不等于实现业务动作"
+    ]
+  },
+  {
+    "page": 68,
+    "title": "组合组件与工具类",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页比较纯 Tailwind 手写界面与 shadcn/ui 组件复用，并展示给现成 Input、Button 继续传入 className 调整外观。",
+    "explanation": [
+      "外层 p-4、max-w-sm、mx-auto、shadow-lg 和 rounded 分别控制内边距、最大宽度、水平居中、阴影与圆角；Input 的 mb-2 加下间距，Button 的 hover:bg-blue-700 提供悬停颜色变化。",
+      "二者不是必须二选一：组件解决重复结构与交互，工具类负责局部外观。但 className 最终如何与组件默认类合并取决于实现；若同一属性冲突，仍要理解生成 CSS 与类合并策略，不能只按 HTML 类名书写顺序猜。"
+    ],
+    "takeaways": [
+      "组件与工具类可以协作",
+      "HTML class 顺序不普遍决定 CSS 胜者"
+    ]
+  },
+  {
+    "page": 69,
+    "title": "讨论课：验证与样式实例",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页是讨论环节的分隔页，把前面的规则学习转向验证工具与真实页面观察。",
+    "explanation": [
+      "练习时可以故意删除一个单位、调换两条同权重规则、把 class 改成 id，观察验证器与浏览器各自报告什么。",
+      "目标是形成能够解释结果的判断力，而不是只保存一张正确截图；验证器检查语法，开发者工具解释最终样式，两者互补。"
+    ],
+    "takeaways": [
+      "验证和浏览器观察互补",
+      "用小改动检验机制"
+    ]
+  },
+  {
+    "page": 70,
+    "title": "CSS 验证服务",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "W3C CSS Validation Service 可检查 CSS 语法和所选配置下的属性值，截图提供 URL、文件或直接输入等入口。",
+    "explanation": [
+      "例如 color:redd 或 width:20 缺少单位，工具能提供诊断；浏览器通常只是忽略无效声明，所以肉眼看页面未必发现原因。若前面有可用后备声明，页面甚至可能看起来完全正常。",
+      "验证结果要结合选择的 CSS profile 和工具支持程度，新特性可能超出某个旧检查配置。验证通过同样不保证对比度合适、布局不溢出或样式匹配到正确节点，这些仍需要实际渲染与行为检查。"
+    ],
+    "takeaways": [
+      "无效声明常被静默忽略",
+      "验证器能力受规则版本影响"
+    ]
+  },
+  {
+    "page": 71,
+    "title": "同一 HTML 的多种 CSS 外观",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "CSS Zen Garden 的多个截图展示同样内容结构可以通过替换样式表呈现不同字体、色彩、背景与布局。",
+    "explanation": [
+      "左侧偏纸张装饰，中间偏清爽绿色，右侧使用更醒目的图案与标题；这些视觉差异不必要求作者重写整份正文。它直观解释为什么将样式从 HTML 内容中分离具有复用价值。",
+      "不过 CSS 也不能任意改变文档语义：标题仍是标题，链接仍指向原目标。读图时应同时寻找不变的文字内容与改变的布局装饰，用这种对照说明结构层与呈现层分别承担什么职责。"
+    ],
+    "takeaways": [
+      "外观可大幅改变而正文不变",
+      "CSS 不替代 HTML 语义"
+    ]
+  },
+  {
+    "page": 72,
+    "title": "兼容性查询",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页展示 Can I use 首页与 CSS 选择器兼容表，用浏览器版本网格回答某项功能在哪里可用。",
+    "explanation": [
+      "读取兼容表时要看功能名称、浏览器版本、支持程度和注释；绿色格子可能仍带限制说明，不能只扫颜色。规范允许某语法与所有目标浏览器都已实现，是两个不同的问题。",
+      "对复习来说无需背整张版本表，应学会遇到新选择器或属性时验证支持情况。若核心内容依赖不广泛可用的功能，应设计合理后备；课堂旧截图的版本矩阵只是当时状态，不应当作现在的实时结果。"
+    ],
+    "takeaways": [
+      "标准存在不等于实现普及",
+      "兼容表需阅读注释"
+    ]
+  },
+  {
+    "page": 73,
+    "title": "使用率统计与支持率不同",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "截图左侧是 -webkit-line-clamp 随时间变化的使用率图，右侧列出多种 CSS 属性的出现频率。",
+    "explanation": [
+      "使用率衡量在观测页面或样本中某功能被采用的程度，浏览器支持率衡量有多少用户环境能运行它，这两个分母不同。一个已经普遍支持的属性也可能很少被网页使用。",
+      "图中“12%”与各日期柱状值属于采样与课件时间背景，不能用来推断某次考试题概率，也不能当成当下精确市场数据。复习重点是区分“被实现”“被使用”“被推荐”三种判断，而不是背每根柱子的高度。"
+    ],
+    "takeaways": [
+      "使用率不等于支持率",
+      "统计数字需保留日期与口径"
+    ]
+  },
+  {
+    "page": 74,
+    "title": "浏览器更新与预览版本",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "本页列举 Chrome、Firefox、Safari 的稳定版更新节奏和 Canary、Nightly、Technology Preview 等试验渠道。",
+    "explanation": [
+      "预览版本让开发者提前测试新标准与实现变化，但它可能与大量用户使用的稳定版不同。某段 CSS 在 Canary 成功运行，并不能直接证明所有当前用户都能得到同样结果。",
+      "课件的四周、双周等节奏是其制作时背景，实际产品流程会更新。面对考试，掌握稳定发布与试验渠道的差别、浏览器兼容性会随版本变化即可，不必把所有更新次数作为永恒常数背诵。"
+    ],
+    "takeaways": [
+      "预览版支持不代表稳定版普及",
+      "兼容性与版本相关"
+    ]
+  },
+  {
+    "page": 75,
+    "title": "CodePen 与可运行小实验",
+    "section": "CSS 应用与工具",
+    "priority": "support",
+    "summary": "末页推荐用在线编辑器体验变换、动画和 SCSS，让 CSS 规则的结果可以即时观察。",
+    "explanation": [
+      "做复习实验先预测再运行，例如把 translateX 从0改为20px，看它是否影响周围元素占位；给同一属性添加 transition，看状态变化是否产生插值。这样能把属性定义转化成可验证的行为。",
+      "SCSS 是预处理器语言，通常需先编译成 CSS 才交给浏览器；在线平台可能已经自动完成这一步，不能因此认为浏览器原生执行所有 SCSS 语法。保留最小 HTML/CSS 有助于排除平台框架和重置样式的干扰。"
+    ],
+    "takeaways": [
+      "在线工具方便实验",
+      "SCSS 通常要先编译为 CSS"
+    ]
+  }
+]

@@ -1,0 +1,1021 @@
+[
+  {
+    "page": 1,
+    "title": "JSON：数据交换的文本表示",
+    "section": "课程导读",
+    "priority": "admin",
+    "summary": "JSON 全称 JavaScript Object Notation，本讲从语法走向网络加载、跨语言解析与页面展示。",
+    "explanation": [
+      "核心区分是 JSON 文本、解析后的语言值和 DOM 节点。三者之间可以转换，但不能直接互换 API。"
+    ],
+    "takeaways": [
+      "文本 → 解析后的数据 → DOM 展示"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "语法、类型与数据流",
+    "section": "课程导读",
+    "priority": "support",
+    "summary": "本讲用六类 JSON 值表达记录和列表，再展示客户端与服务器如何交换这些值。",
+    "explanation": [
+      "对象使用字符串键描述字段，数组保存有顺序的多项内容；字符串、数值、布尔和 null 提供基础值。相同 JSON 文本可被 Python、Java、JavaScript 解析成各自运行时数据。",
+      "复习时先能辨认合法语法，再练习嵌套访问路径，最后分析异步获取和渲染代码。不能因为格式名字含 JavaScript 就认为可以在其中写函数或任意表达式。"
+    ],
+    "takeaways": [
+      "JSON 保存数据，不保存任意程序语句"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "序列化与 application/json",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "JSON 是可读文本数据交换格式，序列化把内存中的结构转换成可存储或传输的文本。",
+    "explanation": [
+      "接收方解析文本后恢复成本语言的数据结构，因此发送方用 Python、接收方用 JavaScript 也能交换记录。文件后缀 .json 只是命名习惯，HTTP 媒体类型 application/json 描述传输内容。",
+      "课件 RFC 4627 是早期规范，后续 RFC 8259 更新了相关表述。JSON 常与 Ajax 一起使用，但不限定 HTTP 或浏览器，也可存到文件、消息或配置中；传输方式与数据格式是不同层次。"
+    ],
+    "takeaways": [
+      "序列化生成文本，解析恢复数据",
+      "JSON 的媒体类型是 application/json"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const text=JSON.stringify({course:\"CSCI571\",credits:4});\nconst data=JSON.parse(text);\nconsole.log(typeof text,data.credits);",
+      "explanation": "string、4；字符串与解析后的对象不同。"
+    }
+  },
+  {
+    "page": 4,
+    "title": "顶层不再只允许对象或数组",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "本页写 JSON text = Object / Array，是早期 RFC 的限制；后页 2017 语法允许任意一个 JSON value。",
+    "explanation": [
+      "因此单独的 42、true、null、\"hello\" 都可以是合法完整 JSON 文本，不必额外包进数组或对象。接口习惯返回对象并不等于语法强制如此。",
+      "做判断题时留意题目指定版本。如果按本讲后面的 RFC 8259 与现代 JSON.parse，应采用“可选空白 + 一个值 + 可选空白”的定义；但两个并列根值如 {}{} 仍不是一份标准 JSON 文本。"
+    ],
+    "takeaways": [
+      "现代 JSON 可用标量作顶层值"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(JSON.parse(\"42\"));\nconsole.log(JSON.parse(\"true\"));\nconsole.log(JSON.parse(\"null\"));",
+      "explanation": "42、true、null，三种顶层值都可解析。"
+    },
+    "pitfall": "原页仅 Object/Array 的定义属于历史限制，不能覆盖后页新语法。",
+    "links": [
+      {
+        "label": "RFC 8259：JSON 标准",
+        "url": "https://www.rfc-editor.org/rfc/rfc8259"
+      }
+    ]
+  },
+  {
+    "page": 5,
+    "title": "六类 JSON 值与 JavaScript 的差异",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "JSON 支持 string、number、boolean、object、array、null，不包含 undefined、函数、symbol、BigInt 或 Date 类型。",
+    "explanation": [
+      "数组和对象可以递归嵌套，让简单类型组合成树。JSON number 的文本语法可以描述整数和小数，但解析后的精度能力依接收语言，例如 JavaScript Number 对大整数可能失去精确性。",
+      "日期通常编码成约定格式的字符串，收到后是否转换成 Date 由应用决定。null 是实际 JSON 值，不等于字段缺失；{\"x\":null} 与 {} 可以表达不同业务状态。"
+    ],
+    "takeaways": [
+      "JSON 不支持 undefined",
+      "字段缺失与字段值 null 不同"
+    ],
+    "question": {
+      "prompt": "{\"callback\": function(){}} 是 JSON 吗？",
+      "answer": "不是，函数表达式不属于 JSON 值。"
+    }
+  },
+  {
+    "page": 6,
+    "title": "字符串必须使用双引号",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "JSON 字符串可为空，支持 Unicode，只有双引号定界，没有单独字符类型。",
+    "explanation": [
+      "字符串里的双引号与反斜杠需要转义，换行等控制字符也不能直接放入。单引号虽然可在 JavaScript 源码中界定字符串，却不能在 JSON 文本中替代双引号。",
+      "一段 JSON 文本被嵌入 JavaScript 字符串时，会出现两层引号规则：外层可用 JavaScript 单引号，内层仍必须符合 JSON 双引号。中文可以直接出现，不必把所有非英文字符都改为 Unicode 转义。"
+    ],
+    "takeaways": [
+      "外层 JS 字符串规则与内层 JSON 规则分开"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const text='{\"message\":\"你好\"}';\nconsole.log(JSON.parse(text).message);",
+      "explanation": "输出 你好；JSON 内部的键和值都使用双引号。"
+    }
+  },
+  {
+    "page": 7,
+    "title": "对象：字符串键到 JSON 值的映射",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "对象由花括号包围，用冒号连接键和值，用逗号分隔成员；键必须是双引号字符串。",
+    "explanation": [
+      "键可以包含空格，例如 \"at large\"，解析成 JavaScript 对象后应用 obj[\"at large\"] 访问。JavaScript 对象本身的普通属性键也是字符串或 symbol，但对象字面量允许省略某些键的引号，JSON 不允许这样写。",
+      "JSON 数据模型不把成员顺序作为业务意义，重要的是键和值的对应关系。若顺序重要，应使用数组；若需要字段名查找，应使用对象，不要依赖接收语言偶然保留的枚举顺序。"
+    ],
+    "takeaways": [
+      "JSON 对象键必须双引号",
+      "业务顺序应交给数组表达"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const o=JSON.parse('{\"at large\":true,\"level\":3}');\nconsole.log(o[\"at large\"],o.level);",
+      "explanation": "true、3。"
+    }
+  },
+  {
+    "page": 8,
+    "title": "紧凑对象示例中的结构错误",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "示例意在展示姓名、布尔、级别、嵌套 format 与尺寸数组，但原页紧凑文本漏掉 dims 的闭合方括号。",
+    "explanation": [
+      "在 [1920,1080 后应先写 ]，再写逗号开始对象里的 interlace 成员；否则 \"interlace\":false 被放进数组上下文，冒号在那里不合法。JSON 解析器会报错，而不是自动补齐括号。",
+      "压缩为一行不会改变合法性，也不会修复括号配对。练习这页可以逐层标注 { } 和 [ ]：外层记录 → format 对象 → dims 数组，回到正确层级后再加入其他属性。"
+    ],
+    "takeaways": [
+      "每层括号必须成对，数组不能直接含 key:value 成员"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const data=JSON.parse('{\"format\":{\"type\":\"rect\",\"dims\":[1920,1080],\"interlace\":false}}');\nconsole.log(data.format.dims[1]);",
+      "explanation": "1080；修正版先闭合 dims 数组。"
+    },
+    "pitfall": "原页示例不是合法 JSON，不能原样作为正确答案。"
+  },
+  {
+    "page": 9,
+    "title": "格式化让嵌套层级可见",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "本页把对象缩进成多行，format 内部包含 type、dims、interlace、framerate，便于追踪字段路径。",
+    "explanation": [
+      "空白与缩进在字符串外不会改变数据意义。data.format.dims[0] 是宽度，dims[1] 是高度，data.format.interlace 是布尔值；不能把 dims 的元素当作对象成员名。",
+      "课件 dims 键前显示弯引号，实际 JSON 必须用标准双引号。格式化工具可以提升可读性，但需先输入合法文本；“看起来像引号”的排版字符不一定是语法所需字符。"
+    ],
+    "takeaways": [
+      "缩进表达层级，实际结构由括号与分隔符决定"
+    ],
+    "question": {
+      "prompt": "如何取得该数据中的 framerate？",
+      "answer": "解析后使用 data.format.framerate，值为 24。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "数组保留顺序",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "JSON 数组由方括号包围，成员按顺序排列，使用逗号分隔，不需要为每个元素写数字键。",
+    "explanation": [
+      "顺序是数组语义的一部分，[\"Mon\",\"Tue\"] 与 [\"Tue\",\"Mon\"] 表达不同次序。解析到 JavaScript 后使用从零开始的下标访问，不能把第一个成员误写成下标 1。",
+      "与 JavaScript 数组字面量不同，JSON 不允许空槽和尾随逗号，[1,,3] 和 [1,2,] 都不合法。若要表达缺失位置，可以按业务约定显式写 null，但 null 本身仍占据一个元素位置。"
+    ],
+    "takeaways": [
+      "JSON 数组没有空槽语法",
+      "尾随逗号不属于标准 JSON"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const a=JSON.parse(\"[10,null,30]\");\nconsole.log(a.length,a[1]);",
+      "explanation": "3、null；中间位置明确保存了 null。"
+    }
+  },
+  {
+    "page": 11,
+    "title": "一维星期列表与二维矩阵",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "第一例用七个字符串表示星期顺序，第二例用数组套数组表示三行数值矩阵。",
+    "explanation": [
+      "二维结构并没有特殊 JSON 类型：外层数组的每个元素还是一个数组。访问 matrix[0][1] 先取第一行，再取第二列，得到 -1；week[0] 则是 Sunday。",
+      "JSON 不强制内层数组等长，也不强制元素同类型。矩阵“每行三列”的规则属于应用约定，解析器只保证语法结构有效；需要矩阵运算时应另行校验形状。",
+      "若把星期与矩阵例子混合，外层任一元素还可保存另一个数组，但访问层次会随之改变；先画括号层次再写索引可以减少越界错误。"
+    ],
+    "takeaways": [
+      "二维数组是嵌套的普通数组",
+      "矩阵形状不是 JSON 语法自动保证的"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const matrix=[[0,-1,0],[1,0,0],[0,0,1]];\nconsole.log(matrix[0][1],matrix[2][2]);",
+      "explanation": "-1、1。"
+    }
+  },
+  {
+    "page": 12,
+    "title": "按语义选择对象或数组",
+    "section": "JSON 基础",
+    "priority": "core",
+    "summary": "有字段名称的记录适合对象，有顺序的一组值适合数组；数据结构应反映访问方式和业务意义。",
+    "explanation": [
+      "学生的 name、email、score 是不同含义的字段，用对象能直接按名字查找。多名学生则可用对象数组，使每项结构相同且保留展示顺序。",
+      "把连续数字写成对象字符串键如 {\"0\":\"a\",\"1\":\"b\"} 仍然是对象，不会自动变成数组；它也没有数组 length 的语义。反过来用数组位置代表一堆不同字段会让含义依赖外部约定，阅读更困难。"
+    ],
+    "takeaways": [
+      "对象表达记录，数组表达有序集合"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const roster=[{name:\"Ana\",score:90},{name:\"Bo\",score:85}];\nconsole.log(roster[1].name);",
+      "explanation": "Bo；先按顺序取第二条记录，再按字段取名字。"
+    }
+  },
+  {
+    "page": 13,
+    "title": "源自 JavaScript，但不依赖 JavaScript",
+    "section": "标准与语法",
+    "priority": "skim",
+    "summary": "JSON 借用了 JavaScript 对象字面量风格，却被定义为语言无关的数据格式。",
+    "explanation": [
+      "JSON 文本本身没有变量声明、函数调用或执行上下文，Python、Java、C 等解析器都可以读取。把它放进 .json 文件不会自动创建浏览器全局变量，必须通过解析或模块加载等机制取得值。",
+      "本页作者与职务介绍属于课件历史背景。学习重点是设计选择：用少量熟悉符号表示记录与列表，让跨语言实现较容易达成一致，而不是把整个 JavaScript 语言带进数据文件。"
+    ],
+    "takeaways": [
+      "格式借用语法外形，不等于绑定语言运行时"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "ECMA-404 与 RFC 8259",
+    "section": "标准与语法",
+    "priority": "support",
+    "summary": "ECMA-404 描述 JSON 数据交换语法，RFC 8259 同时提供互操作性建议；两者意在保持语法一致。",
+    "explanation": [
+      "“能被语法接受”与“跨系统可靠交换”是两个问题。重复对象键、大数精度和字符编码等可能在不同实现得到不同处理，因此 RFC 给出减少分歧的指导。",
+      "课件强调 2017 年规范更新，帮助解释前面仅对象/数组的旧定义为何不足。复习应以本讲后页完整语法为准，并区分 MUST、SHOULD、MAY 所表达的强制、建议和许可程度。"
+    ],
+    "takeaways": [
+      "一致语法之外还需要互操作约定"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "JSON 文法：一个值及两侧空白",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "JSON-text = ws value ws 意味着完整文本包含一个 JSON 值，前后可有规定的空白。",
+    "explanation": [
+      "六个结构字符是 [、]、{、}、:、,，分别承担数组、对象和成员分隔职责。可忽略空白包括空格、制表、LF、CR；字符串内部的空白则是数据，不能随便删除。",
+      "顶层只能有一个值，因此 \"1 2\" 不是一份 JSON；去除不必要空白可以压缩大小，但不能删除两个词之间必需的字符或修改字符串内容。读文法图时把分支看作可选路径，循环看作重复成员。"
+    ],
+    "takeaways": [
+      "字符串外格式空白与字符串内数据空白不同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(JSON.parse(\"  [1, 2]  \").length);\n// JSON.parse(\"1 2\") 会抛 SyntaxError",
+      "explanation": "2；同一文本不能并列两个根值。"
+    }
+  },
+  {
+    "page": 16,
+    "title": "true、false、null 必须小写",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "value 的合法分支包含对象、数组、字符串、数值，以及三个固定的小写字面名称。",
+    "explanation": [
+      "True、False、None 是 Python 常见值写法，却不是 JSON 字面量；undefined、NaN、Infinity 也不在 JSON value 分支里。正确序列化库会负责语言值到 JSON 表达的转换。",
+      "加了双引号后含义又改变：true 是布尔值，\"true\" 是字符串。数据校验应同时检查值与类型，否则表示同样文字的输入可能进入错误分支，例如非空字符串 \"false\" 在 JavaScript 条件里仍为真。"
+    ],
+    "takeaways": [
+      "JSON 布尔字面量与字符串不是同类"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(typeof JSON.parse(\"true\"));\nconsole.log(typeof JSON.parse('\"true\"'));",
+      "explanation": "boolean、string。"
+    }
+  },
+  {
+    "page": 17,
+    "title": "对象成员与重复键",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "对象可为空，也可含多个字符串名和值；规范建议同一对象的成员名唯一。",
+    "explanation": [
+      "重复键会损害互操作性：有的解析器取最后值，有的拒绝，有的保留多对成员。JavaScript JSON.parse 常留下最后一个值，但这不是设计交换格式时值得依赖的做法。",
+      "每个键后是一个冒号，每个成员之间是一个逗号，最后一个成员后不再加逗号。检查复杂文本时可按“字符串键 → 冒号 → 完整值 → 逗号或右花括号”逐段验证。",
+      "键名即使看起来是数字也仍须双引号，例如 \"7\"；读取后是否转成数值索引属于宿主语言操作，JSON 本身没有隐式增加的数组语义。"
+    ],
+    "takeaways": [
+      "重复键应避免",
+      "冒号连接键值，逗号连接成员"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const o=JSON.parse('{\"x\":1,\"x\":2}');\nconsole.log(o.x);",
+      "explanation": "在 JavaScript JSON.parse 中为 2；跨系统交换应使用唯一键。"
+    }
+  },
+  {
+    "page": 18,
+    "title": "数组成员可异构，但必须都是值",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "数组文法允许零个或多个 value，类型可以不同；嵌套数组和对象只是合法成员之一。",
+    "explanation": [
+      "[1,\"two\",false,null,{\"x\":3}] 语法合法。解析器不要求统一类型，若应用要求“所有成员必须为整数”，那是额外 schema 或校验逻辑，而不是 JSON 文法自动完成。",
+      "空数组 [] 合法，成员之间必须有逗号，不允许用省略成员的方式表达空值。遇到层层嵌套时先确定当前处于对象还是数组，再决定下一项应为键值成员还是直接 value。"
+    ],
+    "takeaways": [
+      "合法 JSON 不代表满足应用所需数据形状"
+    ],
+    "question": {
+      "prompt": "[1,true,{\"name\":\"A\"}] 合法吗？",
+      "answer": "合法，数组成员无需同类型，三项都是合法 JSON 值。"
+    }
+  },
+  {
+    "page": 19,
+    "title": "数字文法：十进制与指数",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "JSON number 由可选负号、整数部分、可选小数部分和可选指数组成，不能有任意前导零。",
+    "explanation": [
+      "0、-2、3.14、1e+3 合法；01、+1、.5、1.、0x10 不符合标准 JSON number。小数点后必须至少一位数字，指数 e/E 后也必须有数字，可带正负号。",
+      "语法允许的大数字不保证接收语言精确表示。金融金额、大整数 ID 等应由应用选择合适表示方式；例如 ID 只需识别而不计算时，字符串可避免 JavaScript Number 的整数精度问题。"
+    ],
+    "takeaways": [
+      "数字开头不能写加号，指数里可以",
+      "十六进制不是 JSON number"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(JSON.parse(\"1e+3\"));\n// JSON.parse(\"01\") 会抛 SyntaxError",
+      "explanation": "1000；指数表示与结果显示格式可以不同。"
+    }
+  },
+  {
+    "page": 20,
+    "title": "字符串转义的合法集合",
+    "section": "标准与语法",
+    "priority": "core",
+    "summary": "字符串用双引号包围，内部双引号、反斜杠及控制字符必须转义；Unicode 可用四位十六进制转义表示。",
+    "explanation": [
+      "常见转义包括引号、反斜杠、斜杠以及 b/f/n/r/t/uXXXX。斜杠通常可直接写也可转义，而单引号不是 JSON 定界符，不需要像 JavaScript 单引号字符串那样转义。",
+      "JSON 文本中的反斜杠转义与宿主源码的字符串转义可能叠加。调试时先问实际传给 JSON.parse 的字符串含哪些字符，而不是只数源码里的反斜杠；多一层解析就可能消费一层转义。"
+    ],
+    "takeaways": [
+      "每经过一层字符串解析，转义可能被解释一次"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const text=JSON.stringify({line:\"A\\nB\"});\nconsole.log(text);\nconsole.log(JSON.parse(text).line.length);",
+      "explanation": "序列化文本把换行编码为转义；还原后的字符串长度为 3。"
+    }
+  },
+  {
+    "page": 21,
+    "title": "互操作：编码、Unicode 与解析边界",
+    "section": "标准与语法",
+    "priority": "support",
+    "summary": "不同系统交换 JSON 时需统一 UTF-8 编码、有效字符和解析/生成规则，避免“各自能读”却互相不兼容。",
+    "explanation": [
+      "编码回答字节如何表示字符，转义回答 JSON 字符串里如何表示特殊内容；二者不是同一层。中文可直接以 UTF-8 传输，也可在 JSON 中写 Unicode 转义，解析后可能得到相同字符。",
+      "解析器可以提供某些扩展，但生成器应严格输出标准 JSON。实际实现可设置大小、深度和数值范围等限制，因此“接受合法语法”不等于无限资源处理任意巨大输入。"
+    ],
+    "takeaways": [
+      "字符编码与 JSON 转义属于不同层次"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "获取、解析、修改与发送",
+    "section": "JSON 数据流",
+    "priority": "core",
+    "summary": "使用 JSON 要区分获取文本、解析成值、在程序里使用和再次序列化发送这几个阶段。",
+    "explanation": [
+      "把响应字符串赋给变量仍得到字符串，不会自动拥有 menu 字段；JSON.parse 或 response.json 才进行解析。普通 script src 也不会把任意 .json 文件自动变为全局数据，必须使用约定的 JavaScript 包装或 JSON 模块。",
+      "发送对象时通常 JSON.stringify 为文本，再设置合适 Content-Type；服务器使用本语言解析器恢复结构。eval 可以执行 JavaScript，但不是严格 JSON 解析器，数据接口应使用专用解析。"
+    ],
+    "takeaways": [
+      "赋值文本不等于解析",
+      "发送对象前常需 stringify"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "fetch(\"/api/notes\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\"},body:JSON.stringify({done:true})});",
+      "explanation": "把 JavaScript 对象转成 JSON 请求体后发送。"
+    }
+  },
+  {
+    "page": 23,
+    "title": "从 JSON 文本读取字段再更新页面",
+    "section": "JSON 数据流",
+    "priority": "core",
+    "summary": "模拟响应先经 JSON.parse 得到普通对象，然后 doc.menu.name 被读取或修改，最后写进真正的 DOM 元素。",
+    "explanation": [
+      "doc.commands 是数组，所以 doc.commands[0].title 需要先索引再读属性；doc.menu 是对象，用 .name 取字段。修改数据对象不会自动刷新页面，必须执行 DOM 赋值。",
+      "这里 document.getElementById(\"menu\") 属于页面文档，而 doc.menu 属于数据结构，两个名字相似却处在不同模型。把“数据里的菜单”和“页面上的菜单节点”区分开，是后续 fetch 示例纠错的关键。"
+    ],
+    "takeaways": [
+      "数据修改与页面更新是独立步骤"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const data=JSON.parse('{\"menu\":{\"name\":\"File\"},\"commands\":[{\"title\":\"Open\"}]}');\ndata.menu.name=\"Actions\";\ndocument.querySelector(\"#menu\").textContent=data.menu.name;",
+      "explanation": "解析数据、修改字段，再显式让页面显示 Actions。"
+    }
+  },
+  {
+    "page": 24,
+    "title": "fetch 返回 Promise，必须等待数据",
+    "section": "JSON 数据流",
+    "priority": "core",
+    "summary": "原页 const doc=fetch(...).then(...) 得到 Promise，不能在下一行直接当作解析后的对象访问。",
+    "explanation": [
+      "fetch 完成后得到 Response，response.json() 本身也返回 Promise；因此要 await 两次，或在后续 then 中使用真正的数据。HTTP 404 通常不会单独使 fetch Promise 拒绝，还需要检查 response.ok。",
+      "JSON 数据也没有 getElementById。原例的 doc.getElementById 与 doc.menu.value 混用了 DOM 和数据对象，应改成 data.menu.name、data.commands[0].title 等真实字段，再更新 document 中的节点。"
+    ],
+    "takeaways": [
+      "等待 Response，再等待 JSON 解析",
+      "普通 JSON 对象没有 DOM 查询方法"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "async function loadMenu(){\n  const response=await fetch(\"file.json\");\n  if(!response.ok) throw new Error(`HTTP ${response.status}`);\n  const data=await response.json();\n  console.log(data.commands[0].title);\n}",
+      "explanation": "在响应与解析都完成后读取首个 command 的 title。"
+    },
+    "pitfall": "原页把 Promise 当数据对象，并混用 getElementById，不能原样运行。",
+    "links": [
+      {
+        "label": "MDN：使用 Fetch",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch"
+      }
+    ]
+  },
+  {
+    "page": 25,
+    "title": "JSON 模块与 import attributes",
+    "section": "JSON 数据流",
+    "priority": "support",
+    "summary": "JSON 模块通过 with {type:\"json\"} 声明导入类型；静态导入直接得到默认数据，动态 import 得到模块命名空间。",
+    "explanation": [
+      "await import(url,{with:{type:\"json\"}}) 完成后需从结果的 default 读取数据；import data from url with ... 则直接把默认导出绑定到 data。两者结构不同，不能忘记动态导入的 default 层。",
+      "“JSON 是有效 JS 对象所以可以当普通模块”是过度简化。实际依赖 JSON 模块加载规范、响应 MIME、浏览器支持和 CORS；原始 JSON 文本本身不是带 export 的 JavaScript 源模块。"
+    ],
+    "takeaways": [
+      "动态 import 的数据在 namespace.default 中"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "async function loadData(){\n  const mod=await import(\"./data.json\",{with:{type:\"json\"}});\n  return mod.default;\n}",
+      "explanation": "取得 JSON 模块的默认导出，具体加载需环境支持。"
+    },
+    "links": [
+      {
+        "label": "MDN：Import attributes",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import/with"
+      }
+    ]
+  },
+  {
+    "page": 26,
+    "title": "异步 XHR 解析 JSON 的正确位置",
+    "section": "JSON 数据流",
+    "priority": "core",
+    "summary": "XHR 用 responseText 取得原始响应文本，在完成且状态成功的回调里调用 JSON.parse。",
+    "explanation": [
+      "var doc 定义在 myCode 函数内部，函数外不能直接使用它；而且网络尚未完成时也没有数据。因此依赖 doc 的字段读取和渲染应放在成功分支，或通过函数参数传给后续处理。",
+      "responseXML 适合 XML 文档，JSON 应从文本解析或使用相应 responseType。即使解析成功，得到的仍是普通数据对象，不含 getElementById；原页末尾应改为按属性路径访问。"
+    ],
+    "takeaways": [
+      "异步结果的使用必须位于完成后的控制流"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const req=new XMLHttpRequest();\nreq.onload=()=>{\n  if(req.status===200){\n    const data=JSON.parse(req.responseText);\n    console.log(data.menu.name);\n  }\n};\nreq.open(\"GET\",\"file.json\");\nreq.send();",
+      "explanation": "成功回调里使用 data，避免作用域和时序错误。"
+    }
+  },
+  {
+    "page": 27,
+    "title": "eval 执行代码，而不只是解析数据",
+    "section": "JSON 数据流",
+    "priority": "core",
+    "summary": "eval 会把字符串当 JavaScript 执行，所以能执行赋值、乘法和其他语句；JSON.parse 只接受 JSON 文本语法。",
+    "explanation": [
+      "课件 eval(\"2+2\") 得到 4，但 JSON.parse(\"2+2\") 会报错，因为运算表达式不是 JSON 值。eval(x+17) 在 x=10 时先算出数字 27；eval 接收到非字符串会直接返回它，不是再解析“27”。",
+      "早期 eval(\"(\"+text+\")\") 用括号把对象文本放入表达式上下文，但它会允许超出 JSON 的代码行为。复习应识别其历史用途与真实执行语义，不把 eval 和 parse 当作等价函数。"
+    ],
+    "takeaways": [
+      "eval 的输入可能是代码，parse 的输入是数据文法"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(eval(\"2+2\"));\nconsole.log(eval(27));\ntry{JSON.parse(\"2+2\")}catch(e){console.log(e.name)}",
+      "explanation": "4、27、SyntaxError。"
+    }
+  },
+  {
+    "page": 28,
+    "title": "JSON 与 XML 的数据模型差异",
+    "section": "JSON 与 XML",
+    "priority": "support",
+    "summary": "JSON 以对象、数组和基础值组成树；XML 有元素、属性、文本、CDATA、命名空间等更丰富的标记结构。",
+    "explanation": [
+      "JSON 原生区分数字与布尔值，XML 普通文本内容通常需要额外规则解释类型。XML 更自然表达文字与标签交错的混合内容，而 JSON 常更直接映射记录和列表。",
+      "不是左侧项目少就证明所有场景都更好。选择取决于数据语义、工具链与现有接口；如果把 XML 转成 JSON，需要决定属性、重复元素和混合文本怎样映射，转换不总是唯一。"
+    ],
+    "takeaways": [
+      "JSON 简化结构，XML 擅长标记文档模型"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "Google Trends 图能说明什么",
+    "section": "JSON 与 XML",
+    "priority": "skim",
+    "summary": "图的横轴从 2004 年开始展示时间，纵轴是相对搜索兴趣；红线总体下降，蓝线逐步上升并在中段超过红线。",
+    "explanation": [
+      "这是历史搜索热度快照，不是实际网站使用量、性能或技术质量指标。图中可见平均值柱和 Note 标记，但没有清楚展示查询词与颜色的图例，不应仅凭颜色硬填精确数据或对应关系。",
+      "课程用此图引出 JSON 与 XML 的关注度变化。做复习比较仍应回到语法、数据模型和 API 差异；搜索热度无法证明某一种格式已经不再使用，也不能预测正式考试比重。"
+    ],
+    "takeaways": [
+      "搜索兴趣是相对指标，不是市场份额"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "同一菜单数据的 JSON 与 XML 表示",
+    "section": "JSON 与 XML",
+    "priority": "core",
+    "summary": "JSON 用 menu 字段及 commands 对象数组，XML 用 root、menu、commands、item 等元素表达相近层级。",
+    "explanation": [
+      "JSON 的每个 command 对象有 title 与 action，XML 则每个 item 下有两个同名字段元素。访问第二个 action 时，JSON 是 data.commands[1].action，XML 需要查询相应 item 再读 action 文本。",
+      "JSON 少了成对的结束标签，通常更紧凑；但“等价”来自此例的映射约定，而非任意 XML 都可无损按同一规则转换。数组序列与重复 item 的顺序共同表达命令排列。"
+    ],
+    "takeaways": [
+      "把对象数组映射成重复 XML 元素"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const data={menu:\"File\",commands:[{title:\"New\",action:\"CreateDoc\"},{title:\"Open\",action:\"OpenDoc\"}]};\nconsole.log(data.commands[1].action);",
+      "explanation": "OpenDoc；第二个命令的 action。"
+    }
+  },
+  {
+    "page": 31,
+    "title": "解析器可扩展，生成器应严格",
+    "section": "标准与语法",
+    "priority": "support",
+    "summary": "本页再次强调解析和生成的方向性：接收器可能宽容，发送器应输出标准 JSON 以保证互通。",
+    "explanation": [
+      "某工具能读取注释或尾逗号，不代表这些写法进入 JSON 标准。如果一端使用宽松解析器、另一端使用严格 JSON.parse，同一文本可能一端成功、一端失败。",
+      "序列化库可以减少手工漏引号、漏转义的错误，但也要了解实现选项。例如个别库默认允许非有限数值扩展；需要标准交换时应启用严格选项并检查数据类型，而不是仅凭输出看起来像 JSON。"
+    ],
+    "takeaways": [
+      "某解析器接受 ≠ 标准 JSON 合法"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "同源由协议、主机、端口共同决定",
+    "section": "跨源数据",
+    "priority": "core",
+    "summary": "对常见 HTTP(S) URL，同源比较 scheme、host 与有效端口；路径不同不会改变 origin。",
+    "explanation": [
+      "http://www.example.com/a 与 /b 同源；换成 https、端口 81、en.example.com 或省去 www 都会改变来源。默认端口需按规范化后的有效值判断，例如 http 默认 80。",
+      "同源策略主要限制不同源之间的脚本读取与交互，不是禁止所有跨源网络发送或资源嵌入。CORS 可让服务器授权脚本读取跨源 HTTP 响应；仅把 JSON 换格式不会自动获得这种授权。"
+    ],
+    "takeaways": [
+      "路径不参与 origin 比较",
+      "子域名不同通常就是跨源"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const a=new URL(\"https://example.com/a\");\nconst b=new URL(\"https://example.com:443/b\");\nconsole.log(a.origin===b.origin);",
+      "explanation": "true；443 是 HTTPS 默认端口。"
+    },
+    "links": [
+      {
+        "label": "MDN：同源策略",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy"
+      }
+    ]
+  },
+  {
+    "page": 33,
+    "title": "经典跨源 script 与 JSONP",
+    "section": "跨源数据",
+    "priority": "core",
+    "summary": "经典 script 可加载跨源 JavaScript，这一历史能力可用于服务端返回赋值或回调调用的脚本，即常见 JSONP 模式。",
+    "explanation": [
+      "纯 JSON 响应并不会自动变成一个全局变量。服务端需要返回像 receive({\"x\":1}) 这样的 JavaScript 调用，页面预先定义 receive；或显式赋给双方约定的名称。",
+      "这属于脚本加载许可与服务器配合，不是 JSON 语法自身突破全部同源限制。CSP、混合内容、MIME 等仍可能影响加载，模块脚本也有不同的跨源规则。考试应重点识别返回体是可执行包装，而非裸数据。"
+    ],
+    "takeaways": [
+      "JSONP 响应是 JavaScript 回调调用",
+      "纯 JSON 不会自动创建全局变量"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function receive(data){ console.log(data.x); }\n// 服务器返回的脚本形式：\nreceive({\"x\":1});",
+      "explanation": "执行回调脚本后得到 1；receive(...) 整段不是 JSON 文本。"
+    }
+  },
+  {
+    "page": 34,
+    "title": "动态 script 的关键是 URL 与服务端包装",
+    "section": "跨源数据",
+    "priority": "support",
+    "summary": "客户端创建 script、设置 src，再插入文档触发加载；服务器必须按约定返回能调用本地回调的脚本。",
+    "explanation": [
+      "setAttribute(\"src\",...) 只设置资源地址，不把响应自动解析为普通 JSON 数据。用户看到的回调参数来自脚本执行时的对象字面量，数据可通过预先定义的函数被处理。",
+      "因此找到“返回 JSON 的网站”还不够，接口还要支持 callback 等 JSONP 协定。现代 fetch+CORS 更容易获得状态码和响应控制；本页用于理解早期 Ajax 兼容技术及其限制。"
+    ],
+    "takeaways": [
+      "客户端动态创建节点，服务端提供回调包装"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "JSONscriptRequest：构造与共享方法",
+    "section": "跨源数据",
+    "priority": "core",
+    "summary": "构造函数保存 URL、时间戳、head 节点和唯一 id，原型方法分别建立、插入和移除 script 元素。",
+    "explanation": [
+      "scriptCounter 存在构造函数对象上，是所有实例共享的计数器；scriptObj 则是每个实例自己的节点。buildScriptTag 只创建并配置节点，addScriptTag 才通过插入让浏览器加载它。",
+      "noCacheIE 用时间戳改变 URL 以减少缓存命中，是历史方案；直接拼 & 假定 URL 已经有查询串。现代构建 URL 应检查或使用 URL/searchParams。removeScriptTag 只是清理节点，不撤销已经执行的回调副作用。"
+    ],
+    "takeaways": [
+      "构建节点与插入节点是不同步骤",
+      "静态计数器跨实例共享"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const script=document.createElement(\"script\");\nscript.src=\"https://example.com/data?callback=receive\";\nscript.onload=()=>script.remove();\ndocument.head.append(script);",
+      "explanation": "插入后异步加载服务端脚本，完成后清理该节点；示例地址仅说明格式。"
+    }
+  },
+  {
+    "page": 36,
+    "title": "地理编码 JSONP 的调用链",
+    "section": "跨源数据",
+    "priority": "core",
+    "summary": "课件请求带 callback=getGeo，服务端响应脚本调用 getGeo(data)，回调从嵌套结构取经纬度并移除 script。",
+    "explanation": [
+      "jsonData.ResultSet.Result[0].Latitude 的路径依次是对象字段、对象字段、数组首项、对象字段；Longitude 同理。回调名必须在响应执行时存在，否则会出现未定义函数错误。",
+      "课件注释把 src 写成 getGeo(...) 容易误导：src 实际应是请求 URL，getGeo(...) 是服务器返回的脚本正文。旧 Yahoo 端点属于历史案例，不应假设今天仍可直接运行；理解调用链即可。"
+    ],
+    "takeaways": [
+      "src 是 URL，响应体才是回调调用"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function getGeo(data){\n  const first=data.ResultSet.Result[0];\n  console.log(first.Latitude,first.Longitude);\n}\ngetGeo({ResultSet:{Result:[{Latitude:34,Longitude:-118}]}});",
+      "explanation": "34、-118；示例只演示本地数据路径，不调用历史端点。"
+    }
+  },
+  {
+    "page": 37,
+    "title": "真实接口结构：数组、时间与嵌套记录",
+    "section": "跨源数据",
+    "priority": "support",
+    "summary": "股票示例返回报价对象数组，数字货币示例在数组对象中再包含 topOfBookData 数组，展示真实响应的嵌套形态。",
+    "explanation": [
+      "第一条股票收盘价路径是 data[0].close，数字货币首条盘口的 askPrice 是 data[0].topOfBookData[0].askPrice。日期字段虽长得像时间，仍是 JSON 字符串，不会自动成为 Date。",
+      "页面列出的 2019 年价格是结构示例，不是实时行情。URL 中明确有 token 占位符，因此“不需要 Application ID”不能推导成不需要凭据；无需为复习发起真实报价请求或背具体价格。"
+    ],
+    "takeaways": [
+      "先辨认顶层是否为数组",
+      "日期字符串仍需应用解释"
+    ],
+    "question": {
+      "prompt": "如何取数字货币示例的首个 lastPrice？",
+      "answer": "data[0].topOfBookData[0].lastPrice。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "XHR 与动态 script 的能力边界",
+    "section": "跨源数据",
+    "priority": "support",
+    "summary": "表格对比请求方法、状态码、响应头与跨源方式：XHR 是数据请求接口，script 是加载并执行脚本。",
+    "explanation": [
+      "XHR 可使用 GET/POST、读取允许的响应信息并解析数据；动态 script 通常以 GET 加载，不能像 XHR 一样自由设置请求头或读取精细 HTTP 状态。JSONP 返回代码，只能通过约定回调交付数据。",
+      "课件把 XHR 跨浏览器兼容写为 No 是历史背景，现代主要浏览器都提供 XHR。script 也并非完全不受策略约束；跨源 XHR 可由 CORS 授权，比较应按现代机制修正，而不照抄旧表的绝对结论。"
+    ],
+    "takeaways": [
+      "XHR 处理响应数据，script 执行资源代码",
+      "JSONP 不是通用 POST 数据请求方案"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "JSON 的限制与额外校验",
+    "section": "JSON 与 XML",
+    "priority": "core",
+    "summary": "JSON 没有 XML 式内建命名空间或 schema 声明，但应用可借助 JSON Schema 等工具验证字段结构。",
+    "explanation": [
+      "JSON.parse 成功只证明语法合法，不证明必需字段存在、数值范围正确或对象符合某个业务模型。{\"age\":\"old\"} 是合法 JSON，却可能不符合要求年龄为整数的接口。",
+      "“JavaScript 编译器就是 JSON 解码器”不应当作实现建议，因为 JavaScript 接受更多语法并具有执行行为。JSON 的小语法是互操作优点，而额外含义与约束需要应用明确约定。"
+    ],
+    "takeaways": [
+      "语法合法与业务结构合法是两层判断"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const data=JSON.parse('{\"age\":\"old\"}');\nconsole.log(typeof data.age === \"number\");",
+      "explanation": "false；解析成功并不等于年龄字段类型正确。"
+    }
+  },
+  {
+    "page": 40,
+    "title": "为什么 JSON 适合记录与列表传输",
+    "section": "JSON 与 XML",
+    "priority": "support",
+    "summary": "JSON 兼顾人可读与机器可解析，用字段名和层级描述数据结构，容易映射到常见记录、列表和树。",
+    "explanation": [
+      "字段名让接收者看见数据组织，例如 name 与 price 比匿名位置更容易理解；严格分隔符与有限类型让各种语言都能实现兼容解析器。Unicode 支持不同文字系统的内容。",
+      "“自描述”主要指结构可见，不代表语义完全明确。数值 10 是美元、米还是毫秒仍需接口约定；树结构也不能直接保存循环引用和对象身份，需要另设 ID/引用规则。"
+    ],
+    "takeaways": [
+      "字段名描述结构，但单位和语义仍需约定"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "JSON.parse 与 reviver 转换",
+    "section": "解析与转换",
+    "priority": "core",
+    "summary": "JSON.parse 专门解析 JSON，可用 reviver 在解析后遍历值并替换某些成员，例如把约定日期字符串转换成 Date。",
+    "explanation": [
+      "reviver 按从内到外的顺序处理嵌套成员，返回的新值会替换原值；最后还会以空字符串键处理根值。普通 parse 不会自动识别所有日期，因此转换规则需要明确字段或格式。",
+      "专用解析器不会把数据文本中的任意 JavaScript 表达式执行起来，这和 eval 有本质区别。reviver 本身是应用提供的可执行函数，所以理解它的返回值与控制逻辑仍然重要。"
+    ],
+    "takeaways": [
+      "reviver 可转换成员，也会处理根值"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const data=JSON.parse('{\"created\":\"2026-10-04T00:00:00Z\"}',\n  (key,value)=>key===\"created\" ? new Date(value) : value);\nconsole.log(data.created instanceof Date);",
+      "explanation": "true；明确对 created 字段执行日期转换。"
+    }
+  },
+  {
+    "page": 42,
+    "title": "原生 JSON.parse 与兼容性",
+    "section": "解析与转换",
+    "priority": "support",
+    "summary": "截图列出 JSON.parse 在主流浏览器中的历史支持，说明它已是标准语言能力，通常无需自己实现解析器。",
+    "explanation": [
+      "原生 API 由运行时实现，遵循规范定义的输入和异常行为。不能因为某个旧库通过正则加 eval 模拟解析，就推断今天的原生 JSON.parse 内部一定如此。",
+      "课件声称性能快于 eval，可以视为鼓励使用专用解析器，但不必背成对所有引擎和输入都成立的绝对速度关系。选择 parse 的主要依据是语义准确、无需执行数据里的代码以及明确的错误处理。"
+    ],
+    "takeaways": [
+      "使用专用 API 的核心原因是语义匹配"
+    ],
+    "links": [
+      {
+        "label": "MDN：JSON.parse",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse"
+      }
+    ]
+  },
+  {
+    "page": 43,
+    "title": "旧解析实现与 reviver 删除规则纠错",
+    "section": "解析与转换",
+    "priority": "core",
+    "summary": "本页混合历史 polyfill、正则检查和 reviver 行为；现代 JSON.parse 不能简化成所展示的 eval 包装。",
+    "explanation": [
+      "返回 undefined 才会删除相应对象成员，返回 null 会把成员保留为 null，原页说二者都删除是错误。数组成员被删会留下空槽而不是自动把后续元素前移；根回调返回 undefined 会使整体结果为 undefined。",
+      "展示源码在 return 后换行，按 JavaScript ASI 会立即返回 undefined；且用一个正则检查并不足以完整解析任意嵌套 JSON。应把代码当历史讨论材料，不要复制为现代解析器实现。"
+    ],
+    "takeaways": [
+      "reviver 的 null 保留字段，undefined 删除字段"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const o=JSON.parse('{\"a\":1,\"b\":2}',(k,v)=>k===\"a\"?undefined:k===\"b\"?null:v);\nconsole.log(Object.keys(o),o.b);",
+      "explanation": "只剩键 b，值为 null。"
+    },
+    "pitfall": "原页“null 或 undefined 都删除”不符合原生 JSON.parse 语义。"
+  },
+  {
+    "page": 44,
+    "title": "AJAX 历史访谈的复习用途",
+    "section": "复习方法",
+    "priority": "skim",
+    "summary": "此页给出 Crockford 关于 AJAX 与 JSON 的视频，属于可选背景补充。",
+    "explanation": [
+      "如果观看，重点辨认 Ajax 的核心是页面内异步数据交互，JSON 只是可选交换格式之一；XML、文本等也可以完成类似流程。",
+      "视频中的剩余时间标记依播放器而异，不必为寻找某一句话投入大量时间。考前优先能独立解释请求、解析、字段访问、DOM 更新四步，历史访谈用于帮助串起设计背景。"
+    ],
+    "takeaways": [
+      "Ajax 是交互方式，JSON 是数据格式"
+    ]
+  },
+  {
+    "page": 45,
+    "title": "Python：dump/dumps 与 load/loads",
+    "section": "跨语言 JSON",
+    "priority": "core",
+    "summary": "Python 标准库 json 在 Python 数据与 JSON 文本之间转换，字典、列表、字符串、数值、布尔和 None 有相应映射。",
+    "explanation": [
+      "dumps 返回字符串，dump 写入文件对象；loads 解析字符串，load 从文件对象读取。课件把 dump 说成返回字符串不准确，把 JSONEncoder 称为 decoder 也是笔误，Encoder 负责编码。",
+      "JSON null 对应 None，true/false 对应 True/False，object 对应 dict，array 对应 list。使用库可以自动处理引号和转义，但自定义对象、日期等仍需提供转换规则。"
+    ],
+    "takeaways": [
+      "带 s 的接口处理字符串",
+      "None 编码为 null"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import json\ntext=json.dumps({\"done\":True,\"note\":None})\ndata=json.loads(text)\nprint(text, data[\"done\"] is True)",
+      "explanation": "文本中使用 true/null；解析后恢复 Python True/None。"
+    },
+    "links": [
+      {
+        "label": "Python：json 标准库",
+        "url": "https://docs.python.org/3/library/json.html"
+      }
+    ]
+  },
+  {
+    "page": 46,
+    "title": "紧凑编码只移除格式空白",
+    "section": "跨语言 JSON",
+    "priority": "core",
+    "summary": "json.dumps 的 separators=(\",\",\":\") 省去成员之间默认空格，使输出更紧凑。",
+    "explanation": [
+      "两个分隔符分别控制数组/对象成员间的逗号，以及对象键值间的冒号。它们不会删除字符串内部空格，例如 \"New York\" 必须原样保留，因为那是数据内容。",
+      "紧凑与缩进版解析后得到相同结构，因此格式选择主要影响体积与人读体验。课件输出的数字键 \"4\"、\"6\" 是字符串键，符合 JSON 对象语法；不要把它们误当数组索引定义。"
+    ],
+    "takeaways": [
+      "格式空白可压缩，字符串数据不能随意压缩"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import json\nprint(json.dumps({\"city\":\"New York\",\"items\":[1,2]},separators=(\",\",\":\")))",
+      "explanation": "{\"city\":\"New York\",\"items\":[1,2]}，城市里的空格仍在。"
+    }
+  },
+  {
+    "page": 47,
+    "title": "Python 解码与双层转义",
+    "section": "跨语言 JSON",
+    "priority": "core",
+    "summary": "loads 把 JSON 数组对象递归转换为 Python list/dict，null 转为 None；load 可以从 StringIO 等文件式对象读取。",
+    "explanation": [
+      "字符串转义会经过 Python 源码与 JSON 两层解释。例如 JSON 中的反斜杠 b 代表退格控制字符，Python repr 可能显示为 \\x08，而不是两个可见字符。观察 repr 比直接 print 更容易看清控制字符。",
+      "课件排版中有弯引号和输出夹在调用行后的情况，复现时须还原合法 Python。为了说明结构转换，使用普通简短数据更容易验证，再单独处理复杂转义，不要把排版错误当语言特性。"
+    ],
+    "takeaways": [
+      "loads 对应文本，load 对应可读流"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import json\nfrom io import StringIO\nprint(json.loads('[\"foo\",{\"bar\":[null,1.0,2]}]'))\nprint(json.load(StringIO('[\"streaming API\"]')))",
+      "explanation": "第一项包含 None；第二项得到列表 [\"streaming API\"]。"
+    }
+  },
+  {
+    "page": 48,
+    "title": "Java：JSON 与类型映射",
+    "section": "跨语言 JSON",
+    "priority": "support",
+    "summary": "课件提到 Gson 和根据 schema 生成 Java 数据类，展示 JSON 也可以进入具有显式类型的语言。",
+    "explanation": [
+      "反序列化时可以转换为树状结构，也可以映射到具有字段的 Java 类；字段名、类型和嵌套关系决定是否符合预期。JSON 数组通常映射为数组或 List，对象字段可以映射为普通数据类。",
+      "schema-to-class 工具解决重复定义数据类的问题，却不会凭空知道业务约束。比如 null 能否接受、整数范围和缺失字段默认值仍取决于目标类型与库配置。复习重点是跨语言表示关系，不是背第三方安装步骤。"
+    ],
+    "takeaways": [
+      "JSON 语法独立于 Java 类，映射仍需类型规则"
+    ]
+  },
+  {
+    "page": 49,
+    "title": "飞机案例：更换数据格式，保持页面目标",
+    "section": "JSON 转页面",
+    "priority": "support",
+    "summary": "左侧输入 JSON 文件，右侧仍展示飞机表格，与 DOM 讲里的 XML 案例形成直接对照。",
+    "explanation": [
+      "展示目标没有变化：标题、字段列、飞机行与图片。变化在于解析后的访问方式，XML 使用节点查询和 nodeValue，JSON 使用对象属性和数组索引。",
+      "这说明界面生成逻辑可以与输入格式分离。比较两组程序时不要被相同的变量名 planeNodeList 误导：JSON 版本它往往只是普通对象，不是真正 NodeList，也没有 nodeType 等 DOM 特性。"
+    ],
+    "takeaways": [
+      "相同页面可由不同数据表示生成"
+    ]
+  },
+  {
+    "page": 50,
+    "title": "airbus.json 的具体层级",
+    "section": "JSON 转页面",
+    "priority": "core",
+    "summary": "顶层对象内有 catalog；catalog.title 是标题，catalog.aircraft 是四条飞机记录组成的数组。",
+    "explanation": [
+      "每条记录包含 Airbus、Aircraft、seats、Range、Wingspan、Length、Height、Image。截图里的 seats 值如 \"555\" 带双引号，因此是字符串；含 km 或 m 单位的字段当然也是字符串，而非直接可算的数值。",
+      "键名区分大小写，Height 与 height 不同。Image 保存 URL，不是 DOM 图片节点；要显示图像需要创建 img 并赋 src。路径 data.catalog.aircraft[0].Airbus 返回第一条记录的家族名称 A380。"
+    ],
+    "takeaways": [
+      "字段类型取决于写法，不取决于字段名字"
+    ],
+    "question": {
+      "prompt": "data.catalog.aircraft[0].seats + 1 会得到 556 吗？",
+      "answer": "不会。截图 seats 是字符串 \"555\"，直接 +1 得到 \"5551\"；要先转数值。"
+    }
+  },
+  {
+    "page": 51,
+    "title": "表单只负责给出 JSON 路径",
+    "section": "JSON 转页面",
+    "priority": "support",
+    "summary": "URL 文本框默认 airbus.json，点击 type=button 调用 viewJSON(this.form)，把整张表单作为参数传入。",
+    "explanation": [
+      "读取 what.URL.value 得到用户当前输入，而不是固定使用 HTML 的默认值。method=POST 只有默认提交时才相关；此例按钮不提交，后续脚本自己选择 GET 加载。",
+      "maxlength 与 size 分别限制输入长度和显示宽度。若文件名更改，输入字段值随之变化，网络逻辑与渲染逻辑仍可复用，体现把数据源参数化的意义。"
+    ],
+    "takeaways": [
+      "输入框当前 value 决定请求 URL"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "viewJSON：同步加载与普通对象 onload",
+    "section": "JSON 转页面",
+    "priority": "core",
+    "summary": "原代码同步获取文本、JSON.parse 成普通对象，然后生成 HTML 并写入新窗口。",
+    "explanation": [
+      "jsonObj.onload=generateHTML(jsonObj) 不会等待任何 JSON 加载事件：普通对象没有这种自动事件生命周期，右侧函数立即执行，返回值再作为普通属性保存。应直接调用生成函数，或改用真正异步请求链。",
+      "同步 XHR 会冻结主线程等待网络，并且原代码缺少状态与解析异常处理。异步改写要 await 数据后再生成；窗口引用也可能为空，应检查后再写入。数据获取、解析和渲染三个阶段不能靠一个 onload 属性混在一起。"
+    ],
+    "takeaways": [
+      "普通数据对象的 onload 只是自定义属性"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "async function loadAircraft(url){\n  const response=await fetch(url);\n  if(!response.ok) throw new Error(`HTTP ${response.status}`);\n  const data=await response.json();\n  return data.catalog.aircraft;\n}",
+      "explanation": "异步完成后返回飞机数组；调用者继续等待并渲染。"
+    }
+  },
+  {
+    "page": 53,
+    "title": "Object.keys 生成表头与结构假设",
+    "section": "JSON 转页面",
+    "priority": "core",
+    "summary": "函数从 catalog 取标题与 aircraft 数组，再用 Object.keys(planes[0]) 得到首条记录的字段名。",
+    "explanation": [
+      "这与 XML 遍历 childNodes 不同：Object.keys 返回普通可枚举自有字符串属性名数组，无需检查 nodeType。Airbus 映射成 Family、Wingspan 映射成 Wing Span，是显示文案的转换。",
+      "jsonObj.DocumentElement 没有 DOM 意义，通常为 undefined。用首记录推断列还依赖数组非空且所有记录字段一致；更稳定的表格应定义一份固定列顺序，并每行都按同一列清单读取。"
+    ],
+    "takeaways": [
+      "JSON 对象不具备 DocumentElement",
+      "列顺序最好显式定义"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const columns=[\"Airbus\",\"Aircraft\",\"seats\",\"Range\",\"Wingspan\",\"Length\",\"Height\",\"Image\"];\nconst first=data.catalog.aircraft[0];\nconsole.log(columns.map(key=>first[key]));",
+      "explanation": "按统一列定义读取首条记录，避免每行枚举顺序不一致。"
+    }
+  },
+  {
+    "page": 54,
+    "title": "逐行渲染：固定字段顺序与图片分支",
+    "section": "JSON 转页面",
+    "priority": "core",
+    "summary": "外层循环遍历 planes，内层读取每条对象的键；Image 值生成图片，其余值生成单元格。",
+    "explanation": [
+      "原例为每条记录重新 Object.keys，若不同对象键顺序不一致，就可能与首行表头错位。应复用统一 columns 数组，即使某字段缺失也保留相应列位置。",
+      "课件最后把闭合 body 写成 \"</bo\"+\"<dy>\"，拼接得到无效标记，需要修正为 </body>。更推荐创建 tr/td 节点并用 textContent 放文本，结构清楚且无需手工处理每个值的 HTML 转义。"
+    ],
+    "takeaways": [
+      "所有行必须遵循同一列顺序",
+      "字符串拼接后的完整标记仍须合法"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "for(const plane of data.catalog.aircraft){\n  const tr=document.createElement(\"tr\");\n  for(const key of [\"Airbus\",\"Aircraft\",\"seats\"]){\n    const td=document.createElement(\"td\");\n    td.textContent=plane[key] ?? \"\";\n    tr.append(td);\n  }\n  tbody.append(tr);\n}",
+      "explanation": "每架飞机形成一行，三列按固定顺序排列。"
+    }
+  },
+  {
+    "page": 55,
+    "title": "JSON5 与 YAML：更宽松的不同格式",
+    "section": "拓展与复习",
+    "priority": "support",
+    "summary": "JSON5 增加注释、单引号、部分未加引号的键等便利；YAML 用缩进和列表符号表达结构。",
+    "explanation": [
+      "标准 JSON.parse 不因此能解析 JSON5 或 YAML。看到注释、尾逗号、十六进制或 +1，应先确认输入格式和解析器，而不是把“某超集允许”移植回标准 JSON。",
+      "YAML 1.2 以兼容 JSON 为设计目标，旧 YAML 版本和具体实现可能有类型规则差异；“JSON 是 YAML 子集”的陈述需要版本语境。考前首先练会严格 JSON，再把这些变体作为配置文件生态补充。"
+    ],
+    "takeaways": [
+      "超集支持的便利语法不属于标准 JSON",
+      "解析器必须与文件格式匹配"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "// 合法 JavaScript/JSON5 风格，但不是标准 JSON：\nconst example={name:\"Ana\",};\n// 标准 JSON 文本： {\"name\":\"Ana\"}",
+      "explanation": "标准 JSON 要求键双引号且没有尾随逗号。"
+    }
+  }
+]

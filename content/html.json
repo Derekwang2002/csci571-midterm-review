@@ -1,0 +1,1208 @@
+[
+  {
+    "page": 1,
+    "title": "HTML：用标记描述网页内容",
+    "section": "HTML 基础",
+    "priority": "admin",
+    "summary": "本讲从浏览器与 HTML 的起源出发，逐步学习文档结构、列表、表格、链接、图片和元数据。",
+    "explanation": [
+      "HTML 的任务是让浏览器知道“这是什么内容”：标题、段落、链接、表格等。标签并不是屏幕上的文字，而是解析器建立文档结构的依据。",
+      "复习时需要能从一小段源代码预测页面结构，并分清 HTML 语义、CSS 外观以及浏览器默认样式三件事。课件中的旧式属性会与现代写法一起解释。"
+    ],
+    "takeaways": [
+      "HTML 描述内容与结构",
+      "阅读代码时先找元素嵌套"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "本讲路线：结构、属性与扩展内容",
+    "section": "HTML 基础",
+    "priority": "admin",
+    "summary": "本页把 HTML 学习分成基础概念、元素结构，以及表单、表格和多媒体等内容形式。",
+    "explanation": [
+      "“元素”和“标签”不是完全相同的词：标签是源代码中的标记，元素还包括属性、内容及文档中的节点角色。属性 src、href 分别告诉浏览器资源或导航目标在哪里。",
+      "学习高级元素时仍然沿用同一分析方法：先确定容器与子元素，再看属性影响什么行为。验证器可以发现非法嵌套与拼写问题，但不能替你证明页面内容正确或设计合理。"
+    ],
+    "takeaways": [
+      "先认元素，再认属性",
+      "验证通过不等于页面逻辑正确"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "HTML 是什么：标记语言与版本演化",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "HTML 是 Hypertext Markup Language，即超文本标记语言；课件表格展示 1991 至 2014 年的重要版本节点。",
+    "explanation": [
+      "HTML 用预定义词汇为内容赋予意义，例如 p 表示段落，a 表示锚元素。它不是靠循环、条件和变量完成一般计算的编程语言；网页的行为通常由 JavaScript 补充。",
+      "课件用 XML 作类比，是为了说明两者都使用尖括号标记，不能据此推断 HTML 也采用 XML 的严格解析规则。版本年份用于理解演化，当前学习重点是能够阅读现代 HTML 文档。"
+    ],
+    "takeaways": [
+      "HTML 是标记语言",
+      "HTML 解析规则不等于 XML"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "HTML 能表达的内容",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "HTML 可以组织文字、图像、超链接、音视频与表单，并由浏览器或邮件客户端解析和呈现。",
+    "explanation": [
+      "“超文本”的关键是文档可以指向另一个资源，读者无需按单一线性顺序阅读。图像和视频通常作为独立资源被引用，因此一份 HTML 下载完成，不代表页面依赖的所有资源都已下载。",
+      "本页把显示与格式也列入 HTML 的能力，这是历史概述。现代实现中，HTML 负责语义与结构，CSS 负责多数视觉样式；同一份结构可以有多种外观。Tim Berners-Lee 与 CERN 是理解 Web 起源的背景。"
+    ],
+    "takeaways": [
+      "资源引用不等于把资源字节写入 HTML",
+      "现代网页分离结构与样式"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "第一张网页：观察超文本的基本形态",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "本页展示早期 Web 页面的历史截图，关注文字标题、段落和可点击链接如何组成可导航的信息文档。",
+    "explanation": [
+      "早期页面没有今天复杂的卡片与动画，仍然能够完成 Web 的核心任务：呈现信息并链接到其他资源。浏览器默认提供标题大小、链接颜色和段落间距，因此没有 CSS 不等于完全没有外观。",
+      "复习时把截图还原成可能的 HTML 结构：页面标题对应标题元素，正文对应段落，带链接的文字对应 a 元素。不要把历史浏览器的字体与按钮外观当作 HTML 语言本身的要求。"
+    ],
+    "takeaways": [
+      "浏览器默认样式也会产生外观",
+      "超链接是 Web 文档的基本能力"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "第一个网站与 WWW 项目",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "课件给出 CERN 保存的 WWW Project 页面地址，用真实历史站点说明网页可以包含浏览器、服务器和项目说明的链接。",
+    "explanation": [
+      "一个网站通常由相互链接的资源组成，而不是一份孤立的 HTML。访问项目首页之后，浏览器可以依据相对或绝对 URL 继续请求另一个文档，这把分散信息连接成网络。",
+      "这类历史资源适合帮助理解 client、server 与 document 的关系，考试复习无需背完整 URL。需要说明浏览器请求资源、服务器返回资源、HTML 再引用其他资源的流程。"
+    ],
+    "takeaways": [
+      "网站由资源和链接组成",
+      "分清浏览器、服务器与文档"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "Web 的动机：更快分享研究",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "本页用 CERN 的研究环境解释 Web 的最初需求：跨人员、跨系统共享研究资料，比等待传统期刊发表更直接。",
+    "explanation": [
+      "问题的核心是信息分散在不同机器与文件中。统一的资源地址、请求协议和文档标记，使使用者能够通过链接访问别人维护的信息，而不用先理解每台机器上的文件组织方式。",
+      "这里需要区分 Internet 与 Web：Internet 提供网络连接基础，Web 是运行在其上的一种信息服务。Web 的研究协作起源也解释了为何链接与跨平台浏览是其基础设计目标。"
+    ],
+    "takeaways": [
+      "Web 不等于整个 Internet",
+      "URL、HTTP、HTML 共同支撑文档共享"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "Lynx：文字浏览器",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "Lynx 是课件介绍的文字浏览器，说明访问网页并不以显示图片或图形界面为必要条件。",
+    "explanation": [
+      "文字浏览器能够显示文本、跟随链接并处理部分交互。它通常无法像图形浏览器那样呈现页面图像，因此图像的 alt 文本、清晰的标题和有意义的链接名称格外重要。",
+      "本页历史信息为堪萨斯大学相关团队及 1992 年初次发布。学习目标不是记住浏览器品牌排行，而是理解同一 HTML 可以被不同用户代理以不同形式呈现，结构语义比某一张视觉截图更持久。"
+    ],
+    "takeaways": [
+      "浏览器不一定是图形界面",
+      "alt 和结构语义有独立价值"
+    ]
+  },
+  {
+    "page": 9,
+    "title": "Mosaic：图形 Web 的普及",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "课件介绍 NCSA Mosaic、伊利诺伊大学与 Marc Andreessen，强调 1993 年图形浏览器对 Web 普及的推动。",
+    "explanation": [
+      "图形浏览器把文字、链接与图像组织在一个界面里，使超文本更容易被普通用户理解。浏览器仍然是在解释服务器返回的内容，而不是要求服务器直接发送整张页面截图。",
+      "课件标题称其为“第一款图形浏览器”，历史上已有更早的图形 Web 浏览器；更准确的理解是 Mosaic 对图形 Web 的早期普及非常重要。复习应记住它与 NCSA、1993 年和随后 Netscape 的关联。"
+    ],
+    "takeaways": [
+      "Mosaic 是 Web 普及的重要节点",
+      "历史标题不宜理解成绝对唯一的第一"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "Netscape：商业浏览器的兴起",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "本页介绍 Netscape Navigator 及其 1994 年发布背景，延续 Mosaic 到商业 Web 的历史线索。",
+    "explanation": [
+      "浏览器商业化意味着 Web 开始面向更广泛的日常使用，而不只是研究机构的信息共享。不同厂商为了竞争加入新功能，也带来了网页在不同浏览器中表现不一致的问题。",
+      "这一页与后面的标准化、CSS 和验证器有关：作者希望同一 HTML 在不同实现中保留一致的语义，不能只针对一个品牌的容错行为写页面。具体产品市场故事按课件历史背景理解即可。"
+    ],
+    "takeaways": [
+      "浏览器竞争推动功能也带来兼容性问题",
+      "标准帮助跨浏览器互操作"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "Internet Explorer 与浏览器竞争",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "课件借 IE 与 Windows 的捆绑发行说明浏览器分发渠道对 Web 生态的影响。",
+    "explanation": [
+      "浏览器不仅是 HTML 的执行环境，也是 Web 标准的实现者。当某个实现占据较大份额时，网站可能依赖其专有功能，进而影响其他用户的访问体验，这也是课程反复强调标准与验证的原因。",
+      "课件把 Netscape 衰落浓缩为 IE 随系统发行的故事，属于历史叙述而不是当前浏览器建议。学习时应能把 IE、Netscape、Mosaic 放入大致时间顺序，不必把旧产品名称当成今天应安装的工具。"
+    ],
+    "takeaways": [
+      "历史市场地位不同于当前技术选择",
+      "避免依赖浏览器专有容错"
+    ]
+  },
+  {
+    "page": 12,
+    "title": "浏览器时间线：演化而非静止产品",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "本页用时间线展示浏览器家族的出现、延续与变化，帮助把前面几个历史节点连起来。",
+    "explanation": [
+      "阅读时间线应先看时间方向，再观察同一浏览器分支的持续区间与分叉关系。产品名称、渲染引擎和发行版本并非同一个概念；品牌变化不一定代表底层实现完全从零开始。",
+      "对考试复习而言，把文字浏览、早期图形浏览、商业竞争及现代标准化串成因果关系，比背图上每个版本号更有用。图中的截止时间属于课件制作时的视角，不能当作今天所有浏览器的完整列表。"
+    ],
+    "takeaways": [
+      "时间线属于历史快照",
+      "浏览器品牌与渲染引擎要区分"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "HTML 标准版本与 Living Standard",
+    "section": "HTML 基础",
+    "priority": "skim",
+    "summary": "本页从早期 HTML、HTML 4.01、HTML5 讲到 WHATWG 的 HTML Living Standard，并说明标准组织协作方式的变化。",
+    "explanation": [
+      "早期版本以正式推荐文档发布，现代 HTML 则持续维护。所谓 HTML5 常被宽泛地用来指现代 Web 能力，但浏览器是否支持某一具体功能仍需按功能判断，不能只问“支持 HTML5 吗”。",
+      "课件提醒很多示例源自 HTML4，因此会出现大写标签、旧式 DOCTYPE 和已经过时的表示性属性。读题时应识别这些历史代码表达的功能，并能说明对应现代写法，而不是把整份旧代码当成最佳实践。"
+    ],
+    "takeaways": [
+      "Living Standard 持续维护",
+      "旧示例要区分语义与历史写法"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "元素、标签与属性",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页区分 HTML 元素、开始与结束标签，以及放在开始标签内的属性，图中用 img 的 src 作示范。",
+    "explanation": [
+      "例如 <p class=\"note\">Hi</p> 是一个段落元素：p 是元素名，两个尖括号片段是标签，class 是属性，Hi 是内容。属性一般不会作为正文直接显示，而是改变语义、行为或提供元数据。",
+      "课件把无内容元素称为“self-closing”，需要修正：HTML 的 img、br、input 属于 void elements，不写结束标签；尾随斜杠通常只是被忽略。普通 div 写成 <div/> 并不会自动关闭，而且 HTML 的部分结束标签在特定条件下允许省略。"
+    ],
+    "takeaways": [
+      "void element 与 XML 自闭合不同",
+      "属性写在开始标签内"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<p class=\"note\">Hello <strong>Web</strong></p>\n<img src=\"photo.jpg\" alt=\"校园图书馆\">",
+      "explanation": "p 包含文本和 strong 子元素；img 是无结束标签的 void element。"
+    },
+    "question": {
+      "prompt": "HTML 中 <div/> 会自动关闭 div 吗？",
+      "answer": "不会。div 不是 void element，应写 <div></div>；HTML 不按 XML 自闭合普通元素。"
+    },
+    "pitfall": "HTML void elements 不等于 XML 自闭合语法；普通元素不能随意用 /> 结束。"
+  },
+  {
+    "page": 15,
+    "title": "第一份完整 HTML 文档",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "示例依次包含 HTML5 DOCTYPE、注释、html 根元素、head 中的 title，以及 body 内的问候文字。",
+    "explanation": [
+      "title 显示在浏览器标签页或窗口标题位置，不是正文中的大标题；正文想要标题必须在 body 中使用 h1 等元素。注释保留在源代码里但不会按普通文字显示。",
+      "<!DOCTYPE html> 用于使浏览器采用标准模式，它不是可见元素，也不是一个普通开闭标签对。阅读代码题时可以先圈出 head 与 body 的边界，再只把 body 内的可见内容作为页面主体来推演。"
+    ],
+    "takeaways": [
+      "title 不等于 h1",
+      "DOCTYPE 不产生可见内容"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>复习</title></head>\n<body><h1>HTML 复习</h1><p>从结构开始。</p></body>\n</html>",
+      "explanation": "标签页显示“复习”，正文显示标题“HTML 复习”和一个段落。"
+    }
+  },
+  {
+    "page": 16,
+    "title": "head 与 body：结构职责",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页用旧 HTML4 DOCTYPE 和 Solar System 示例强调，head 放元信息，body 放用户看到的主要内容。",
+    "explanation": [
+      "旧式 DOCTYPE 中的公共标识与 DTD URL 用来声明文档类型；现代 HTML 通常使用短写 <!DOCTYPE html>。它主要影响浏览器文档模式，不会要求浏览器每次通过网络下载 DTD 才能展示页面。",
+      "示例中的段落结束标签被省略，浏览器能够按 HTML 规则补全结构。阅读时不要把“源文件未显式写标签”误判为“DOM 中不存在对应元素”。太阳系九大行星说法只是历史示例文本，不属于 HTML 知识结论。"
+    ],
+    "takeaways": [
+      "head 放元数据，body 放内容",
+      "源代码省略标签不等于 DOM 没有元素"
+    ]
+  },
+  {
+    "page": 17,
+    "title": "给正文增加段落和行内标记",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "示例以两个 p 组织内容，并在段落内部使用 b 与 i 改变部分文字的呈现。",
+    "explanation": [
+      "p 通常形成独立的段落块；b、i 默认作为行内元素留在文字流中，因此不会只因为变粗或变斜就另起一整段。浏览器也会折叠源码中的普通空白，所以代码排版换行不等于屏幕换行。",
+      "现代语义中，strong 表示重要性，em 表示强调，b 与 i 有各自的文字语义，并不能一律互换。代码分析时应区分“默认看起来粗体”与“表达重要内容”，CSS 可以改变它们的外观。"
+    ],
+    "takeaways": [
+      "段落组织块结构",
+      "行内标记通常不打断文字流"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "浏览器容错：能显示不等于写得对",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页说明浏览器往往能够显示不完整或包含错误的 HTML，例如省略部分结构标签。",
+    "explanation": [
+      "HTML 解析器会按规定进行错误恢复，并可能自动插入 html、head、body 等节点，因此 DOM 树可能不同于作者眼中的源代码顺序。未知标签也不意味着其中的所有文字都被丢弃，它们通常仍可能进入文档树。",
+      "容错不是可以随意书写的理由：非法嵌套、缺少引号或错误关闭可能改变实际结构，影响 CSS 选择器与 JavaScript 查询结果。复习时既要知道浏览器会恢复，也要能说明标准有效写法为什么更可靠。"
+    ],
+    "takeaways": [
+      "渲染成功不证明 HTML 合法",
+      "浏览器会修复文档树"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "head 中误放正文的容错示例",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页比较多个浏览器对 head 中放普通文字和未知 ODDTAG 的处理，重点是解析恢复而不是正常 head 用法。",
+    "explanation": [
+      "head 应包含标题、元数据、样式等元信息，而不是普通正文。遇到不属于 head 的内容时，HTML 解析器可能提前结束 head 并开始 body，所以作者以为“放在 head 就不会显示”的文字仍可能出现在正文。",
+      "复习要把三层分开：文件中写在哪里、解析后节点落在哪里、最终是否被渲染。图示用于说明错误输入仍有输出，不能证明这些标签位置合法，也不能据此声称所有浏览器永远给出完全相同的页面。"
+    ],
+    "takeaways": [
+      "查看 DOM 才知道恢复后的结构",
+      "head 不是隐藏任意内容的容器"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "元素内容、可省略结束标签与空元素",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页再次拆解元素，并以 body、p 和 hr 区分有内容元素与无内容元素。",
+    "explanation": [
+      "普通元素通常由开始标签、内容、结束标签组成；部分 HTML 元素如 p 在特定上下文可以省略结束标签，因为后续标签足以让解析器判断边界。这种省略是特定语法规则，不适用于所有元素。",
+      "hr 是 void element，没有子内容，也不能写 </hr>。默认浏览器把它画成横线，但其现代语义是段落间的主题分隔；横线粗细和颜色可以由 CSS 改变，不能把语义仅理解成“画线指令”。"
+    ],
+    "takeaways": [
+      "p 的可省略规则有条件",
+      "hr 表示主题分隔且无结束标签"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "属性语法与大小写",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "示例 <h1 id=\"Chapter1\"> 给标题分配标识符，说明属性位于开始标签内并常以 name=value 形式出现。",
+    "explanation": [
+      "在 HTML 语法中，元素名和属性名通常不区分 ASCII 大小写，但 id、class 和 URL 路径等属性值不能笼统当成不区分大小写。href 的路径还可能受到服务器文件系统或路由规则影响。",
+      "属性值统一加引号最清晰，尤其值包含空格时必须避免被解析成新的属性。并非每个属性都需要普通字符串值；disabled 等布尔属性以是否出现表达真假，写 disabled=\"false\" 仍表示禁用。"
+    ],
+    "takeaways": [
+      "属性名与属性值的大小写规则不同",
+      "布尔属性看是否存在"
+    ],
+    "question": {
+      "prompt": "disabled=\"false\" 会启用 input 吗？",
+      "answer": "不会。disabled 是布尔属性，出现即表示禁用，应移除属性来启用。"
+    }
+  },
+  {
+    "page": 22,
+    "title": "HTML 注释",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "HTML 注释使用 <!-- 开始、--> 结束，浏览器不会把注释内容当成普通正文显示。",
+    "explanation": [
+      "注释适合记录结构说明或临时标记，但不会从下载的源文件中消失，因此查看源代码仍能读到。它与 CSS 的 /* ... */、JavaScript 的 // 不是同一种语法，放错上下文可能造成解析问题。",
+      "注释不能任意嵌套。为了避免课件中旧语法细节引起混淆，直接使用标准的 <!-- comment --> 写法，不依赖特殊空白或不完整结束符。考试分析只需排除注释可见性，同时保留它对源文件结构的作用。"
+    ],
+    "takeaways": [
+      "HTML 注释不会正常显示",
+      "注释仍会随文档发送"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "body 的全局属性与事件属性",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "本页列出 id、class、lang、title、style 及一系列事件处理属性，并混合展示历史上的颜色属性。",
+    "explanation": [
+      "id 通常用于唯一定位，class 用于把多个元素归为一类，lang 声明自然语言，title 提供补充描述，style 放行内 CSS。它们很多都是全局属性，不只属于 body；一个元素也可以有多个 class，用空格分隔。",
+      "onclick、onload 等属性连接到事件处理行为，和颜色、字号不同。bgcolor、text、link 等旧表示性属性应改用 CSS。本页所谓“完整属性集”是历史范围内的列表，不能当作现代 HTML 全部属性的穷尽集合。"
+    ],
+    "takeaways": [
+      "id 唯一，class 可复用",
+      "事件属性描述行为，CSS 描述样式"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "把 body 的颜色属性迁移到 CSS",
+    "section": "HTML 基础",
+    "priority": "core",
+    "summary": "上下两个示例表达相同的目标：白背景、黑正文以及不同状态的链接颜色，但现代写法把规则集中在 style 中。",
+    "explanation": [
+      "body {background:white; color:black} 设置页面基础颜色，a:link、a:visited、a:active 则分别匹配未访问、已访问与正在激活的链接。这些选择器根据状态工作，不需要给每个链接逐一写颜色。",
+      "迁移的价值是结构和样式分离：HTML 保留正文和链接，视觉方案可以单独修改。需要注意 active 是按下或激活时的短暂状态，不表示当前页面，也不等于已经访问；同一元素同时匹配多条规则时还要经过层叠。"
+    ],
+    "takeaways": [
+      "链接状态由伪类匹配",
+      "active 不等于 visited"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "编写 HTML 的工具",
+    "section": "HTML 基础",
+    "priority": "admin",
+    "summary": "本页比较直接编辑源码、文字处理器导出 HTML，以及专门的开发工具；它鼓励使用能清晰控制源码的编辑器。",
+    "explanation": [
+      "HTML 本质上是文本文件，普通文本编辑器就能编写。开发编辑器的价值是语法高亮、自动补全与错误提示，而不是拥有某种只有该软件才能生成的 HTML 格式。",
+      "文字处理器的“另存为网页”可能输出大量与视觉排版绑定的冗余标记，使学习者难以看清真正的结构。复习时应能手动阅读最小 HTML，而不是把某个编辑器按钮流程当成语言知识；课件软件名单按历史背景理解。"
+    ],
+    "takeaways": [
+      "HTML 是文本格式",
+      "工具辅助不能代替理解源码"
+    ]
+  },
+  {
+    "page": 26,
+    "title": "标题层级 h1–h6",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "示例通过 h1、h2、h3 和 h6 展示不同层级的标题，浏览器默认把较高层级画得更醒目。",
+    "explanation": [
+      "标题层级表达文档组织关系，而不是单纯的字号工具。例如课程是 h1，章节是 h2，章节中的小节是 h3；若只是需要把文字缩小，应修改 CSS，不应跳到 h6 来“调字号”。",
+      "截图中四行标题依次缩小，但这种大小来自默认样式，可以被覆盖。考试若问某标签的意义，应回答其层级与结构角色；若问代码默认输出，则可以根据用户代理样式判断常见外观。"
+    ],
+    "takeaways": [
+      "标题等级是语义",
+      "CSS 能改变标题大小"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "段落 p 与换行 br",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页的两个 p 形成两个逻辑段落，而第二段内部的 br 只在该段内强制换行。",
+    "explanation": [
+      "浏览器通常会给段落设置上下外边距，因此两个 p 之间的距离与一个 br 产生的行间距离不同。源码中的回车常常折叠为空格，不会自动成为可见换行，必须结合元素与 CSS 理解输出。",
+      "br 适合地址、诗行等确实需要保留行断开的内容，不适合连续堆叠来制造页面间距。它是 void element，现代 HTML 写 <br> 即可；<br /> 中的斜杠不改变这份 HTML 的显示行为。"
+    ],
+    "takeaways": [
+      "p 划分段落，br 只换行",
+      "不要用多个 br 代替 CSS 间距"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<p>第一段。</p>\n<p>第二段第一行。<br>第二段第二行。</p>",
+      "explanation": "共两个段落；最后两行属于同一个段落。"
+    }
+  },
+  {
+    "page": 28,
+    "title": "列表类型与父子关系",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页介绍 ul、ol、dl 与 menu，核心区别是条目之间是否有顺序，以及是否采用术语—说明结构。",
+    "explanation": [
+      "ul 适合顺序无关的项目，ol 适合步骤或排名；两者通常包含 li。dl 则使用 dt 标记术语、dd 标记说明，不应该照搬 li 的模式。选择列表首先看内容意义，再由 CSS 控制项目符号外观。",
+      "课件称 dl 与 menu 都在 HTML4 中被废弃，这不准确：dl 并未因此废弃，现代 HTML 仍用它表达描述列表。列表嵌套时应把子列表放在对应 li 内，避免仅按视觉缩进猜测结构。"
+    ],
+    "takeaways": [
+      "ul/ol 用 li",
+      "dl 用 dt 和 dd"
+    ],
+    "pitfall": "课件称 dl 在 HTML4 被废弃不准确；dl 一直是描述/定义列表元素。"
+  },
+  {
+    "page": 29,
+    "title": "描述列表：术语与解释",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "源代码以 light year、asteroids 为 dt，再用 dd 给出对应定义，体现描述列表的键值式组织方式。",
+    "explanation": [
+      "dt 表示被解释的术语，dd 表示该术语的解释内容；浏览器常把 dd 缩进，但缩进只是默认外观。dl 不要求每组只有一个术语和一个定义，仍需保持语义清楚。",
+      "这页截图还带有 planets and moons 与 Mars 的外层结构，超过上方单独展示的 dl 片段；不能把截图的所有节点都归因于那几行源码。对给出的片段，确定能推出的是两个术语及各自说明，不能推出数字编号。"
+    ],
+    "takeaways": [
+      "描述列表不是有序列表",
+      "源码片段与完整截图可能不同范围"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<dl><dt>URL</dt><dd>资源地址。</dd><dt>HTML</dt><dd>描述文档结构。</dd></dl>",
+      "explanation": "产生两组术语和解释，不产生自动编号。"
+    }
+  },
+  {
+    "page": 30,
+    "title": "嵌套无序列表源码",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页把 Mars、Jupiter 放在外层列表，把卫星放在下一层，并给 deimos 再嵌套轨道、直径、质量说明。",
+    "explanation": [
+      "阅读嵌套结构应从每个 ul 的开始与结束位置追踪层级，而不是只看缩进。Mars 与 Jupiter 是兄弟条目；deimos 和 phobos 属于 Mars；轨道等三个条目是 deimos 的子列表内容。",
+      "课件省略了一些 li 结束标签，浏览器可按规则恢复。学习时写完整关闭更便于检查层级：子 ul 应位于拥有它的 li 内。项目符号样式可能随深度改变，但这种形状变化不决定数据的父子关系。"
+    ],
+    "takeaways": [
+      "先画列表树再预测输出",
+      "子列表属于一个 li"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<ul>\n  <li>前端<ul><li>HTML</li><li>CSS</li></ul></li>\n  <li>后端</li>\n</ul>",
+      "explanation": "前端和后端是兄弟；HTML 和 CSS 是前端条目内部的子列表。"
+    }
+  },
+  {
+    "page": 31,
+    "title": "无序列表输出：三层结构",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "截图显示 Mars 与 Jupiter 在最左侧，卫星缩进一级，deimos 的三个属性再缩进一级，对应上一页的三层 ul。",
+    "explanation": [
+      "外层条目以实心圆点显示，第二层使用不同圆点，第三层出现方形标记，这是该浏览器默认样式区分层级的方式。就算 CSS 把所有符号改成相同形状，DOM 中的嵌套关系仍保持不变。",
+      "deimos 的轨道、直径、质量不会成为 Mars 的直接兄弟；phobos 回到第二层缩进，说明内部列表已经结束。复习时可遮住截图，用上一页源码独立写出层级，再检查自己是否把结束标签配对正确。"
+    ],
+    "takeaways": [
+      "缩进来自嵌套层级",
+      "phobos 与 deimos 同级"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "有序列表的编号",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "ol 默认从 1 编号，start 改变起始序号，type 可以指定数字、字母或罗马数字等标记形式。",
+    "explanation": [
+      "例如 <ol start=\"4\" type=\"A\"> 的起始序号是整数 4，显示时对应 D，再继续 E；start 不需要也不应该写成字母 D。CSS 的 list-style-type 能控制标记外观，适合统一页面风格。",
+      "课件说 type 已废弃属于历史表述，现代 HTML 的 ol 仍支持 type。当编号形式本身与内容意义相关时也可以使用它。读题必须分别追踪“数值起点”和“显示样式”，不要把 a/A/i/I 当成新的独立计数规则。"
+    ],
+    "takeaways": [
+      "start 是整数起点",
+      "type 决定标记表示方式"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<ol start=\"3\" type=\"A\"><li>解析</li><li>渲染</li></ol>",
+      "explanation": "标记为 C、D：起点是数值3，字母只是显示格式。"
+    },
+    "question": {
+      "prompt": "ol start=\"4\" type=\"i\" 的前两项是什么？",
+      "answer": "iv、v。start 指序号4，type=i 把序号显示为小写罗马数字。"
+    }
+  },
+  {
+    "page": 33,
+    "title": "嵌套有序列表源码",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "外层 ol start=4 让 Mars 和 Jupiter 从 4、5 开始，卫星列表 type=A，deimos 的属性列表 type=I。",
+    "explanation": [
+      "每一个 ol 都维护自己的编号序列，所以 Mars 下的卫星从 A 开始，Jupiter 下重新创建的 ol 也从 A 开始，不会接着 Mars 的 B 继续成 C。最深层的 I、II、III 同样是独立序列。",
+      "阅读时把嵌套列表看成三个局部计数器：外层十进制、第二层大写字母、第三层大写罗马数字。父列表的 start 不会自动传递给子列表，CSS 属性继承也不能与 HTML 的编号属性混为一谈。"
+    ],
+    "takeaways": [
+      "每个 ol 独立计数",
+      "父级 start 不自动影响子级"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "有序列表输出：4、A、I 的组合",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "截图中 Mars 标为 4，Jupiter 标为 5；各自卫星使用大写字母，deimos 的属性使用罗马数字。",
+    "explanation": [
+      "该输出是上一页三个层级的直观结果：Mars 下出现 A. deimos 与 B. phobos，Jupiter 下重新出现 A. callisto 等。最深层 I、II、III 只对 deimos 的三个属性编号。",
+      "观察标题因为窗口较窄而分成两行，这不是源码多写了一个标题或 br，而是文字自动换行。做输出题时应区分由 DOM 决定的层级、由编号属性决定的标记，以及由可用宽度决定的行折返。"
+    ],
+    "takeaways": [
+      "列表层级与文本自动换行是两回事",
+      "子列表重新编号"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "表格基本元素",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "table 定义表格，caption 给出表格标题，tr 定义行，th 与 td 分别表示表头单元格和数据单元格。",
+    "explanation": [
+      "典型结构是 table 内包含若干行，每行内包含单元格；不能把 td 与 table 之间的行结构当成可有可无。浏览器可能自动插入 tbody，因此 DOM 检查时实际层级可能比源码多一层。",
+      "th 默认粗体居中，但它更重要的作用是表达表头关系，辅助技术可以据此理解数据。caption 描述整个表格，和页面 h1 不同；旧 align 属性应交给 CSS 处理。表格适合二维数据，不应只为布局而使用。"
+    ],
+    "takeaways": [
+      "tr 包含 th/td",
+      "th 的语义不只是粗体"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "表格尺寸与内容",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "单元格可以容纳文字、图像、列表乃至嵌套表格；表格布局根据各行的单元格和跨行跨列关系形成二维网格。",
+    "explanation": [
+      "简单无跨列情形可按最多单元格的行估计列数，但一旦出现 colspan 与 rowspan，必须统计占用的网格位置，不能只数每行有几个 td。某行缺少单元格也不会自动在 DOM 中创造对应的 td 元素。",
+      "表头与数据的默认字体差异来自浏览器样式，可以被 CSS 修改。复习重点是分清“逻辑网格中的空位置”“实际存在的元素”和“最终视觉布局”，避免把渲染出的空白区域都误认为源码有空单元格。"
+    ],
+    "takeaways": [
+      "列数需计入跨列",
+      "视觉空白不等于新增 td"
+    ]
+  },
+  {
+    "page": 37,
+    "title": "三行两列的表格源码",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "例子用三个 tr，每行两个 td，把 MIME 类型和格式名称配成三组数据；caption 显示 MIME Content-Types。",
+    "explanation": [
+      "没有 rowspan 或 colspan，因此共六个数据单元格，形成三行两列。border=\"2\" 是旧式表示属性，现代可以通过 CSS 给 table、td 设置边框；默认分离边框模式可能让每个单元格都有自己的边线。",
+      "课件中的 application/x-pdf 是旧写法，当前通常应使用 application/pdf。这个纠错不影响表格行列计算，因为单元格内的文本内容与 HTML 表格结构是独立的。阅读题时不要把标题 caption 误算成普通 tr。"
+    ],
+    "takeaways": [
+      "三行两列共六个 td",
+      "caption 不算数据行"
+    ]
+  },
+  {
+    "page": 38,
+    "title": "三行两列表格输出",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "截图中页面有一个大标题，下面是较小的表格标题，再下面是三行两列的 MIME 类型数据。",
+    "explanation": [
+      "大标题来自 h1，MIME Content-Types 来自 caption，两者不是同一个元素的两种显示。左列字符串较长，表格算法据内容分配宽度；这说明未明确指定列宽时，列宽不必相等。",
+      "细边框围绕单元格与表格形成可见网格，来自上一页 border 属性及默认边框模型。考试若让画草图，应优先保证三行两列和标题位置正确，不必模仿旧浏览器的菜单栏、像素字体或窗口边框。"
+    ],
+    "takeaways": [
+      "默认列宽可以不同",
+      "先识别 h1、caption、数据网格"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "rowspan 与 colspan",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页在表格左侧加入 rowspan=4 的 Items 表头，并用 colspan=2 创建横跨右侧两列的总表头。",
+    "explanation": [
+      "计算网格时第一行占三列：Items 占第一列并延伸四行，Types and Their Meaning 占第二、三列。后续每行虽然只写两个 td，但左侧第一列已经被 rowspan 占用，因此两个新单元格进入右侧两列。",
+      "rowspan 的数字包含起始行自身，而不是额外向下再跨四行；colspan 也是总共占用的列数。最有效的解题方法是先画空网格，给每个跨格元素标出占位，再按源码顺序填入剩余格子。"
+    ],
+    "takeaways": [
+      "rowspan/colspan 包含自身",
+      "已有跨行占位影响后续单元格位置"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<table>\n<tr><th rowspan=\"2\">课程</th><th colspan=\"2\">成绩</th></tr>\n<tr><td>期中</td><td>期末</td></tr>\n</table>",
+      "explanation": "逻辑网格2行3列；第二行第一列已被“课程”占用。"
+    },
+    "question": {
+      "prompt": "rowspan=\"4\" 是跨4行还是额外跨4行？",
+      "answer": "总共4行，包含该元素所在的起始行。"
+    }
+  },
+  {
+    "page": 40,
+    "title": "合并单元格输出",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "截图显示 Items 是左边贯穿表头行和三条数据行的高单元格，右上总表头横跨两个数据列。",
+    "explanation": [
+      "从视觉上数可见小框容易误判行列，因为一个大框可占多个逻辑位置。整个表格的逻辑网格为四行三列；右下有六个普通数据单元格，左侧与右上分别有一个合并表头。",
+      "Items 在大单元格中的垂直位置来自默认表格单元格对齐，不能据文字居中判断 rowspan 的值。要验证输出，应与上一页的 4、2 这两个属性值及三行数据相互核对，而不只看框的高度。"
+    ],
+    "takeaways": [
+      "逻辑网格为四行三列",
+      "大框可能跨多个位置"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "表格单元格的水平与垂直对齐",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页截图用箭头指出单元格文字的上方、中部及右侧对齐，说明同一个网格中的内容仍可调整位置。",
+    "explanation": [
+      "水平对齐用 text-align:left/center/right，表格单元格的垂直对齐可用 vertical-align:top/middle/bottom。课件把右侧箭头写成 valign right 是混淆了方向：right 属于水平对齐，不是合法的垂直对齐值。",
+      "deprecated 表示某种旧写法不再推荐或已被规范淘汰，不等于所有浏览器会立刻拒绝它。理解旧 align、valign 代码的作用后，应能翻译成 CSS；不要把现代属性名直接写成 valign。"
+    ],
+    "takeaways": [
+      "text-align 管水平",
+      "vertical-align 管表格单元格内的垂直对齐"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "字符集合与字符编码",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页区分字符本身的集合以及字符在网络传输中如何编码，并以 Content-Type 的 charset 参数为例。",
+    "explanation": [
+      "Unicode 为字符分配码点，UTF-8 等编码再把这些码点表示为字节。一个中文字符可能在 UTF-8 中占多个字节，所以“字符数”不能直接当成文件字节数。浏览器必须用合适编码解码，错误解码会产生乱码。",
+      "现代 HTML 常在 head 尽早写 <meta charset=\"utf-8\">，服务器也可以通过 Content-Type: text/html; charset=utf-8 声明。课件列出的 Unicode 版本和旧区域编码属于其时间背景，复习重点是字符集与编码不是同义词。"
+    ],
+    "takeaways": [
+      "Unicode 码点不同于 UTF-8 字节",
+      "charset 影响解码"
+    ]
+  },
+  {
+    "page": 43,
+    "title": "字符引用：安全地显示保留字符",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "字符引用允许在 HTML 中表示某个字符，而不把它误认为语法标记；可使用命名形式或十进制、十六进制数值形式。",
+    "explanation": [
+      "例如 &lt; 与 &#60; 都产生字符 <，&amp; 产生 &，&#229; 产生 å。写代码教学内容时，直接输入 <p> 会被解析为标签，而写 &lt;p&gt; 才会在正文中显示标签的字面文本。",
+      "数值引用使用 Unicode 码点，不是该字符在某个文件编码下的单个字节值。十六进制形式要加 x，例如 &#x3C;。为了避免解析歧义，习惯性保留结尾分号，不依赖浏览器允许省略的特殊情况。"
+    ],
+    "takeaways": [
+      "命名与数值引用可表示同一字符",
+      "数值是码点"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<p>&lt;h1&gt; &amp; &#x1F600;</p>",
+      "explanation": "正文显示字面文本 <h1>、& 与一个笑脸字符，不创建 h1。"
+    }
+  },
+  {
+    "page": 44,
+    "title": "字符引用输出练习",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页把 &lt;UL&gt;、&#60;/UL&#62; 等写在正文中，让浏览器显示 HTML 语法说明而不是创建真正的列表。",
+    "explanation": [
+      "解析器先把字符引用转换成文本节点中的字符，但不会把转换得到的 <UL> 再次当成新标签重新解析。因此页面上出现“<UL>”这几个字符，不会开始一个 ul 元素，也就没有项目符号。",
+      "示例中的 START=\"5&#34; 最终显示 START=\"5\"，说明引号也能由数值引用构成。考试时需要逐个替换引用再读正文；尤其注意 &amp;lt; 的结果是文本 &lt;，并非连续解码两次得到 <。"
+    ],
+    "takeaways": [
+      "字符引用转换成文本不会再次解析成标签",
+      "转义层数决定结果"
+    ],
+    "question": {
+      "prompt": "正文中的 &lt;ul&gt; 会创建列表吗？",
+      "answer": "不会，字符引用产生文本字符，不会再次作为标签解析。"
+    }
+  },
+  {
+    "page": 45,
+    "title": "超链接与 a 元素",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "a 配合 href 创建导航目标，链接既可到另一个文档，也可到同文档中的具体位置。",
+    "explanation": [
+      "a 的内容决定用户看到的链接文字，href 决定点击后去哪，两者可以完全不同。例如显示“课程主页”的文字并不意味着 URL 中也必须包含这几个字。URL 可以相对当前文档解析，也可以是完整绝对地址。",
+      "默认下划线和颜色来自浏览器样式或 CSS，并不是 a 必须永远具有的外观。严格地说 a 没有 href 时可以存在，但不会成为普通可导航超链接；visited 等状态也依赖真实链接目标。"
+    ],
+    "takeaways": [
+      "链接文字与目标独立",
+      "有 href 才是通常的导航链接"
+    ]
+  },
+  {
+    "page": 46,
+    "title": "段落内的超链接",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "示例把 a 放在 p 中间，所以 Hello、可点击的 CSCI 571、Class! 共同形成一句话。",
+    "explanation": [
+      "a 默认是行内元素，不会因为可点击就另起一行；只有被它包围的课程文字是链接区域，其前后的普通文字不共享 href。若把整个 p 放入链接中，点击区域与结构就会不同。",
+      "浏览器先显示完整文字，用户激活链接后才进行导航，链接存在本身并不等于已访问目标站点。理解这种“声明导航关系”和“实际发出请求”的区别，有助于后面区分 a、img 和 link 的加载行为。"
+    ],
+    "takeaways": [
+      "a 默认留在行内",
+      "只有其内容构成链接"
+    ]
+  },
+  {
+    "page": 47,
+    "title": "片段目标与唯一 id",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "页面内部跳转通常用 href=\"#section2\" 指向 id=\"section2\" 的元素，这个 id 就是片段目标标识。",
+    "explanation": [
+      "id 在同一文档内应唯一，重复值会使定位、CSS 选择和脚本查询变得难以推断。片段名匹配需要注意大小写，section2 与 Section2 不应被当作同一个标识符。",
+      "旧网页有 <a name=\"...\"> 的命名锚写法，现代通常直接给标题等真实内容元素加 id。id 本身不会显示在页面上，也不会自动生成目录；必须另有链接指向它。复习时要同时找到“来源 href”和“目标 id”。"
+    ],
+    "takeaways": [
+      "片段 href 与 id 精确配对",
+      "id 不等于可见标题文字"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "使用任意元素作为锚点",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页用 h2 的 id 建立 Section Two 目标，并从它前后两个位置分别创建指向同一目标的链接。",
+    "explanation": [
+      "目标不需要额外放一个空 a 元素，因为 id 是全局属性，可以直接标识 h2 等元素。跳转发生时浏览器把目标区域带入视口，文档内容本身并不会因此复制或重新排列。",
+      "课件后半部分故意比较 #label1 与 LABEL1，提醒不要依赖旧浏览器不一致的宽容匹配。应把字符串写成完全一致，并正确闭合 h2；示例里出现错误结束标签时，现代写法需要修复而不是照抄。"
+    ],
+    "takeaways": [
+      "一个目标可由多个链接引用",
+      "大小写不一致属于错误风险"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<a href=\"#css\">跳到 CSS</a>\n<h2 id=\"css\">CSS</h2>",
+      "explanation": "点击链接定位到 h2；目标 id 与片段完全一致。"
+    }
+  },
+  {
+    "page": 49,
+    "title": "不同形式的 href",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "本页集中展示同目录文件、绝对 HTTP 地址、mailto、旧式 news/ftp，以及带父目录、片段和查询的链接。",
+    "explanation": [
+      "相对路径 ../Docs/Style/Overview.html#reference 的解析顺序是先以上级目录为基础找到文档，再在文档内定位 reference。查询参数用 ? 开始，片段用 # 开始，它们不是文件夹层级的一部分。",
+      "mailto 表示请求系统打开邮件处理程序，不保证机器已经配置可用邮件客户端；旧 ftp/news 的浏览器支持也不能按历史截图推断。考试重点是识别 scheme、path、query、fragment，不需实际访问这些旧地址。"
+    ],
+    "takeaways": [
+      "../ 表示上一级路径",
+      "? 查询与 # 片段含义不同"
+    ],
+    "question": {
+      "prompt": "页面 https://e.test/a/b/page.html 中 ../x.html#top 指向什么？",
+      "answer": "https://e.test/a/x.html#top；回到上级目录 a 后定位 x.html 的 top 片段。"
+    }
+  },
+  {
+    "page": 50,
+    "title": "链接 title 属性",
+    "section": "HTML 内容结构",
+    "priority": "core",
+    "summary": "title 为链接补充说明，例如描述目标章节或说明目标是一张 GIF 图片，但它不改变 href 指向的位置。",
+    "explanation": [
+      "桌面浏览器常在悬停后将 title 显示为工具提示，然而触屏与辅助技术的呈现并不完全一致，因此重要信息不应只放在 title。清楚的可见链接文字本身仍然最可靠。",
+      "本页的两个示例分别链接到同目录 chapter2.html 和上级 images 中的图片，展示链接可以指向任意资源，不仅是 HTML 文件。点击图片 URL 后的表现取决于服务器响应类型和浏览器处理方式。"
+    ],
+    "takeaways": [
+      "title 是补充说明",
+      "链接可指向非 HTML 资源"
+    ]
+  },
+  {
+    "page": 51,
+    "title": "URI、URL 与 URN 的关系",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "图示把 URL 与 URN 放在 URI 的大范围内，并用分色标注地址的 scheme、authority、path、query 和 fragment。",
+    "explanation": [
+      "课件标题写 Universal，规范中的常用展开是 Uniform Resource Identifier 与 Uniform Resource Locator。URI 强调标识资源，URL 强调通过位置与访问方式定位资源；URN 则是名称型标识。不能把每个 URI 都拆成主机加文件路径。",
+      "阅读图中的 HTTP URL 时，先找冒号前的 scheme，再找 // 后的主机与可选端口；? 后是查询，# 后是片段。片段通常由客户端用于资源内部定位，不作为 HTTP 请求目标发送给服务器。"
+    ],
+    "takeaways": [
+      "URL 属于 URI 的传统分类",
+      "fragment 通常不发给 HTTP 服务器"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "绝对与相对资源标识",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "课件用 http://www.usc.edu/dept/cs/index.html 说明 scheme、主机与路径，并在末尾添加 #section2 表示内部位置。",
+    "explanation": [
+      "这是典型分层 HTTP 地址的结构，并不代表所有 URI 都必须有这三部分。相对引用必须结合基准 URL 才能求出完整目标：若当前文件在 /dept/cs/，../index.html 会回到 /dept/index.html。",
+      "同页片段 #section2 通常不需要重新获取另一个文件；相对引用也不一定只写文件名，可以包含目录、查询、片段，甚至以 // 开头继承当前 scheme。做解析题时应先确定基准地址，再逐段消除 . 和 ..。"
+    ],
+    "takeaways": [
+      "相对地址依赖基准",
+      "HTTP URI 的例子不是所有 URI 的通用格式"
+    ]
+  },
+  {
+    "page": 53,
+    "title": "link 元素：文档间的关系",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页的 link 为 Chapter2 声明目录、上一章和下一章等关系，不会像正文 a 那样必然显示可点击文字。",
+    "explanation": [
+      "rel 说明当前文档与目标资源的关系，href 给出目标地址；同一个 head 中可以出现多个 link。浏览器或其他工具是否给这些关系显示界面，取决于其实现，不能认为 rel=\"Next\" 一定生成“下一页”按钮。",
+      "现代最常见的是 <link rel=\"stylesheet\" href=\"style.css\">，它让浏览器获取并应用外部 CSS。课件“只能位于 head”是便于入门的惯例，现代规范对某些 link 类型另有 body-ok 规则；本课程示例按 head 放置最清晰。"
+    ],
+    "takeaways": [
+      "link 声明资源关系",
+      "link 不等同于可见 a 链接"
+    ]
+  },
+  {
+    "page": 54,
+    "title": "link 的语言、媒体与样式关系",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页展示 alternate 关系配合 hreflang 与 media，说明同一内容可以拥有不同语言或不同输出媒体的版本。",
+    "explanation": [
+      "hreflang 描述被链接资源的语言，type 描述其媒体类型，media 指明适用的媒体条件。这些元数据帮助浏览器与其他处理工具理解资源，但不会自动把英文正文翻译成法文，也不会自动创建翻译切换界面。",
+      "用于样式表时，media 可以选择打印样式或符合条件的屏幕样式，后续 CSS 媒体查询会展开这一点。读代码时先看 rel 决定资源的用途，再分析 media/type 等限制，不应只看到 href 就当作普通导航。"
+    ],
+    "takeaways": [
+      "alternate 是替代版本关系",
+      "media 决定适用条件"
+    ]
+  },
+  {
+    "page": 55,
+    "title": "图像从哪里来",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "课件列出相机与手机、图形编辑器和扫描仪三种图像来源，说明网页引用的视觉资源通常先在外部生成。",
+    "explanation": [
+      "数码照片以像素记录画面，图形编辑器可组合文字与图案，扫描仪则把纸面材料数字化。它们生成的文件可以放在服务器上，再由 img 的 src 引用，HTML 本身不会因为写了文件名就创造这张图片。",
+      "图像的像素尺寸、文件格式和压缩方式会影响清晰度与下载量。将一张大图在 CSS 中缩小显示，并不自动减少浏览器必须下载的原文件字节；这与后面的响应式图像候选选择直接相关。"
+    ],
+    "takeaways": [
+      "显示尺寸不等于下载文件大小",
+      "图片是单独资源"
+    ]
+  },
+  {
+    "page": 56,
+    "title": "传统图像格式",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "本页回顾 GIF、JPEG、PNG、SVG 与历史格式，核心是位图、矢量图以及压缩方式各有所长。",
+    "explanation": [
+      "JPEG 常用于照片并允许有损压缩，PNG 常用于需要无损保存与透明通道的图像，GIF 支持有限调色板和简单动画。SVG 以几何与文本描述矢量图，缩放时不依赖固定像素网格，适合图标和示意图。",
+      "课件中的 x-pixelmaps 已标为过时，不应把“五种始终支持”当作当代所有浏览器的保证。选择格式应结合内容特征与实际兼容性，而不是把某个格式说成任何情况都最小、最清晰。"
+    ],
+    "takeaways": [
+      "照片与图标有不同格式需求",
+      "SVG 是矢量图而非普通位图"
+    ]
+  },
+  {
+    "page": 57,
+    "title": "现代格式与 picture 回退",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "本页用 AVIF、WebP、JPEG 三层候选说明，浏览器可以选择它支持的格式并保留兼容的默认图片。",
+    "explanation": [
+      "picture 内按顺序检查 source 的 type 等条件，遇到合适来源后选择它；最后的 img 既提供后备 src，也承载 alt 与实际图像元素。示例先尝试 AVIF，再尝试 WebP，否则使用 JPEG。",
+      "课件中的市场占比与兼容性百分比是制作时快照，不应作为当前精确事实背诵。重点是渐进增强思路：优化带宽同时提供回退；type 表示媒体类型，srcset 给候选，不要误写成 source 的 src。"
+    ],
+    "takeaways": [
+      "source 顺序会影响选择",
+      "img 提供后备与 alt"
+    ]
+  },
+  {
+    "page": 58,
+    "title": "img、srcset 与 sizes",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "img 用 src 指定资源，alt 提供替代文本，width/height 指定尺寸信息；srcset 与 sizes 为不同显示条件提供候选。",
+    "explanation": [
+      "示例的 400w、800w、1600w 表示各资源的固有像素宽度，sizes 表达该图片预计占用的 CSS 显示宽度。浏览器综合布局尺寸、设备像素比等因素选择候选，不是简单地把窗口宽度与文件名大小直接相等。",
+      "width/height 还可帮助浏览器提前保留比例，减少图片加载后的布局跳动。alt 应描述图像在当前内容中的作用，装饰图可用空 alt。旧 align 属性应改 CSS；src 与超链接使用的 href 名称不可混淆。"
+    ],
+    "takeaways": [
+      "srcset 提供候选，sizes 描述布局尺寸",
+      "alt 服务于替代呈现"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<img src=\"campus-800.jpg\"\n srcset=\"campus-400.jpg 400w, campus-800.jpg 800w\"\n sizes=\"(max-width: 600px) 90vw, 600px\"\n width=\"800\" height=\"600\" alt=\"校园中央草坪\">",
+      "explanation": "sizes 告知预计显示宽度，浏览器再依据设备像素比选择合适资源。"
+    }
+  },
+  {
+    "page": 59,
+    "title": "picture 的艺术指导",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页按媒体条件在 portrait.jpg 与 landscape.jpg 之间选择，重点是不同视口可以使用不同裁切或构图。",
+    "explanation": [
+      "这与只用 srcset 提供同一构图的多个分辨率不同：手机可能需要主体较集中的竖图，宽屏则适合横向全景。source 的 media 使用 CSS 像素条件，浏览器按文档顺序选择符合条件的来源。",
+      "真正呈现图像、承载替代文本的仍是最后的 img；没有匹配 source 时使用它的 src。课件的 600px 与 601px 范围在非整数 CSS 宽度上可能留下细小空档，不过有 fallback 仍能显示，实际可以用一个 max-width 条件加默认 img 简化。"
+    ],
+    "takeaways": [
+      "picture 可切换构图",
+      "img 不是可省略的装饰节点"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<picture>\n <source media=\"(max-width: 600px)\" srcset=\"portrait.jpg\">\n <img src=\"landscape.jpg\" alt=\"山谷全景\">\n</picture>",
+      "explanation": "窄视口使用竖版构图，其余条件回退到横版图像。"
+    }
+  },
+  {
+    "page": 60,
+    "title": "图片尺寸与边框源码",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "示例把同一 Ferrari 图像设置为不同宽高和边框，并故意把最后一个文件名写错以观察 alt 回退。",
+    "explanation": [
+      "第一与第二张内容尺寸都是 50×50，但第二张增加边框后整体占用更大；第三张放大到 100×100，第四张指定 200×300，若不符合原比例可能发生拉伸。border=\"...\" 是历史写法，现代用 CSS border。",
+      "最后的 xferrari.jpg 无法加载时浏览器显示破图或替代文字，具体细节取决于实现与给定尺寸。做题时把图片内容盒、边框和外层表格单元格分开计算；同样的 src 并不意味着每次显示尺寸都相同。"
+    ],
+    "takeaways": [
+      "宽高可改变显示比例",
+      "加载失败时 alt 提供替代信息"
+    ],
+    "question": {
+      "prompt": "图片设置为100×100后，原始下载文件自动变小吗？",
+      "answer": "不会。显示尺寸与资源文件字节数独立，需要提供更小资源或响应式候选。"
+    }
+  },
+  {
+    "page": 61,
+    "title": "图片输出：大小、边框与失败回退",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "截图从左到右显示两张小车图、一张稍大车图、一张高大的拉伸图，以及文件名错误造成的小型失败区域。",
+    "explanation": [
+      "黑色边框随着 border 值增加变得明显，第四张粗边框尤其突出；这些黑色区域属于图片边框，不是车辆照片本身增添了背景。表格整行高度由最高的单元格内容撑起，所以小图周围出现大面积空白。",
+      "最右侧因为指定了 50×50 的尺寸，替代文本可见空间很有限，不能保证完整显示 Ferrari。这个例子同时检验替代文本、固有图片比例与布局盒子：资源相同只约束图像内容，不约束 CSS 或属性决定的外部尺寸。"
+    ],
+    "takeaways": [
+      "行高由最高内容影响",
+      "图片边框和表格边框是不同层"
+    ]
+  },
+  {
+    "page": 62,
+    "title": "把图片作为链接",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "用 a 包住 img，就能让点击图片触发导航；img 的 src 与 a 的 href 分别负责图像资源和导航目的地。",
+    "explanation": [
+      "例如 src 指向徽标 PNG，href 指向学校首页：页面加载时先请求图片，点击时才转到首页。这两个 URL 不必同域，也不必是同一资源。链接可以包含文字、图片等内容，只要符合相应内容模型。",
+      "旧浏览器可能给链接图像画默认边框，现代外观由浏览器样式与 CSS 决定，并非“图片链接必须有框”。当链接仅有图像时，alt 应说明链接用途，例如“返回课程首页”，比仅写“图片”更有帮助。"
+    ],
+    "takeaways": [
+      "src 是显示资源，href 是点击目标",
+      "a 可把图片变成导航入口"
+    ]
+  },
+  {
+    "page": 63,
+    "title": "图像映射的基本机制",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "image map 允许一张图片包含多个可点击区域，每个区域各自导航到不同目标。",
+    "explanation": [
+      "img 的 usemap=\"#name\" 将图像与 map 的 name 关联，map 内的 area 描述形状、坐标、目标和替代文字。点击判断在浏览器端完成，因此这是客户端图像映射，不必先把每次点击位置发给服务器再决定链接。",
+      "图像显示与热点定义是分离的：图片仍是一张，区域也不会天然显示边框。考试通常需要从坐标判断点击落在哪个区域，或检查 usemap 与 map 的名称是否匹配；应先确认坐标原点在图片左上角。"
+    ],
+    "takeaways": [
+      "usemap 连接 img 与 map",
+      "area 定义独立热点"
+    ]
+  },
+  {
+    "page": 64,
+    "title": "人物画中的多边形热点",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页左侧是一张聚会画，右侧代码用多个 poly 区域沿人物轮廓指定链接，点击不同人物可到其介绍页。",
+    "explanation": [
+      "poly 的 coords 由连续的 x,y 点组成，浏览器把这些点连接成多边形区域。因为人物形状不规则，矩形会误包含周围人物，而多边形能更贴近轮廓；这解释了坐标列表为何很长。",
+      "每个 area 都有自己的 href、alt 与 title，img 只负责共同底图。图上肉眼看到人物并不意味着浏览器知道“人物对象”，交互完全来自人工给定的区域坐标。改变图片缩放时也需要注意热点与实际显示区域是否仍对应。"
+    ],
+    "takeaways": [
+      "poly 用多个坐标点描述轮廓",
+      "浏览器不靠图像识别决定链接"
+    ]
+  },
+  {
+    "page": 65,
+    "title": "area 的形状与坐标",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页给出三个相邻矩形热点，并列出 rect、circle、poly 与 default 四种区域类型。",
+    "explanation": [
+      "rect 的 coords 是左上角 x1,y1 与右下角 x2,y2；circle 则是圆心 x,y 与半径 r；poly 是多个点。示例第一区域 10,10,50,50 表示宽高均为 40 的矩形范围，不能把最后两个数解释成宽和高。",
+      "usemap 的 #bannerbar 要与 map name=\"bannerbar\" 一致。旧 nohref 属性在现代通常通过省略 href 表示无链接区域，需注意后备 default 区域与前面区域的顺序关系；带链接的 area 应提供有意义的 alt。"
+    ],
+    "takeaways": [
+      "rect 后两数是右下角坐标",
+      "circle 第三数是半径"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<img src=\"menu.png\" usemap=\"#menu\" alt=\"课程导航\">\n<map name=\"menu\"><area shape=\"rect\" coords=\"0,0,100,50\" href=\"html.html\" alt=\"HTML 复习\"></map>",
+      "explanation": "左上角100×50的矩形成为指向 HTML 复习页的热点。"
+    }
+  },
+  {
+    "page": 66,
+    "title": "iframe：嵌入另一个文档",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "iframe 在当前页面中创建独立的嵌套浏览上下文，示例将学校网站放入 400×200 的区域。",
+    "explanation": [
+      "外层页面有自己的标题与 DOM，iframe 里的页面也有独立文档，并不是把对方 HTML 直接拼接成外层子节点。嵌入尺寸较小会裁切或滚动内部视图，不代表对方页面原本只有这点内容。",
+      "课件用 <iframe ... /> 是错误的 HTML 自闭合写法，应明确写 </iframe>。此外目标站点能否被嵌入取决于其响应策略，不能保证示例 URL 今天仍允许。复习应理解“独立文档嵌入”及正常关闭标签，而不是记住截图必然能复现。"
+    ],
+    "takeaways": [
+      "iframe 不是 void element",
+      "嵌入页面有独立文档环境"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<iframe src=\"chapter.html\" width=\"400\" height=\"200\" title=\"章节示例\"></iframe>",
+      "explanation": "iframe 正确使用结束标签；内部 chapter.html 是独立文档。"
+    },
+    "pitfall": "iframe 不是空元素，必须明确写结束标签；目标站点也可能拒绝被嵌入。"
+  },
+  {
+    "page": 67,
+    "title": "meta：文档的描述信息",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "本页用 author、description 和 keywords 等 name/content 对给文档提供元信息。",
+    "explanation": [
+      "meta 通常位于 head 中，供浏览器、搜索工具或其他软件读取，不会自动把 description 放进正文。页面若需要可见摘要，仍要在 body 编写相应内容，不能只设置一个 meta 标签。",
+      "name 指明信息种类，content 给出值；charset 与 http-equiv 是另两类常见用法，不应和普通 name/content 混为一谈。keywords 是历史常见写法，并不意味着填写关键词就能保证搜索排名或搜索引擎一定采用。"
+    ],
+    "takeaways": [
+      "meta 描述文档",
+      "元信息通常不直接显示"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<meta charset=\"utf-8\">\n<meta name=\"description\" content=\"逐页学习 HTML 的复习笔记\">",
+      "explanation": "第一行声明字符编码，第二行提供页面摘要；它们都不是正文段落。"
+    }
+  },
+  {
+    "page": 68,
+    "title": "meta refresh：延时导航",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "示例的 http-equiv=\"refresh\" 与 content=\"5; URL=...\" 要求浏览器在约五秒后导航到新位置，并在正文保留手动链接。",
+    "explanation": [
+      "数字 5 表示秒，URL 指定新地址；这是一种客户端行为，浏览器已经拿到旧页面后才安排导航。它和服务器立即返回 301/302/307/308 等 HTTP 重定向响应的工作位置不同。",
+      "本页的 generator 只是标记生成页面的软件，不参与跳转。现代真正迁站通常更适合服务器重定向，而延时跳转仍应保留可见说明与手动入口。考试需要能判断哪个 meta 控制行为以及何时发生。"
+    ],
+    "takeaways": [
+      "refresh 延时单位为秒",
+      "客户端 refresh 不等于 HTTP 重定向"
+    ]
+  },
+  {
+    "page": 69,
+    "title": "robots 元信息",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "robots meta 通过 noindex 与 nofollow 等值向遵守规则的抓取工具表达索引和链接处理偏好。",
+    "explanation": [
+      "index/noindex 针对是否把本页纳入索引，follow/nofollow 针对页面链接的处理，两组含义不同，可以组合。例如 noindex,follow 并不禁止浏览器显示页面，而是希望抓取工具不把本页列入索引。",
+      "这些规则不是访问控制，服务器仍然可能向能访问 URL 的用户返回页面；不能把 noindex 理解成隐藏内容。课件 ALL/NONE 的组合有助于记忆，但实际搜索引擎采用何种细节取决于其实现，考试先掌握两类指令的基本分工。"
+    ],
+    "takeaways": [
+      "索引本页与跟随链接是不同维度",
+      "robots 不改变正常浏览"
+    ],
+    "question": {
+      "prompt": "noindex 是否阻止普通用户访问页面？",
+      "answer": "不阻止。它是索引指令，不是访问控制或内容加密。"
+    }
+  },
+  {
+    "page": 70,
+    "title": "为什么要验证 HTML",
+    "section": "HTML 资源与元信息",
+    "priority": "core",
+    "summary": "验证器检查文档是否符合语法和结构要求，帮助发现浏览器容错掩盖的问题，例如非法嵌套、属性错误与缺失必要信息。",
+    "explanation": [
+      "浏览器以“尽量展示内容”为目标，验证器以“指出不符合规范的输入”为目标，因此一个页面可以看起来正常却仍存在验证错误。验证也不保证外部资源存在、链接目的正确或用户交互设计合理。",
+      "课件“HTML5 experimental”是旧工具时期的描述，现代可使用 Nu HTML Checker 检查现代 HTML。复习应能解释验证与测试的区别：前者看文档约束，后者还要看行为、内容与实际浏览器表现。"
+    ],
+    "takeaways": [
+      "验证关注文档合规结构",
+      "可见正常不等于无错误"
+    ]
+  },
+  {
+    "page": 71,
+    "title": "验证服务的输入方式",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "截图展示 W3C Markup Validation Service，可通过 URI 检查页面，并设置字符编码和文档类型等选项。",
+    "explanation": [
+      "验证器需要知道如何解释输入的字节与适用的文档规则，编码或 DOCTYPE 错误都可能造成大量后续诊断。除了 URL，实际工具也常支持文件上传或直接输入代码，适合尚未部署的小片段。",
+      "不要为了消除报错任意选择一个更宽松的文档类型；应让声明与实际编写方式一致。浏览器渲染截图和验证器结果提供不同证据：一个说明视觉表现，一个指出源码结构问题，两者需要结合判断。"
+    ],
+    "takeaways": [
+      "编码和文档类型影响检查",
+      "应修复源码而非伪造声明"
+    ]
+  },
+  {
+    "page": 72,
+    "title": "如何阅读验证错误",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "本页展示一次旧版验证结果：工具报告错误，并给出行列定位与相关源码片段，而不是只给一个通过或失败图标。",
+    "explanation": [
+      "阅读诊断应先找第一处明确结构问题，因为前面的未关闭标签可能让后面出现连锁错误。行号定位到的是源码中的触发位置，不一定就是错误最初发生的位置，必要时要往前检查父元素。",
+      "截图里关于 style/scoped 的提示属于当时 HTML5 检查器的规则背景；现代 scoped 已不是照抄来修复 style 的方式。正确做法是根据当前标准把样式放在合适位置，再重新检查，不能机械地按历史截图添加过时属性。"
+    ],
+    "takeaways": [
+      "先修最早的结构错误",
+      "验证器版本和规则背景也要辨别"
+    ]
+  },
+  {
+    "page": 73,
+    "title": "继续练习 HTML 的资源",
+    "section": "HTML 资源与元信息",
+    "priority": "support",
+    "summary": "末页列出 MDN、学习教程与在线代码实验工具，目的是让你能用最小示例验证对 HTML 的理解。",
+    "explanation": [
+      "复习时最有效的练习是先预测结果再运行：例如列表会产生几层、rowspan 占哪些格子、一个相对 URL 指向何处。只浏览大量漂亮成品，并不能检验你是否理解了这些规则。",
+      "遇到语法争议优先查看 MDN 的具体元素页或 WHATWG 标准，再用浏览器开发者工具观察 DOM。在线编辑器方便实验，但其外围页面可能已经提供默认 CSS，因此分析原生默认输出时要先排除平台附加样式。"
+    ],
+    "takeaways": [
+      "用最小示例验证预测",
+      "查元素规则优于盲目照抄"
+    ],
+    "links": [
+      {
+        "label": "MDN HTML 元素参考",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements"
+      }
+    ]
+  }
+]

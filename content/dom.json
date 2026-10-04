@@ -1,0 +1,920 @@
+[
+  {
+    "page": 1,
+    "title": "DOM：把文档当成树操作",
+    "section": "课程导读",
+    "priority": "admin",
+    "summary": "本讲把 HTML/XML 从文本标记转换为可查询、修改和遍历的节点树。",
+    "explanation": [
+      "复习重点是画树、识别节点类型、追踪节点移动，以及解释网络数据如何被转换为页面内容。"
+    ],
+    "takeaways": [
+      "DOM 题既考树结构，也考运行后页面变化"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "从查询节点到重建页面",
+    "section": "课程导读",
+    "priority": "support",
+    "summary": "DOM 的基本流程是选择节点、读取状态、改变内容或结构；课件再用 XML 数据渲染展示完整应用。",
+    "explanation": [
+      "getElementById、querySelector 等解决“找到谁”，style、textContent 和节点插入方法解决“怎样改变”。如果选择结果为 null，后续属性访问就可能失败，所以查找与操作不能脱节。",
+      "后续示例逐步从单个颜色和位置改变发展到遍历复杂树。复习时可以用同一张表记录节点类型、父子关系、操作前后顺序，减少对视觉截图的猜测。"
+    ],
+    "takeaways": [
+      "先定位节点，再分析修改范围"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "Document 与根元素不是同一个节点",
+    "section": "DOM 树模型",
+    "priority": "core",
+    "summary": "DOM 是文档的程序接口，Document 代表整个文档，documentElement 指向其中唯一的根元素。",
+    "explanation": [
+      "HTML 页面通常由 document.documentElement 得到 html 元素；XML 的根可以是 bookstore、order 等自定义标签。Document 位于根元素之上，还可含注释、文档类型等允许节点。",
+      "DOM 并不是只能在 JavaScript 使用，也不意味着 HTML 按 XML 语法解析。现代 HTML 有自己的解析规则，DOM 是解析后可操作的对象树；操作它影响运行时文档，而不自动改写服务器上的原文件。"
+    ],
+    "takeaways": [
+      "Document 是文档节点，documentElement 是根元素"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(document.nodeType);\nconsole.log(document.documentElement.nodeType);",
+      "explanation": "通常分别是 9（Document）、1（Element）。"
+    }
+  },
+  {
+    "page": 4,
+    "title": "DOM 标准的演变",
+    "section": "DOM 树模型",
+    "priority": "skim",
+    "summary": "课件从 Level 1 的文档模型讲到 Level 2 事件与样式、Level 3 扩展，最后到持续更新的 DOM Living Standard。",
+    "explanation": [
+      "历史 Level 分工说明 DOM 不只是读取标签：它还涉及事件传播、节点关系和文档操作。某些原先集中在 DOM 的能力后来分配到 HTML、CSS 等相关标准。",
+      "复习不必把旧版目录当成现代接口边界。更实用的是明确一个 API 操作的是节点结构、样式还是网络，并理解这些标准协作让浏览器行为一致。版本史只作为读旧代码的背景。"
+    ],
+    "takeaways": [
+      "现代 DOM 采用 Living Standard 方式维护"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "order.xml 的节点树",
+    "section": "DOM 树模型",
+    "priority": "core",
+    "summary": "order 是根元素，customer 与两个 orderitem 是它的子元素；customer 下有 name、address、city、zip。",
+    "explanation": [
+      "id、date、quantity 是附着于元素的属性，不是普通 childNodes 中的子元素。实际树还可能包含缩进换行的 Text 节点，因此图中只画业务元素是结构简化。",
+      "两个 orderitem 是兄弟节点，不能因为标签名一样就合并为一个对象。遍历时可以用 getElementsByTagName 收集它们，再分别读取各自属性；嵌套层次决定查询范围与父子路径。"
+    ],
+    "takeaways": [
+      "同名元素仍是不同节点",
+      "属性不属于元素的普通子节点列表"
+    ],
+    "question": {
+      "prompt": "order 的直接元素子节点共有几个？",
+      "answer": "3 个：customer 和两个 orderitem；不要把 id/date 属性计入。"
+    }
+  },
+  {
+    "page": 6,
+    "title": "查询 API：单个、集合与实时性",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "querySelector 返回第一个匹配元素或 null，querySelectorAll 返回静态 NodeList；按标签/类名查询常返回实时集合。",
+    "explanation": [
+      "getElementById 常在 document 上调用，不能把课件 element.getElementById 当成所有 Element 都支持的方法。querySelector 可在元素子树内按 CSS 选择器搜索，适合缩小范围。",
+      "静态结果保存查询时的节点列表，实时集合会随 DOM 变化更新。遍历时删除或移动节点可能改变后续索引，必须看清集合性质；调用 .style 前也要确保单节点查询成功。"
+    ],
+    "takeaways": [
+      "querySelectorAll 是静态列表",
+      "普通 Element 没有通用 getElementById"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const one=document.querySelector(\".item\");\nconst all=document.querySelectorAll(\".item\");\nif (one) one.style.color=\"red\";\nconsole.log(all.length);",
+      "explanation": "只修改首个匹配项；all 保存查询时所有匹配项。"
+    }
+  },
+  {
+    "page": 7,
+    "title": "创建、插入、替换与节点唯一位置",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "createElement 创建离线节点，append/prepend 放到末尾或开头，replaceChildren 替换整个子节点集合。",
+    "explanation": [
+      "同一个节点在树中只能有一个位置。课件 replaceChildren(myEl,myEl) 不会复制成两个 div，只会保留同一个节点的一处位置；要两份必须重新创建或 cloneNode。",
+      "contains 包括节点自身，所以 body.contains(body) 为 true。课件自定义函数刻意排除 body 本身，但 JavaScript 布尔值必须写 false，False 会被当作变量。清空可用 replaceChildren() 无参数调用。"
+    ],
+    "takeaways": [
+      "重复插入同一节点是移动，不是复制",
+      "contains 包含自身"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const p=document.createElement(\"p\");\nconst box=document.createElement(\"div\");\nbox.replaceChildren(p,p);\nconsole.log(box.childNodes.length);",
+      "explanation": "1；同一 p 无法同时占据两个子节点位置。"
+    },
+    "pitfall": "原页称重复传 myEl 会产生两个 div，属于错误说明。"
+  },
+  {
+    "page": 8,
+    "title": "HTML、文本、样式与树导航属性",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "innerHTML 处理内部标记，outerHTML 包含元素本身；parentNode/childNodes/nextSibling 描述关系，classList 和 style 控制外观。",
+    "explanation": [
+      "innerText 偏向渲染后的可见文字，textContent 直接处理节点文本。只显示文字时，textContent 更明确；要解析嵌套标记才选择 HTML 接口。outerHTML 赋值会替换当前元素，已有引用可能仍指向脱离文档的旧节点。",
+      "style.left 等是行内样式字符串，需要单位且受 CSS 定位规则影响；classList.toggle 则添加或移除类，通常用于让样式表负责具体表现。"
+    ],
+    "takeaways": [
+      "内容、结构与样式修改的作用范围不同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const el=document.querySelector(\"#counter\");\nel.textContent=\"Clicks: 1\";\nel.classList.toggle(\"active\");",
+      "explanation": "修改文字并切换 active 类，不替换 el 自身。"
+    }
+  },
+  {
+    "page": 9,
+    "title": "淡入文字：状态、颜色与定时器",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "例子从高亮灰度向黑色减小三个 RGB 分量，再用 setTimeout 预约下一次更新，形成白底上逐渐变深的文字。",
+    "explanation": [
+      "hex 初始 255，每次减 11；三个颜色分量相等，所以只改变灰度。setTimeout 的 20 ms 是最早调度意图，不保证严格每 20 ms 执行，当前线程忙时会更晚。",
+      "原例可减到负值，CSS 会按颜色规则限制有效范围；循环结束仅把变量重置为 255，没有把样式重设成白色。重复快速点击还会启动多条计时链，导致不同于单次点击的行为。"
+    ],
+    "takeaways": [
+      "定时器递归让更新分多次发生",
+      "重置变量不等于同步重置 DOM 样式"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "let shade=255;\nfunction fade(el){\n  shade=Math.max(0,shade-15);\n  el.style.color=`rgb(${shade},${shade},${shade})`;\n  if(shade>0) setTimeout(()=>fade(el),20);\n}",
+      "explanation": "每次降低灰度直到 0，避免出现负分量。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "淡入截图与时间过程",
+    "section": "查询与修改",
+    "priority": "support",
+    "summary": "截图显示文字和 Fade Text 按钮，静态图片只能记录某个时刻，动画来自前页多次样式更新。",
+    "explanation": [
+      "点击后第一步先把颜色从默认色改为接近白色，再逐步趋向黑色，所以在白色背景上看起来是“逐渐出现”。这种视觉效果依赖背景色，换成黑底时同样数值变化可能看起来相反。",
+      "程序改变的是文字颜色，没有删除文字节点，也没有切换 display。即使文字暂时与背景接近，DOM 内容仍存在；视觉不可见和节点不存在不能混为一谈。"
+    ],
+    "takeaways": [
+      "视觉淡入不等于创建/删除节点"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "按标签计数：font 元素共四个",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "handleAllTags 查询文档中的所有 font 元素，读取集合 length，再在弹窗中显示数量。",
+    "explanation": [
+      "标题 h1 到 h4 各包含一个 font，因此总数为 4。查询按标签名而不是字体大小、颜色或显示文字，不能把 h1/h2 等也计入 font 的集合。",
+      "历史支持检测先查看 document.getElementById 属性是否存在；访问已存在对象上的缺失属性可得到 undefined。font 元素虽然过时，查询方法仍可用同样思路统计现代的 p、img 或自定义类。"
+    ],
+    "takeaways": [
+      "查询条件决定被计数的节点集合"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const fonts=document.getElementsByTagName(\"font\");\nconsole.log(fonts.length);",
+      "explanation": "对课件这段 HTML 输出 4。"
+    }
+  },
+  {
+    "page": 12,
+    "title": "四种字体外观，一种标签查询",
+    "section": "查询与修改",
+    "priority": "support",
+    "summary": "截图有四行不同颜色与大小的文字，弹窗显示 Number of font tags 为 4。",
+    "explanation": [
+      "外观差异分别来自标题级别和 font color，但 getElementsByTagName 只关心元素名。四个元素视觉不同仍属同一查询集合。",
+      "如果代码改成 querySelectorAll(\"h1 font\")，则只找到第一行里的 font，数量为 1。练习通过改变选择器预测结果，可以把 CSS 选择关系与 DOM 查询联系起来。"
+    ],
+    "takeaways": [
+      "视觉样式不改变元素标签名"
+    ],
+    "question": {
+      "prompt": "查询 document.getElementsByTagName(\"h2\") 得到几个元素？",
+      "answer": "1 个；h2 与内部 font 是不同节点。"
+    }
+  },
+  {
+    "page": 13,
+    "title": "innerHTML 解析并替换后代",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "给 innerHTML 赋字符串时，浏览器把它解析成内容节点并替换原来的子树，元素本身通常保留。",
+    "explanation": [
+      "课件把红色计数内容替换成紫色 font，既改变文字又改变内部标记。读取 innerHTML 得到的是内部 DOM 的序列化字符串，不是原始源文件的逐字备份。",
+      "“没有闭合标签的元素就没有 innerHTML 属性”过于绝对；void 元素的 HTML 内容模型与可见效果有限，但不能据此推断该属性根本不存在。需要单纯展示文字时使用 textContent，避免意外解析尖括号。"
+    ],
+    "takeaways": [
+      "innerHTML 赋值替换内部子树",
+      "textContent 把尖括号作为文字"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const el=document.createElement(\"div\");\nel.innerHTML=\"<b>Review</b>\";\nconsole.log(el.firstChild.nodeName);",
+      "explanation": "B；字符串中的标记被解析成了元素节点。"
+    },
+    "links": [
+      {
+        "label": "MDN：innerHTML",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML"
+      }
+    ]
+  },
+  {
+    "page": 14,
+    "title": "点击计数器：数据状态与显示状态",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "hits 保存逻辑上的点击次数，updateMessage 每次先加一，再把新值写入 counter。",
+    "explanation": [
+      "第一次点击从 0 变 1，第二次变 2，页面文字总是由当前 hits 重新生成。赋值 innerHTML 不会自动给 hits 加一；变量更新与 DOM 更新是两条不同语句。",
+      "若 hits 放进处理函数内部并每次初始化为 0，就会一直显示 1。因此变量声明所在作用域决定是否跨事件保留状态。这里只输出纯文字，textContent 与内联脚本分离能更直接表达目的。"
+    ],
+    "takeaways": [
+      "持续状态应定义在能跨事件存活的作用域"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "let hits=0;\nbutton.addEventListener(\"click\",()=>{\n  counter.textContent=`Clicks: ${++hits}`;\n});",
+      "explanation": "每次点击保留并增加 hits，依次显示 1、2、3。"
+    }
+  },
+  {
+    "page": 15,
+    "title": "为什么不要用 innerHTML += 追加节点",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "+= 会读取整个内部标记、拼接后重新解析，可能重建大量旧节点；appendChild 直接插入已有节点对象。",
+    "explanation": [
+      "重新解析不仅增加工作，还会使原子节点对象被替换，原先以 addEventListener 注册在旧节点上的监听器不会自动迁移到新节点。保留节点身份时应创建新节点再追加。",
+      "appendChild 并不是把任意内容自动当文字，它接受 Node；append 字符串或创建 Text 节点才明确表示文本。innerHTML 插入的 script 通常不执行，也不表示任意 HTML 都没有事件等行为，课件安全说法需按具体 API 理解。"
+    ],
+    "takeaways": [
+      "appendChild 保留已有子节点身份",
+      "appendChild 接受节点，不直接接受字符串"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const p=document.createElement(\"p\");\np.textContent=\"Hello World!\";\ncontainer.appendChild(p);",
+      "explanation": "只追加一个 p，原有子树不会被整体重新解析。"
+    },
+    "links": [
+      {
+        "label": "MDN：appendChild",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild"
+      }
+    ]
+  },
+  {
+    "page": 16,
+    "title": "设置 left/top 需要定位上下文",
+    "section": "样式与移动",
+    "priority": "core",
+    "summary": "按钮使用 position:relative 后，left=500px 产生相对原位置的水平偏移；top 控制垂直方向。",
+    "explanation": [
+      "相对定位仍保留元素原先的布局空间，视觉位置移动不意味着后续兄弟元素自动占据被腾出的空间。若 position 为 static，left/top 通常不会按示例产生定位效果。",
+      "给 style.left 赋值必须是合法 CSS 值，如 \"500px\"，而不是任意裸字符串。每次点击赋同一个 500px 只是把偏移设置成固定值，不会累计再向右 500px。"
+    ],
+    "takeaways": [
+      "固定赋值不累加",
+      "relative 保留原布局空间"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "button.style.position=\"relative\";\nbutton.style.left=\"500px\";",
+      "explanation": "按钮相对原位置向右偏移 500 CSS 像素。"
+    }
+  },
+  {
+    "page": 17,
+    "title": "数值累加后补回 px 单位",
+    "section": "样式与移动",
+    "priority": "core",
+    "summary": "本例先把 \"0px\" 解析为数字，再在每次点击时加 50，最后拼接 \"px\" 写回 style.left。",
+    "explanation": [
+      "parseInt(\"0px\",10) 得到 0，因为读取开头整数后停止；不能直接对 \"0px\" 做 +50，否则容易得到字符串 \"0px50\"。维护单独数值变量让累计过程更容易分析。",
+      "obj.style.left 只反映行内声明，若 left 仅来自样式表，读到的可能是空字符串，parseInt 会得到 NaN。课件内联给定 0px 才使初始读取成立，不能省略这项前提。"
+    ],
+    "takeaways": [
+      "style.left 是 CSS 字符串",
+      "数值状态与 CSS 单位分开维护"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "let x=0;\nbutton.addEventListener(\"click\",()=>{\n  x+=50;\n  button.style.left=`${x}px`;\n});",
+      "explanation": "三次点击后 left 为 150px。"
+    }
+  },
+  {
+    "page": 18,
+    "title": "移动按钮截图：固定步长的累积",
+    "section": "样式与移动",
+    "priority": "support",
+    "summary": "截图从初始位置到较右位置，展示点击次数越多，按钮水平偏移越大。",
+    "explanation": [
+      "初始化弹窗显示 0，证明 parseInt 读取到行内 left=0px。每次事件只增加 50，因此 n 次点击后的状态为 50n 像素，而不是根据浏览器窗口宽度自动算位置。",
+      "按钮改变的是呈现位置，其 DOM 父节点和兄弟顺序没有改变。与后面的 reverse 节点操作对照：一个改 CSS 坐标，一个改树结构，视觉上都可能移动但机制不同。"
+    ],
+    "takeaways": [
+      "CSS 位移不等于 DOM 重新排序"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "反转 childNodes：实时列表中的移动",
+    "section": "树遍历",
+    "priority": "core",
+    "summary": "算法从最后一个 child 开始移除并追加到末尾，逐步把直接子节点顺序反转。",
+    "explanation": [
+      "childNodes 是实时 NodeList，删除与追加会立即影响列表。以 A、B、C 为例：处理 C 后仍 ABC，处理 B 后 ACB，处理 A 后 CBA；反向索引与移动相配合完成反转。",
+      "操作包含 Text 和 Comment 等节点，不只元素；空白节点也会参与排列。removeChild 返回被移除的原节点，appendChild 重新挂接同一对象，不会复制节点或递归反转每个段落内部文字。"
+    ],
+    "takeaways": [
+      "反转的是直接子节点顺序",
+      "移动保留节点对象，不复制内容"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const box=document.createElement(\"div\");\nbox.innerHTML=\"<b>A</b><b>B</b><b>C</b>\";\nfor(let i=box.childNodes.length-1;i>=0;i--) box.appendChild(box.childNodes[i]);\nconsole.log(box.textContent);",
+      "explanation": "CBA；appendChild 已会移动现有节点，无需额外 removeChild。"
+    }
+  },
+  {
+    "page": 20,
+    "title": "反转结果：按钮移到前面",
+    "section": "树遍历",
+    "priority": "support",
+    "summary": "截图右侧按钮来到顶部，段落次序从 1、2、3 变成 3、2、1，验证 body 直接子节点被反转。",
+    "explanation": [
+      "按钮所在的段落节点跟其他段落一起移动，因此按钮仍能点击，其事件处理也跟着同一节点保留。段落文字没有倒序成字符序列，说明操作目标是节点列表而不是文本字符串。",
+      "若再次调用同样的完整反转，元素顺序会恢复原来的方向。可用这一性质自测算法，但需要记得文档中还存在空白 Text 节点，它们也在完整 childNodes 操作范围内。"
+    ],
+    "takeaways": [
+      "节点顺序反转不改变节点内部文字"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "XMLHttpRequest：网络请求与局部更新",
+    "section": "网络数据与 XML",
+    "priority": "core",
+    "summary": "XHR 可在页面加载后发送请求、读取响应，再由脚本修改局部 DOM，避免整页导航刷新。",
+    "explanation": [
+      "网络 API 自身不会自动把数据画成表格。完整过程是创建请求、发送、等待完成、解析响应、更新页面；它与 DOM 渲染是前后连接的两个阶段。",
+      "同步 XHR 会阻塞主线程等待网络，使页面无法正常响应用户，因此课件明确标为弃用方向。异步 XHR 或 fetch 让等待与 UI 执行解耦，但必须把依赖响应的逻辑放进完成后的流程。"
+    ],
+    "takeaways": [
+      "请求获取数据，DOM 负责展示",
+      "同步网络等待会阻塞页面主线程"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "同步 XML 加载的历史实现",
+    "section": "网络数据与 XML",
+    "priority": "core",
+    "summary": "open(\"GET\",url,false) 中 false 选择同步模式，send 返回后代码才读取 responseXML。",
+    "explanation": [
+      "responseXML 是解析后的 Document，responseText 是响应文本，二者不能混为同一种数据。请求失败、响应类型不适合或 XML 解析失败时，responseXML 可能为 null，不能无条件遍历。",
+      "ActiveXObject 分支服务于旧 IE，应作为历史兼容代码阅读。现代浏览器无需保留该分支；改为异步后，原来的 return xmlDoc 不能继续假定在发送下一行已经得到数据，必须重构控制流。"
+    ],
+    "takeaways": [
+      "open 的第三参数 false 表示同步",
+      "responseXML 不保证非空"
+    ],
+    "question": {
+      "prompt": "把 false 改成 true，能马上 return responseXML 吗？",
+      "answer": "不能保证；异步响应可能尚未到达，应在完成回调中读取。"
+    }
+  },
+  {
+    "page": 23,
+    "title": "books.xml：元素、属性与重复作者",
+    "section": "网络数据与 XML",
+    "priority": "core",
+    "summary": "bookstore 包含四个 book，每本书有 title、author、year、price；category 和 lang 是属性。",
+    "explanation": [
+      "第三本 XQuery Kick Start 有多个 author 元素，说明 XML 同名子元素可以重复。若只取 getElementsByTagName(\"author\")[0]，就会丢失其余作者；数据结构决定遍历策略。",
+      "文本 \"2005\" 和 \"30.00\" 在未经过额外 schema 或转换时仍是文本内容。price 标签的名字不自动把值转成数字，做数值运算需显式解析。"
+    ],
+    "takeaways": [
+      "重复标签可能表达一对多关系",
+      "XML 文本不会仅凭标签名变成数字"
+    ],
+    "question": {
+      "prompt": "category=\"web\" 在 childNodes 中作为一个 book 子元素出现吗？",
+      "answer": "不会，它是 book 的属性，应通过 getAttribute 读取。"
+    }
+  },
+  {
+    "page": 24,
+    "title": "异步 XHR：完成后提取第一本书标题",
+    "section": "网络数据与 XML",
+    "priority": "core",
+    "summary": "onreadystatechange 等待 readyState=4 且 status=200，再从 responseXML 取第一个 title 的文字。",
+    "explanation": [
+      "状态 4 表示请求处理完成，不单独代表 HTTP 成功，所以还要检查 status。回调中的 this 在这种普通函数赋值写法下指向 XHR 对象；替换箭头函数时 this 规则会不同。",
+      "getElementsByTagName(\"title\")[0] 先取得元素，再 childNodes[0].nodeValue 取得内部 Text 值，因此输出 Everyday Italian。textContent 更直接，也能拼合多个文本后代；读取前仍应检查响应和元素存在。"
+    ],
+    "takeaways": [
+      "完成状态与 HTTP 成功是两项检查"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const xhr=new XMLHttpRequest();\nxhr.onload=()=>{\n  if(xhr.status===200 && xhr.responseXML)\n    document.querySelector(\"#demo\").textContent=xhr.responseXML.querySelector(\"title\").textContent;\n};\nxhr.open(\"GET\",\"books.xml\");\nxhr.send();",
+      "explanation": "响应成功并能解析为 XML 后显示首个 title 的文本。"
+    }
+  },
+  {
+    "page": 25,
+    "title": "nodeType 常量辨认节点种类",
+    "section": "树遍历",
+    "priority": "core",
+    "summary": "常见 nodeType 包括 Element=1、Text=3、Comment=8、Document=9、DocumentFragment=11，用于区分可操作内容。",
+    "explanation": [
+      "childNodes 可能混合元素、文本和注释；nodeType===Node.ELEMENT_NODE 可以过滤业务元素，避免把缩进空白当成一本书或一架飞机。节点名称与类型是两个维度，title 是名称，1 是类型。",
+      "课件表还列出 Entity、EntityReference 等历史 XML DOM 类型，现代 DOM 已不按旧接口完整使用它们。复习常用树分析时优先掌握 1、3、8、9、11，并认识属性不是普通子节点。"
+    ],
+    "takeaways": [
+      "nodeType 判断类别，nodeName 判断名称"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const text=document.createTextNode(\"hello\");\nconsole.log(text.nodeType===Node.TEXT_NODE);",
+      "explanation": "true；Text 不属于 Element。"
+    }
+  },
+  {
+    "page": 26,
+    "title": "XML 浏览器树视图",
+    "section": "树遍历",
+    "priority": "support",
+    "summary": "截图把第一本书展开、其余书折叠，展示 book 元素下的 title、author、year 和 price。",
+    "explanation": [
+      "浏览器的展开符号是查看器提供的界面，不属于 XML 数据本身。折叠某本书也不删除它的节点，仅改变查看器展示，所以 DOM 查询仍能找到所有书。",
+      "category 与 lang 在开始标签内显示，书名与作者则是元素中的文本。这个可视化帮助把原始文本和树层级对应起来，后续遍历可以从 bookstore 根进入每一个 book 再进入字段元素。"
+    ],
+    "takeaways": [
+      "查看器折叠状态不改变 XML 数据树"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "空白也是 Text 节点",
+    "section": "树遍历",
+    "priority": "core",
+    "summary": "XML 中标签之间的换行和缩进可能形成 Text 节点，和书名、价格文本具有相同的 nodeType=3。",
+    "explanation": [
+      "遍历 book.childNodes 时，第一项未必是 title，可能是一段换行空格。如果直接把每项都当业务字段，就会产生空输出或错误访问；用 nodeType===1 过滤能只处理元素。",
+      "Text 节点是叶子，没有子元素。title 元素本身 nodeValue 通常为 null，它的内部 Text 才有书名字串；或者直接用 title.textContent 读取聚合文字，避免硬编码第一文本子节点。"
+    ],
+    "takeaways": [
+      "缩进空白也可能进入 childNodes",
+      "元素 nodeValue 不是其内部文字"
+    ],
+    "question": {
+      "prompt": "元素 <year>2005</year> 的 nodeValue 是 \"2005\" 吗？",
+      "answer": "不是，元素 nodeValue 通常为 null；其 Text 子节点的 nodeValue 才是 \"2005\"。"
+    }
+  },
+  {
+    "page": 28,
+    "title": "含空白节点的 bookstore 树图",
+    "section": "树遍历",
+    "priority": "core",
+    "summary": "图中每两个 Book 之间穿插换行空白节点，Book 内字段之间也有同样节点，显式展示真实遍历时可能看到的结构。",
+    "explanation": [
+      "横向相邻的框并不都代表书：只有标为 Book 的是元素，其余换行与空格框是 Text。四本书可能对应多于四个 childNodes，这是索引题常见陷阱。",
+      "图下的破折号代表空格，目的在于让不可见字符可视化。使用 children 只取得元素集合，使用 childNodes 则保留完整节点序列；应按任务选择，而不是假定每个解析器都会去掉格式空白。"
+    ],
+    "takeaways": [
+      "childNodes.length 可大于 children.length"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const el=document.createElement(\"div\");\nel.innerHTML=\"\\n<p>A</p>\\n<p>B</p>\\n\";\nconsole.log(el.childNodes.length,el.children.length);",
+      "explanation": "5、2；三段换行也是 Text 节点。"
+    }
+  },
+  {
+    "page": 29,
+    "title": "简化 XML 树与解析差异",
+    "section": "树遍历",
+    "priority": "support",
+    "summary": "本页省略格式空白，只保留 Book 和字段元素及其数据文字，与前页形成对照。",
+    "explanation": [
+      "课件把它称为其他浏览器的树，是历史解析器行为背景；不能据此推断现代某品牌一定删除 XML 空白。解析模式、输入和相关实现都可能影响看到的节点。",
+      "稳健遍历应说明自己要元素还是所有节点。业务表格通常使用 children，或在 childNodes 循环里检查 nodeType；这样不依赖“第 0 项恰好是 title”这种对缩进格式敏感的假设。"
+    ],
+    "takeaways": [
+      "不能把简化示意图当作所有环境的精确 childNodes"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "选择不同目标，替换不同子树",
+    "section": "查询与修改",
+    "priority": "core",
+    "summary": "四张截图依次把 div、p、form 的内部内容改为 Hello World；下拉选项值用来定位对应 id。",
+    "explanation": [
+      "目标元素原有背景和样式仍在，因为 innerHTML 替换的是内部内容；form 里的按钮会消失，因为它原先属于被替换的子树。不同选择修改不同容器，其他已修改内容会继续保留。",
+      "旧代码用 if(element.innerHTML) 判断支持性不可靠：空字符串也是假值，空元素同样支持 innerHTML。应检查元素是否存在，再执行目标操作，而不是把当前内容是否非空当成 API 能否使用。"
+    ],
+    "takeaways": [
+      "innerHTML 不替换外层容器，但会移除原后代"
+    ],
+    "pitfall": "空 innerHTML 是合法状态，不能据此报告浏览器不支持。"
+  },
+  {
+    "page": 31,
+    "title": "只改变目标 div 的背景色",
+    "section": "样式与移动",
+    "priority": "core",
+    "summary": "setBackgroundColor 接收 id 与颜色名，定位元素后设置 style.backgroundColor；截图将目标区域变成 magenta。",
+    "explanation": [
+      "CSS 属性名 background-color 在 JavaScript style 对象上使用驼峰 backgroundColor。变化只作用于目标 div 的背景，不会自动改变整个 body 的背景，也不修改文字内容。",
+      "代码的两个参数分别表达“改谁”和“改成什么”，因此同一函数可复用到不同元素。若 id 不存在，getElementById 返回 null，必须先处理这一情况才能读取 style。"
+    ],
+    "takeaways": [
+      "CSS 连字符属性常对应 JS 驼峰形式"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function setBackground(id,color){\n  const el=document.getElementById(id);\n  if(el) el.style.backgroundColor=color;\n}",
+      "explanation": "找到指定元素才更新其背景色。"
+    }
+  },
+  {
+    "page": 32,
+    "title": "背景图需要 CSS url(...) 值",
+    "section": "样式与移动",
+    "priority": "core",
+    "summary": "函数将图片路径包进 CSS 的 url(...) 语法后赋给 backgroundImage，截图显示 USC 图片在区域内重复铺设。",
+    "explanation": [
+      "backgroundImage 的值是 CSS 图像表达式，不是裸文件名；字符串拼接同时需要配好 JavaScript 与 CSS 引号。背景图不会新增 img 元素，也不会改变原有文字节点。",
+      "默认 background-repeat 通常允许重复，所以小图可以平铺填满目标背景；要改变平铺或缩放，应另外设置 backgroundRepeat、backgroundSize 等。图片能否显示还依赖资源路径能否正确解析与加载。"
+    ],
+    "takeaways": [
+      "背景图是样式，不是子 img 节点"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const el=document.querySelector(\"#test\");\nel.style.backgroundImage=\"url(usc.png)\";\nel.style.backgroundRepeat=\"repeat\";",
+      "explanation": "以图片平铺目标背景，文字继续显示在其上。"
+    }
+  },
+  {
+    "page": 33,
+    "title": "letterSpacing 改视觉，不插入空格",
+    "section": "样式与移动",
+    "priority": "core",
+    "summary": "截图从紧凑的 Hello World 变成字母间明显拉开，代码将目标的 style.letterSpacing 设为 30px。",
+    "explanation": [
+      "此操作改变文字排版的字间距，并没有在 DOM 字符串里插入许多空格。读取 textContent 仍得到同样的 Hello World，字符串 length 也不因 CSS 排版改变。",
+      "像 left 一样，letterSpacing 需要合法 CSS 单位。对比修改内容与修改外观是本例的复习目标：视觉上“字分开了”，但数据层面原文字没有变化。"
+    ],
+    "takeaways": [
+      "CSS 字距不改变原始字符串"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const p=document.createElement(\"p\");\np.textContent=\"Hello World\";\np.style.letterSpacing=\"30px\";\nconsole.log(p.textContent.length);",
+      "explanation": "仍为 11；显示字距不影响文本长度。"
+    }
+  },
+  {
+    "page": 34,
+    "title": "CharacterData：操作 Text 节点内容",
+    "section": "文本与属性",
+    "priority": "core",
+    "summary": "截图用 data、length、appendData、deleteData、insertData、replaceData、substringData 演示文本节点的局部操作。",
+    "explanation": [
+      "Text 是可修改的节点对象，修改它的 data 会更新页面；这不违背 JavaScript 字符串不可变，因为这里更新的是节点保存的字符串值。deleteData(offset,count) 的第二参数是数量，不是结束下标。",
+      "以 \"How are you?\" 为例，删除 offset=0 的四个字符得到 \"are you?\"，substringData(8,3) 读取 \"you\" 且不修改节点。图上 insertData(11,\"Tom and \") 与显示在 are 后的结果位置不一致，应按实际 offset 语义推导，不能只背截图。"
+    ],
+    "takeaways": [
+      "CharacterData 的 count 是数量",
+      "读取 substringData 不修改节点"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const t=document.createTextNode(\"How are you?\");\nconsole.log(t.substringData(8,3));\nt.deleteData(0,4);\nconsole.log(t.data);",
+      "explanation": "you；随后节点内容为 are you?。"
+    }
+  },
+  {
+    "page": 35,
+    "title": "getAttribute 读取标记属性字符串",
+    "section": "文本与属性",
+    "priority": "core",
+    "summary": "四个按钮分别读取自己的 type、name、value 与 onclick，截图展示 button、e1、value 等属性信息。",
+    "explanation": [
+      "HTML attribute 与 DOM property 常有关联，却不总相同。getAttribute(\"onclick\") 在现代标准行为下返回属性代码字符串，element.onclick 则通常是函数或 null；旧 IE 截图把前者显示成函数是历史差异。",
+      "同样，输入框 getAttribute(\"value\") 通常反映标记/默认值，.value 反映用户当前输入。没有的 attribute 返回 null。题目中要看清究竟调用 getAttribute 还是读取对象属性。"
+    ],
+    "takeaways": [
+      "attribute 与 property 不可一概等同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const input=document.createElement(\"input\");\ninput.setAttribute(\"value\",\"initial\");\ninput.value=\"edited\";\nconsole.log(input.getAttribute(\"value\"),input.value);",
+      "explanation": "initial、edited，默认标记值和当前值不同。"
+    }
+  },
+  {
+    "page": 36,
+    "title": "setAttribute 修改图片展示尺寸",
+    "section": "文本与属性",
+    "priority": "core",
+    "summary": "按钮把 img 的 width 改为 500、height 改为 200，截图中的图像随之拉宽或拉高。",
+    "explanation": [
+      "setAttribute 接收名称和值，数值会转换成属性字符串。对 img 的 width/height，这些 HTML 属性参与尺寸表现，但不会重新生成更高分辨率的图片资源，也不会改变 naturalWidth/naturalHeight。",
+      "独立设置宽高可能改变显示比例，所以截图可出现拉伸。若只改一维而另一维保持自动，浏览器通常能依据固有比例计算；固定两维则可能产生变形，CSS 规则也可覆盖展示结果。"
+    ],
+    "takeaways": [
+      "展示尺寸改变不等于图片原始像素改变"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const img=document.querySelector(\"img\");\nimg.setAttribute(\"width\",\"500\");\nimg.setAttribute(\"height\",\"200\");",
+      "explanation": "在没有其他样式覆盖时，设置图片展示宽高。"
+    }
+  },
+  {
+    "page": 37,
+    "title": "XML 不只有元素与文本",
+    "section": "树遍历",
+    "priority": "support",
+    "summary": "sentence 示例还包含实体引用、CDATA、处理指令和嵌套 bold，说明 XML 的节点种类比 HTML 元素列表更丰富。",
+    "explanation": [
+      "CDATA 中的 <i>project</i> 被保留为字符数据，而不是把 i 解析成子元素；bold 则是真正元素，内部 Text 为 important。处理指令以 <?...?> 形式提供给相应处理器。",
+      "课件树中的实体引用展开和 Entity 节点关系属于历史 DOM 表述，依赖实体声明与解析器支持。原始片段未给出完整 DTD 等上下文，不能直接假设复制后就是完整可解析 XML 文档。"
+    ],
+    "takeaways": [
+      "CDATA 中的标记形状文本不生成元素"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "<sentence><![CDATA[<i>project</i>]]><bold>important</bold></sentence>",
+      "explanation": "前一部分是文本内容，后一部分才有 bold 元素节点。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "不同节点允许的子节点不同",
+    "section": "树遍历",
+    "priority": "core",
+    "summary": "结构摘要说明 Document、Element 与 Fragment 可容纳不同节点，Text、Comment 等是叶子，不能任意接子元素。",
+    "explanation": [
+      "Document 只能有一个根元素，不能把两个独立 html 元素都追加为文档根。DocumentFragment 可以暂存多个子节点，插入时把它们移交目标，是批量构建结构的常用工具。",
+      "课件列出的 Attr 子节点、Entity 与 Notation 等反映旧 XML DOM 模型；现代 Attr 不作为普通树中的带文本子节点容器。复习通用操作时应遵守当前树约束，非法嵌套可能抛 HierarchyRequestError。"
+    ],
+    "takeaways": [
+      "Document 只能有一个根元素",
+      "Text 与 Comment 不容纳子节点"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const fragment=document.createDocumentFragment();\nfragment.append(document.createElement(\"p\"),document.createElement(\"p\"));\ndocument.body.append(fragment);",
+      "explanation": "两个 p 转移到 body，fragment 随之变空。"
+    }
+  },
+  {
+    "page": 39,
+    "title": "完整案例：XML 飞机数据转 HTML 表格",
+    "section": "XML 转页面",
+    "priority": "support",
+    "summary": "左侧输入 XML 路径，右侧结果窗口按飞机家族、型号、座位等字段生成表格并展示图片。",
+    "explanation": [
+      "这不是 XML 文件自带表格样式，而是脚本读取数据树后主动生成 HTML。输入路径 → 请求 XML → 遍历字段 → 生成表头和数据行 → 显示，是后面几页代码的完整数据流。",
+      "复习时把每页代码放回这条链：表单只取路径，加载函数只拿文档，generateHTML 负责转换，窗口操作负责呈现。分清职责可以定位“数据有了但页面没有显示”的原因。"
+    ],
+    "takeaways": [
+      "数据结构与最终表现格式可以不同"
+    ]
+  },
+  {
+    "page": 40,
+    "title": "airbus.xml：重复 aircraft 与图片 URL",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "截图的 catalog 根下有 title 和多条 aircraft，每条记录依次保存家族、型号、seats、Range、Wingspan、Length、Height、Image。",
+    "explanation": [
+      "字段元素名决定后续表头，文本内容决定单元格。Image 保存的是图片 URL 字符串，并不是嵌入的图片二进制；渲染成 img src 后浏览器还会额外请求资源。",
+      "XML 名称区分大小写，例如 Height 与 height 不同。后续代码若按小写 height 重命名而实际文件用 Height，该分支不会执行；其他字段仍能显示，说明局部映射错误未必使整个表格失败。"
+    ],
+    "takeaways": [
+      "Image 文本是资源地址",
+      "XML 元素名区分大小写"
+    ],
+    "question": {
+      "prompt": "从截图这份 XML 读取 getElementsByTagName(\"height\") 能匹配 Height 吗？",
+      "answer": "不能，XML 标签名区分大小写。"
+    }
+  },
+  {
+    "page": 41,
+    "title": "输入表单与实际 GET 请求",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "文本框 URL 默认值为 airbus.xml，按钮把 this.form 传给 viewXML；method=\"POST\" 不决定脚本的 XHR 方法。",
+    "explanation": [
+      "按钮是 type=button，所以点击不会进行表单的默认 POST 提交。真正请求由 viewXML 内的 XMLHttpRequest.open(\"GET\",...) 指定，应沿函数调用看网络方法。",
+      "maxlength=255 限制用户可输入的字符数，size=100 主要控制显示宽度。控件 name=\"URL\" 用于脚本获取字段，form 的 id=\"location\" 只是元素标識，并不等于浏览器 Location 对象。"
+    ],
+    "takeaways": [
+      "表单 method 不覆盖脚本主动选择的请求方法"
+    ],
+    "question": {
+      "prompt": "这个按钮最终发出的获取 XML 请求是 POST 还是 GET？",
+      "answer": "GET，由下一页 XHR.open 明确指定；type=button 不触发表单默认提交。"
+    }
+  },
+  {
+    "page": 42,
+    "title": "viewXML：加载、错误分支与显示",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "函数取得路径后同步加载 XML，按旧 IE 与其他浏览器分支检查或转换，再把生成 HTML 写入窗口。",
+    "explanation": [
+      "原代码 xmlDoc.onload=generateHTML(xmlDoc) 会立刻调用 generateHTML，把返回值赋给 onload；它不是注册未来回调。如果需要延后调用应传函数；但该例已经使用同步请求，网络时机逻辑本身属于历史混合写法。",
+      "现代读法应先确认请求成功、XML 可解析，再生成内容并检查窗口引用。DocumentElement 大小写、隐式全局变量和未给出的 generateError 等也不能原样当完整可靠程序。"
+    ],
+    "takeaways": [
+      "onload=f(x) 是立即执行，不是登记 f"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "async function readXML(url){\n  const response=await fetch(url);\n  if(!response.ok) throw new Error(`HTTP ${response.status}`);\n  const doc=new DOMParser().parseFromString(await response.text(),\"application/xml\");\n  if(doc.querySelector(\"parsererror\")) throw new Error(\"XML parse error\");\n  return doc;\n}",
+      "explanation": "按异步顺序获取文本、解析 XML，并在无效响应时结束流程。"
+    }
+  },
+  {
+    "page": 43,
+    "title": "生成表头：从首条记录提取字段",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "函数读取 title 作 caption，再遍历第一个 aircraft 的子元素，把业务字段名映射成展示表头。",
+    "explanation": [
+      "过滤 nodeType 非 1 的节点可以跳过缩进空白。Airbus/Boeing 统一显示为 Family，seats 显示 Seats，Wingspan 显示 Wing Span；这种映射分离了数据字段与界面文案。",
+      "原代码 xmlDoc.DocumentElement 大小写错误，应是 documentElement；页标题叫 generateXML，实际函数是 generateHTML。以首条记录决定所有列隐含“每条字段顺序一致”的假设，空数据或异构记录应单独处理。"
+    ],
+    "takeaways": [
+      "表头映射依赖字段名称",
+      "首记录推断结构需要一致性前提"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const first=xmlDoc.querySelector(\"aircraft\");\nconst names=first ? Array.from(first.children,n=>n.nodeName) : [];\nconsole.log(names);",
+      "explanation": "获得首架飞机的字段名列表，children 自动排除空白 Text。"
+    }
+  },
+  {
+    "page": 44,
+    "title": "生成数据行：普通文本与图片分支",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "外层循环每架飞机生成 tr，内层循环每个字段生成 td；Image 字段特别转换成 img 元素。",
+    "explanation": [
+      "普通字段的 firstChild.nodeValue 读取最前面的文本节点，若字段为空或文本被分段就不稳健，textContent 更适合读取整段文字。图片 URL 需要赋给 src，才会从文字地址变成视觉内容。",
+      "x、y 在前页由首条记录的家族设置，意味着同一张表中的图片都共用尺寸。拼接结果最后闭合 tbody/table/body/html，若标记或弯引号错误会影响解析，因此构造 DOM 节点能减少字符串层次问题。"
+    ],
+    "takeaways": [
+      "外循环决定行，内循环决定列",
+      "Image 字段触发额外资源展示"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const td=document.createElement(\"td\");\nconst img=document.createElement(\"img\");\nimg.src=field.textContent.trim();\nimg.alt=\"Aircraft\";\ntd.append(img);",
+      "explanation": "把 XML 字段中的图片路径变成 HTML 图片单元格。"
+    }
+  },
+  {
+    "page": 45,
+    "title": "书店案例重新使用同一数据模型",
+    "section": "XML 转页面",
+    "priority": "support",
+    "summary": "本页再次展示 bookstore XML，为下一页“遍历并输出所有书”准备输入结构。",
+    "explanation": [
+      "与前面只取首个 title 不同，完整输出需要先遍历所有 book，再遍历每本书的字段，多个 author 都应保留。对同一数据可设计不同展示形式，取决于遍历层次与输出模板。",
+      "浏览器折叠的 book 仍是完整数据。若直接遍历 childNodes，格式空白也会出现；因此下一页两层循环都要检查 nodeType，不能只在最外层过滤一次。"
+    ],
+    "takeaways": [
+      "嵌套遍历需要在每个层级明确节点类型"
+    ]
+  },
+  {
+    "page": 46,
+    "title": "两层 XML 遍历与输出容器",
+    "section": "XML 转页面",
+    "priority": "core",
+    "summary": "xmlparse 遍历 bookstore 的书，再遍历每本书的字段，把节点名与文本值拼进 HTML 列表。",
+    "explanation": [
+      "外层和内层都用 nodeType!==1 跳过空白。读取 child.childNodes[0].nodeValue 假设字段内有第一个 Text，可改用 textContent；多个 author 会分别输出为多行。",
+      "原页把 output 放在 <noscript> 内且未正确闭合，在启用脚本的现代浏览器中可能根本不是可查询的 div，导致 getElementById 为 null。应把真正输出容器放在 noscript 外面，这样 JavaScript 才能更新它。"
+    ],
+    "takeaways": [
+      "数据遍历正确还需要有效的显示容器"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<div id=\"output\"></div>\n<noscript>请启用 JavaScript 查看数据。</noscript>",
+      "explanation": "启用脚本时能查询 output；禁用脚本时才展示 noscript 提示。"
+    },
+    "pitfall": "原代码将输出 div 放入 noscript，无法作为正常脚本渲染容器使用。"
+  },
+  {
+    "page": 47,
+    "title": "书店输出：数据按层级展开",
+    "section": "XML 转页面",
+    "priority": "support",
+    "summary": "右侧结果把四本书转成分组列表，第三本包含多个作者行，验证内外两层遍历的作用。",
+    "explanation": [
+      "标题、作者、年份、价格保持来自 XML 的值，浏览器只是按新 HTML 列表格式呈现。原 XML 树不会因为生成字符串而变成这个输出树，它们是两个不同文档/结构。",
+      "课件指出可使用 bookstore.children 替代 childNodes，再免去只为过滤空白所写的检查。选择更符合任务的集合类型可以减少分支，同时保留“只处理直接子元素”的语义。"
+    ],
+    "takeaways": [
+      "XML 数据树与生成的 HTML 树是两套结构"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "moveBefore：移动时保留更多运行状态",
+    "section": "现代 DOM 补充",
+    "priority": "support",
+    "summary": "moveBefore 旨在移动既有节点的同时保留连接相关状态，例如 iframe 文档、焦点和动画，减少传统移除再插入造成的中断。",
+    "explanation": [
+      "parent.moveBefore(node,referenceNode) 放到参考节点前，第二参数 null 表示末尾。与 appendChild 一样它操作现有节点身份，但专门提供保持状态的移动步骤。",
+      "课件“insertBefore 重置全部状态”说得过满：普通节点属性和监听器并非全部消失，只是某些连接相关状态可能受影响。新 API 还有同文档、已连接状态等前提，需检测支持并了解限制，不能当作无条件替换所有插入操作。"
+    ],
+    "takeaways": [
+      "保留节点身份与保留连接状态是两层概念"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "if (typeof container.moveBefore === \"function\") {\n  container.moveBefore(existingNode,null);\n} else {\n  container.appendChild(existingNode);\n}",
+      "explanation": "支持时使用状态保留移动；回退仍移动节点，但部分状态可能不同。"
+    },
+    "links": [
+      {
+        "label": "MDN：moveBefore",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/moveBefore"
+      }
+    ]
+  },
+  {
+    "page": 49,
+    "title": "AbortSignal：组合取消与自动清理",
+    "section": "现代 DOM 补充",
+    "priority": "support",
+    "summary": "any 把多个取消来源合并，timeout 提供超时信号，事件监听器可随信号中止自动移除，reason 记录原因。",
+    "explanation": [
+      "AbortController 负责发出中止，signal 供 fetch 或监听接口观察。any 中任意一个信号中止就令组合信号中止，因此可同时支持用户取消和超时；已中止的 signal 不能重置复用为未中止状态。",
+      "给 addEventListener 传 signal 后，controller.abort() 会移除对应监听器，不需要再次记住 removeEventListener 的匹配参数。取消是通知机制，不会自动撤回服务器已完成的副作用，也不强行停止任意同步 JavaScript。"
+    ],
+    "takeaways": [
+      "controller 发信号，API 决定如何响应",
+      "any 是任意一个中止即可"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const controller=new AbortController();\nbutton.addEventListener(\"click\",handler,{signal:controller.signal});\ncontroller.abort(\"view closed\");\nconsole.log(controller.signal.reason);",
+      "explanation": "移除该监听器，并得到中止原因 view closed。"
+    },
+    "links": [
+      {
+        "label": "MDN：AbortSignal.any",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/any_static"
+      }
+    ]
+  },
+  {
+    "page": 50,
+    "title": "DOM 复习：用最小树验证操作",
+    "section": "复习方法",
+    "priority": "support",
+    "summary": "末页推荐 Document、Node 与 Element 文档；查资料时应先辨认方法属于哪个接口。",
+    "explanation": [
+      "Document.createElement 创建节点，Node 提供通用树关系与插入方法，Element 提供选择器、属性和样式相关能力。把接口归属理清，就能解释为什么 Text 没有 style，普通 Element 不提供 document 的全部方法。",
+      "练习可从一个只有三项的列表开始：查询、加类、改文本、移动、删除，再写出 childNodes 与 children 的变化。先纸上预测，再在开发者工具观察 DOM，尤其留意空白节点和节点身份。"
+    ],
+    "takeaways": [
+      "接口归属解释可调用的方法范围"
+    ]
+  }
+]

@@ -1,0 +1,1605 @@
+[
+  {
+    "page": 1,
+    "title": "Python：从语言基础到 Web 后端",
+    "section": "课程导航",
+    "priority": "support",
+    "summary": "本讲把 Python 基础语法、集合、函数与 Web 框架连在一起。最终目标是看懂一个收到 HTTP 请求并返回 JSON 的 Python 服务。",
+    "explanation": [
+      "复习时沿着“值与类型→控制流→函数和模块→路由与响应”的顺序建立联系。后面的 Flask、FastAPI 和 Django 都依赖前面的字典、列表、函数调用和导入语法。"
+    ],
+    "takeaways": [
+      "分清语言特性、框架特性和 HTTP 协议"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "本讲路线：类型、控制流与函数",
+    "section": "课程导航",
+    "priority": "support",
+    "summary": "目录把学习任务分为语言定位、数据与变量、控制结构与函数三个基础层次；Web 框架是这些基础的应用。",
+    "explanation": [
+      "动态类型意味着同一个名字可以先绑定整数，再绑定字符串；不是所有不同类型都能任意混算。读代码时逐行记录名字目前引用什么对象。",
+      "条件分支决定执行哪段代码，循环决定执行多少次，函数封装可重复调用的操作。考试复习应能预测输出、判断异常发生的位置，并说明程序为何走到某个分支。"
+    ],
+    "takeaways": [
+      "动态类型不等于自动转换一切",
+      "读代码要同时追踪值、类型和执行顺序"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "Python 的语言定位",
+    "section": "语言与变量",
+    "priority": "support",
+    "summary": "Python 是高级、支持面向对象及过程式编程的语言，内置列表、字典等高层数据结构。",
+    "explanation": [
+      "高级指程序通常直接表达业务操作，而不用手动管理每个内存地址。面向对象指可以用类封装状态和方法，但写 Python 并不要求所有代码都放在类中。",
+      "动态类型是在执行过程中由对象决定类型；动态绑定则强调名字和操作在运行时关联对象。比如 len(x) 可用于字符串或列表，具体行为由对象支持的协议决定。这些概念解释了代码简洁，也解释了某些错误为何运行时才出现。"
+    ],
+    "takeaways": [
+      "支持多种编程范式",
+      "对象有类型，名字绑定对象"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "脚本、解释执行与模块生态",
+    "section": "语言与变量",
+    "priority": "support",
+    "summary": "本页强调 Python 适合脚本、自动化和后端开发，标准库及第三方库能减少重复实现。",
+    "explanation": [
+      "通常直接运行 .py 文件，不需要像传统 C 开发那样先手动构建可执行文件。不过“没有编译步骤”是面向使用者的简化：CPython 会把源码编译成字节码再执行，导入时还可能生成 .pyc 缓存。",
+      "数据库连接由驱动和库提供，语言本身不等于某一种数据库。理解这个层次很有用：Python 是执行语言，数据库保存数据，连接库负责在二者之间传递查询和结果。"
+    ],
+    "takeaways": [
+      "通常不需要手动编译",
+      "解释执行与内部字节码编译可以同时存在"
+    ],
+    "pitfall": "不要把课件的“no compilation step”理解成 Python 实现内部完全没有编译。"
+  },
+  {
+    "page": 5,
+    "title": "简洁语法与模块化",
+    "section": "语言与变量",
+    "priority": "support",
+    "summary": "Python 用较少的语法样板表达操作，并通过模块组织可复用代码。短代码仍需要准确理解类型、缩进和函数边界。",
+    "explanation": [
+      "例如对一组数字求和可调用 sum，而不必自己维护索引和累计变量。简洁来自内置抽象，不表示运算没有成本，也不保证逻辑一定正确。",
+      "相对于 C 的许多不受检查操作，Python 通常用异常报告越界索引、类型不匹配等问题。模块化则把重复操作放进独立 .py 文件，通过 import 复用；它能让后面的 Web 路由只负责接收参数和组织响应。"
+    ],
+    "takeaways": [
+      "缩进决定代码块",
+      "内置函数和模块减少重复实现"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "scores = [80, 90, 100]\nprint(sum(scores) / len(scores))",
+      "explanation": "输出 90.0：sum 求和，len 计数，/ 产生浮点结果。"
+    }
+  },
+  {
+    "page": 6,
+    "title": "启动解释器与命令行参数",
+    "section": "语言与变量",
+    "priority": "support",
+    "summary": "Python 可以交互运行、运行脚本，或用 -c 直接执行一段语句；脚本参数通过 sys.argv 读取。",
+    "explanation": [
+      "可执行文件的实际位置和版本由安装方式决定，课件里的 /usr/local/bin/python3.8 是示例路径。终端中的 python3 能否执行，取决于 shell 的 PATH 能否找到解释器。",
+      "运行 python3 app.py blue 7 时，sys.argv 是字符串列表，通常首项为脚本路径，后面依次是 blue 和 7。数字参数并不会自动变成 int，计算前要显式转换。-c 后面是代码字符串，与执行文件是两种入口。"
+    ],
+    "takeaways": [
+      "sys.argv 的元素是字符串",
+      "PATH 用来定位解释器"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import sys\n# 运行：python3 app.py blue 7\nprint(sys.argv[1])\nprint(int(sys.argv[2]) + 1)",
+      "explanation": "输出 blue 和 8；如果缺少相应参数，索引访问会失败。"
+    }
+  },
+  {
+    "page": 7,
+    "title": "Hello World 的执行过程",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "最小脚本通过 print() 把字符串写到标准输出。执行顺序是解释器读取文件，然后执行顶层语句。",
+    "explanation": [
+      "字符串需要普通半角引号，课件排版中的弯引号不能直接作为 Python 字符串界定符。print 是函数，括号里放参数；默认输出后换行。",
+      "文件开头的三引号字符串可以用作模块文档字符串，不会自动显示在终端。只有显式调用 print 的文本才在这个脚本里输出。区分源代码中的说明文字、字符串对象和程序输出，是后续代码分析的第一步。"
+    ],
+    "takeaways": [
+      "Python 3 使用 print(...)",
+      "字符串文字不会自动输出"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "\"\"\"A tiny greeting script.\"\"\"\nprint(\"Hello, exam review!\")",
+      "explanation": "仅输出 Hello, exam review!，不会输出文档字符串。"
+    }
+  },
+  {
+    "page": 8,
+    "title": "注释和文档字符串的区别",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "# 开始的是正式注释；三引号创建的仍是字符串，位于模块、类或函数的第一条语句时可成为 docstring。",
+    "explanation": [
+      "解释器忽略 # 到行末的注释内容，但字符串中的 # 只是普通字符。三引号适合跨行文本，所以经常被用来写长说明，不能据此把它当成独立的多行注释语法。",
+      "函数的 docstring 可以从 __doc__ 读取，也能被 help() 使用。若只是暂时禁用几行代码，用逐行 # 最清晰；普通位置上未赋值的三引号字符串并不具有同样的注释语义。"
+    ],
+    "takeaways": [
+      "注释：# 到行末",
+      "三引号：字符串；特定位置可作 docstring"
+    ],
+    "pitfall": "课件把三引号统称多行注释，是教学上的简化。",
+    "example": {
+      "lang": "python",
+      "code": "def square(x):\n    \"\"\"Return the square of x.\"\"\"\n    return x * x  # multiplication\nprint(square.__doc__)",
+      "explanation": "输出函数的文档字符串，证明它是可被程序读取的对象。"
+    }
+  },
+  {
+    "page": 9,
+    "title": "局部变量、全局变量与属性",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "本页同时出现模块全局名字、函数局部名字、类属性和实例属性；它们的归属不同。",
+    "explanation": [
+      "函数内普通赋值默认创建局部名字；要在函数里重新绑定模块全局名字，需要 global 声明。读取一个全局名字通常不需要 global。类体中的赋值创建类属性，由类及实例查找共享。",
+      "实例属性通常通过 self.name = value 创建。仅仅“在方法内部赋值”并不会自动变成实例属性：temp = 3 仍是方法局部变量。Python 没有 C 风格 static 关键字，但有类属性、staticmethod 等机制。"
+    ],
+    "takeaways": [
+      "self.x 是实例属性",
+      "方法里的裸名字通常是局部变量"
+    ],
+    "pitfall": "类作用域和函数作用域不同；不能把类体内所有名字都称为局部变量。",
+    "example": {
+      "lang": "python",
+      "code": "class Student:\n    course = \"CSCI571\"\n    def __init__(self, name):\n        self.name = name\n        label = \"local\"\ns = Student(\"Derek\")\nprint(s.name, Student.course)",
+      "explanation": "name 存在实例上，course 存在类上，label 只在方法执行期间局部可见。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "动态类型与显式转换",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "Python 不先声明变量类型。赋值把名字绑定到对象；再次赋值可以让同一个名字指向其他类型。",
+    "explanation": [
+      "x = 7 后执行 x = \"7\"，不是把原来的整数内部变成字符串，而是让 x 改指向一个字符串对象。int、float、str 等构造函数可以显式转换合适的值，不保证任何输入都能转换成功。",
+      "课件列出的 NULL 应写为 Python 的 None，类型是 NoneType。列表、元组、字典、集合是不同容器；“object”是对象体系的基础概念，不是只适用于某一种业务数据的专用类型。"
+    ],
+    "takeaways": [
+      "空值写 None",
+      "动态类型不取消类型规则"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "x = 7\nprint(type(x).__name__)\nx = str(x)\nprint(type(x).__name__, x + \"1\")",
+      "explanation": "先输出 int，再输出 str 71；字符串加法执行拼接。"
+    }
+  },
+  {
+    "page": 11,
+    "title": "赋值是名字绑定，不是自动复制",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "本页列出整数、字符串、列表、元组和字典的字面量。理解这些语法时，应同时建立“名字引用对象”的赋值模型。",
+    "explanation": [
+      "a = 10、b = \"foo\" 把名字绑定到对应对象。c = [1, 2] 创建可变列表，d = (1, 2) 创建元组，e = {\"key\": \"value\"} 创建映射。不同括号决定不同结构。",
+      "课件写 assignment by value 容易引起误解：把列表赋给另一个名字不会复制列表。修改共享列表的元素，所有别名都能看到；给一个名字重新赋值，则只改变这个名字的绑定。"
+    ],
+    "takeaways": [
+      "赋值通常不复制对象",
+      "区分修改对象和重新绑定名字"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)\nb = [9]\nprint(a)",
+      "explanation": "两次都输出 [1, 2, 3]。append 修改共享对象，第二次赋值只改变 b。"
+    },
+    "question": {
+      "prompt": "b = a 后执行 b[0] = 9，a 是否变化？",
+      "answer": "如果 a 是同一个可变列表，会变化，因为两者引用同一对象。"
+    }
+  },
+  {
+    "page": 12,
+    "title": "print：多个参数与版本区别",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "Python 3 的 print 是函数，可以接收多个参数；参数之间默认插入空格，末尾默认换行。",
+    "explanation": [
+      "print(age) 输出变量当前值，print(\"Age:\", age) 先输出文字，再输出转换为文本的变量值。这里不需要手动把整数转成字符串，因为 print 负责展示每个参数。",
+      "print age 是 Python 2 的语法，在 Python 3 中会报语法错误。课件中的旧版本对照只用于认识历史，复习代码一律按 Python 3 推演。额外空格也要仔细看：文字本身若以空格结尾，再加默认 sep，就会出现两个空格。"
+    ],
+    "takeaways": [
+      "多参数用逗号分隔",
+      "sep 默认空格，end 默认换行"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "age = 18\nprint(\"Age\", age, sep=\": \")\nprint(\"A\", end=\"\")\nprint(\"B\")",
+      "explanation": "输出 Age: 18，下一行是 AB。"
+    }
+  },
+  {
+    "page": 13,
+    "title": "合法变量名与大小写",
+    "section": "语言与变量",
+    "priority": "core",
+    "summary": "变量名不能以数字开头，不能包含空格，也不能使用 if、class 等保留关键字；大小写不同就是不同名字。",
+    "explanation": [
+      "在常见 ASCII 写法里，首字符用字母或下划线，其余字符可以加数字。因此 score_2 合法、2score 不合法，total score 也不合法。Python 还允许许多 Unicode 标识符，但课程代码通常使用易读的英文名字。",
+      "命名的语法合法与命名的质量是两回事：a 和 b 可以运行，却未必能表达数据含义。把 list、str 等内置名字覆盖成变量虽合法，但会让后续调用对应构造函数变得困难。"
+    ],
+    "takeaways": [
+      "score 与 Score 是不同名字",
+      "不要覆盖 list、str 等常用内置名称"
+    ],
+    "question": {
+      "prompt": "哪些合法：_count、count2、2count、class？",
+      "answer": "_count 和 count2 合法；2count 以数字开头，class 是关键字。"
+    }
+  },
+  {
+    "page": 14,
+    "title": "常量是命名约定",
+    "section": "语言与变量",
+    "priority": "support",
+    "summary": "Python 常用全大写名字表示不应修改的值，例如 MAX_RETRIES；这通常是开发约定，不是语言强制禁止重新赋值。",
+    "explanation": [
+      "常量经常放在模块顶部，方便多个函数读取，但“大写”不会自动创造全局作用域：作用域仍由定义位置决定。把常量集中命名能避免在代码中散布含义不明的数字。",
+      "课件提到 constants module 不能理解为标准库必有一个提供所有科学常数的统一模块。圆周率可从标准库 math.pi 取得，其他领域常数可能来自第三方库。考试要记住“约定不变”和“运行时不可变对象”也是两件事。"
+    ],
+    "takeaways": [
+      "UPPER_CASE 是常量命名约定",
+      "大写名字仍然能被重新赋值"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "MAX_RETRIES = 3\nMAX_RETRIES = 4\nprint(MAX_RETRIES)",
+      "explanation": "输出 4；解释器不靠大写名字实施 const 限制。"
+    }
+  },
+  {
+    "page": 15,
+    "title": "算术、比较与除法",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "本页把算术运算、字符串拼接和比较运算放在一起，关键是先判断操作数类型，再判断运算符含义。",
+    "explanation": [
+      "对内置 int/float，/ 做普通除法并得到浮点数，// 向负无穷取整，% 求余，** 求幂。负数是区分向下取整与截断的好例子：-7 // 2 等于 -4，不是 -3。",
+      "= 是赋值，== 比较值是否相等，!= 判断不相等；<、<= 等比较返回布尔值。字符串 + 执行拼接，不能把任意数字自动当成文本加入。复杂表达式应先处理括号和幂，再乘除，后加减与比较。"
+    ],
+    "takeaways": [
+      "// 是 floor division",
+      "= 与 == 的作用不同"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "print(7 / 2, 7 // 2, 7 % 2)\nprint(-7 // 2, 2 ** 3)\nprint(\"CS\" + \"571\")",
+      "explanation": "输出 3.5 3 1；-4 8；CS571。"
+    }
+  },
+  {
+    "page": 16,
+    "title": "复合赋值与按位运算",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "+=、*= 等把运算和赋值合并；位运算操作整数的二进制位，而不是把整个数作为一个布尔条件。",
+    "explanation": [
+      "对整数，x += 1 等价于求出 x + 1 再把结果绑定给 x。&、|、^ 分别是按位与、或、异或；<< 和 >> 移动二进制位。整数的 ~x 等于 -x - 1，因此 ~5 不是简单把十进制的 5 改成 0。",
+      "Python 没有 C/Java 风格的自增自减运算符。++x 会被解释成连续两次一元正号，并不会改变 x；--x 同理也不会减一。列表的 += 还可能原地修改对象，这与普通列表 + 创建新列表不同。"
+    ],
+    "takeaways": [
+      "自增用 x += 1",
+      "^ 是异或，** 才是幂"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "x = 5  # binary 101\nprint(x & 3, x | 3, x ^ 3)\nprint(++x, x)\nx += 1\nprint(x)",
+      "explanation": "先输出 1 7 6；再输出 5 5；最后输出 6。"
+    }
+  },
+  {
+    "page": 17,
+    "title": "逻辑、身份与成员测试",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "and/or/not 测试真假，is 测试是否同一个对象，in 测试容器是否包含某元素。这三组问题不能混淆。",
+    "explanation": [
+      "and 与 or 会短路，而且可能返回原操作数：x or default 在 x 为假时返回 default。not 总是返回布尔值。== 比较内容，is 比较对象身份；判断 None 通常用 is None。",
+      "列表中的 in 比较元素，字符串中的 in 可检查子串；字典中的 in 默认查找键，而不是值。两个内容相同的列表可以 == 为 True，却 is 为 False，因为它们是分别创建的对象。"
+    ],
+    "takeaways": [
+      "== 比内容；is 比身份",
+      "字典 in 默认检查键"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a, b = [1], [1]\nprint(a == b, a is b)\nprint(\"\" or \"fallback\")\nprint(\"score\" in {\"score\": 90})",
+      "explanation": "输出 True False、fallback、True。"
+    }
+  },
+  {
+    "page": 18,
+    "title": "内置类型全景",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "类型决定数据能做什么：数值可计算，字符串和序列可索引，集合适合去重，字典适合按键查值。",
+    "explanation": [
+      "常用数值类型包括 int、float 和 complex；复数不是整数的一个形式。str、list、tuple 都有顺序，列表可变、字符串和元组不可变；set 可变且元素唯一，但不承诺序列式位置。",
+      "dict 保存键值映射，Python 3.7 起语言保证保留插入顺序。它不是按位置访问的普通序列。课件早先把字典写成 unordered，与后面第 26 页的新版说明不一致，复习按现代 Python 的插入顺序保证理解。"
+    ],
+    "takeaways": [
+      "complex 是独立数值类型",
+      "dict 保留插入顺序但仍按键访问"
+    ],
+    "pitfall": "“无序字典”“复数属于整数”均不适用于本网站采用的 Python 3 语义。"
+  },
+  {
+    "page": 19,
+    "title": "类型错误：数字不能直接拼接百分号",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "税率示例说明：计算先得到数字，文本展示是下一步。数字与字符串之间没有自动适配的 + 运算。",
+    "explanation": [
+      "vat_rate * 100 得到浮点结果；再加 \"%\" 时，左侧是 float、右侧是 str，因此抛出 TypeError。这不是运算结果数值不正确，而是两个操作数没有定义这种加法。",
+      "str(...) 可把结果转换成文字后拼接，也可用格式化字符串指定展示位数。若把会报错的语句和正确语句放在同一脚本中且不捕获异常，程序在第一处异常终止，不会自动跳到下一行继续执行。"
+    ],
+    "takeaways": [
+      "TypeError 表示操作类型不匹配",
+      "未捕获异常会中断后续语句"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "rate = 0.175\nprint(str(rate * 100) + \"%\")\nprint(f\"{rate:.1%}\")",
+      "explanation": "两行都显示 17.5%。格式化负责把数值呈现为百分比文本。"
+    }
+  },
+  {
+    "page": 20,
+    "title": "int、float 与 complex",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "本页希望区分整数和小数，但 Python 的内置数值不止这两类：complex 用 j 表示虚部。",
+    "explanation": [
+      "int 可表示任意精度的整数，受可用内存限制；float 通常是有限精度二进制浮点数，未必精确表示每个十进制小数。科学计数法如 2.5e3 是浮点数 2500.0。",
+      "2 + 4j 的类型是 complex，不是 int。源码里的千位分隔可写 10_000；写成 10,000 会成为两个逗号分隔的表达式，常形成元组，而不是单个整数一万。类型题既要看数值外观，也要看语法。"
+    ],
+    "takeaways": [
+      "2 + 4j 是 complex",
+      "10_000 是一万；10,000 不是"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "print(type(2).__name__, type(2.0).__name__)\nprint(type(2 + 4j).__name__)\nprint(10_000, (10, 000))",
+      "explanation": "类型分别为 int、float、complex；最后输出 10000 和 (10, 0)。"
+    }
+  },
+  {
+    "page": 21,
+    "title": "布尔字面量与 truthiness",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "Python 的布尔字面量确实写作 True 和 False，但条件判断也接受其他对象，并根据它们的真假值选择分支。",
+    "explanation": [
+      "0、0.0、None、空字符串、空列表、空字典和空集合通常为假；非零数与非空容器通常为真。因此 if 1: 合法，if []: 也合法，只是不会进入该分支。",
+      "bool 是 int 的子类，True == 1 成立，但 True is 1 不应该拿来判断数值相等。小写 true/false 不是布尔关键字，若未绑定会导致 NameError。课件“只能用 True/False 作条件”的表述需要纠正。"
+    ],
+    "takeaways": [
+      "字面量区分大小写",
+      "条件可使用对象的真假值"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "print(bool(0), bool([]), bool(\"False\"))\nif 1:\n    print(\"entered\")",
+      "explanation": "输出 False False True，然后 entered；非空文本 \"False\" 仍为真。"
+    }
+  },
+  {
+    "page": 22,
+    "title": "字符串索引、切片与不可变性",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "字符串是有序的 Unicode 文本序列，可以按位置取字符、切片、重复和拼接，但不能原地替换字符。",
+    "explanation": [
+      "索引从 0 开始，-1 表示最后一个字符。切片 s[1:3] 取索引 1 和 2，不含 3。a = \"Hello \" 含尾部空格，所以 a[-1] 是空格；课件注释写成 o 漏看了这一位。",
+      "不可变不是名字不能重新赋值：s = \"Hi\" 可以让 s 指向新字符串；s[0] = \"h\" 才是不允许的原地修改。字符串可以为空，定义也不应限制为“至少一个字符”。"
+    ],
+    "takeaways": [
+      "切片左闭右开",
+      "空格也是字符",
+      "字符串不能按索引赋值"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "s = \"Hello \"\nprint(repr(s[-1]), s[1:3], \"ha\" * 2)\ns = \"J\" + s[1:]\nprint(s)",
+      "explanation": "第一行显示空格的 repr、el 和 haha；第二行是新字符串 Jello 加尾空格。"
+    }
+  },
+  {
+    "page": 23,
+    "title": "列表的修改和删除",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "list 保存有顺序的对象引用，允许混合类型，也允许追加、插入、删除和原地修改。",
+    "explanation": [
+      "append(x) 在尾部加入一个元素，insert(i, x) 在指定位置插入，remove(x) 删除第一个相等元素，sort() 与 reverse() 原地修改列表并返回 None。课件截图用循环 append(x**2) 生成平方列表。",
+      "del a[i] 删除元素；del a[:] 清空原列表；del a 删除名字 a，之后读取该名字会 NameError，而不是把列表“变空”。若另一个名字仍引用旧列表，对象仍可使用。"
+    ],
+    "takeaways": [
+      "原地方法常返回 None",
+      "del 名字与清空列表不同"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = [3, 1, 2]\nr = a.sort()\nprint(a, r)\na.append(4)\ndel a[1]\nprint(a)",
+      "explanation": "先输出 [1, 2, 3] None，后输出 [1, 3, 4]。"
+    }
+  },
+  {
+    "page": 24,
+    "title": "集合：唯一元素与集合运算",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "set 用于去重、成员测试和交并差运算，不提供列表那样的位置索引。截图中的重复水果被合并为唯一元素。",
+    "explanation": [
+      "集合元素必须可哈希，不能直接把普通列表放入集合。创建空集合要用 set()，因为 {} 表示空字典。打印或遍历集合时不要依赖某一种固定排列顺序。",
+      "a | b 是并集，a & b 是交集，a - b 是只在 a 中的元素，a ^ b 是只在其中一个集合中的元素。课件对两个单词取 set，是把字符去重后比较字符成员，而不是比较单词顺序。"
+    ],
+    "takeaways": [
+      "空集合是 set()",
+      "& 表示交集；竖线运算符表示并集",
+      "- 表示差集；^ 表示对称差"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a, b = {1, 2, 3}, {3, 4}\nprint(sorted(a & b))\nprint(sorted(a - b))\nprint(sorted(a ^ b))",
+      "explanation": "为让展示顺序可预测，sorted 后输出 [3]、[1, 2]、[1, 2, 4]。"
+    }
+  },
+  {
+    "page": 25,
+    "title": "元组：有序而不可变",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "tuple 适合组合一组相关值；创建后不能替换其中某个位置的引用，但内部引用的可变对象仍可能变化。",
+    "explanation": [
+      "元组可索引和切片，并非集合。单元素元组的关键是逗号：(\"x\",) 是元组，(\"x\") 只是被括号包住的字符串。多个值也可以不加括号构成元组。",
+      "截图先展示元组嵌套，再展示按索引赋值导致 TypeError，最后展示包含列表的元组。不可变的准确含义是元组各位置的绑定不能变，不是它所引用的所有内容递归冻结。"
+    ],
+    "takeaways": [
+      "单元素元组需要逗号",
+      "元组不可变不代表内部对象都不可变"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "t = ([1], \"fixed\")\nt[0].append(2)\nprint(t)\nprint(type((7,)).__name__)",
+      "explanation": "输出 ([1, 2], \"fixed\") 的等价表示及 tuple；列表被修改，元组位置没有被替换。"
+    }
+  },
+  {
+    "page": 26,
+    "title": "字典：键值映射与 items",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "字典按键查值，键唯一、值可重复；现代 Python 保留键的插入顺序。",
+    "explanation": [
+      "d[\"name\"] 读取某个键的值，d[\"name\"] = ... 会更新值；重复键的字面量保留最后一次提供的值。键必须可哈希，通常字符串和数字合适，含列表的元组却不能作为键。",
+      "list(d) 得到键列表，d.items() 让循环同时得到键和值。{} 和 dict() 都能构造空字典；避免用 dict 作为变量名覆盖构造函数。字典虽然有顺序，但 d[0] 仍查整数键 0，不能当成“第一个元素”。"
+    ],
+    "takeaways": [
+      "键唯一，值可重复",
+      "字典的索引是键",
+      "items() 提供键值对"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "d = {\"a\": 1, \"b\": 2}\nd[\"a\"] = 9\nprint(list(d))\nfor key, value in d.items():\n    print(key, value)",
+      "explanation": "键顺序仍是 a、b；更新现有键的值不会移动其插入位置。"
+    }
+  },
+  {
+    "page": 27,
+    "title": "四类容器的对照表",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "表格沿顺序、索引、切片、重复和可变性五个维度比较 list、tuple、set 与 dict，适合做选择题判断依据。",
+    "explanation": [
+      "list 和 tuple 都按位置访问、支持切片、允许重复；主要差异是 list 可变而 tuple 不可变。set 可变、元素唯一、不提供位置索引，也不提供序列切片。",
+      "dict 可变、保留插入顺序，按键访问；其“不能重复”特指键，两个不同键可以保存同一个值。表格把 dict 的键查找列在 indexed access 下，不应误读成列表式整数位置。对照时先问业务要保序、去重还是映射。"
+    ],
+    "takeaways": [
+      "序列：list、tuple",
+      "唯一成员：set",
+      "键到值：dict"
+    ],
+    "question": {
+      "prompt": "需要按姓名查分数、允许两个学生同分，应选什么？",
+      "answer": "dict。姓名作键，分数作值；值允许重复。"
+    }
+  },
+  {
+    "page": 28,
+    "title": "同一运算符在不同类型上的含义",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "foo * 7 对整数执行乘法，bar * 7 对字符串执行重复；随后 bar + 7 因类型不匹配而失败。",
+    "explanation": [
+      "运算符并不只靠外形决定行为，还取决于操作数类型。数字 25 乘 7 得到 175；文本 Hello 乘 7 得到七份连续文本。这个操作创建结果，不是在每个字符上做数值乘法。",
+      "下一句不能把整数 7 自动转换为文本。若想拼接，可写 bar + str(7)；若想输出两者且中间留空格，可用 print(bar, 7)。分析程序应在异常处停止，不能把后续语句算成已经执行。"
+    ],
+    "takeaways": [
+      "字符串 * 整数是重复",
+      "字符串 + 整数产生 TypeError"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "number = 4\ntext = \"ab\"\nprint(number * 3)\nprint(text * 3)\nprint(text + str(3))",
+      "explanation": "输出 12、ababab、ab3。"
+    }
+  },
+  {
+    "page": 29,
+    "title": "字符串里的变量名不会自动展开",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "print(foo) 取变量值，print(\"foo\") 输出字面文本。引号内和引号外是代码阅读时最重要的边界之一。",
+    "explanation": [
+      "课件中的 print(\"5x5=\", foo) 把文字与值作为不同参数传入，输出 5x5= 25。print(\"5x5=foo\") 则只收到一个字符串，输出原样文字，不会在其中查找同名变量。",
+      "需要插值时可以使用 f-string，并把表达式放进花括号；仅仅在普通字符串中写变量名不会生效。多个参数默认以空格分隔，而字符串拼接 + 不会自动补空格，所以两种方式的输出可能不同。"
+    ],
+    "takeaways": [
+      "普通字符串不替换变量",
+      "f-string 用 {表达式} 插值"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "score = 25\nprint(\"score\")\nprint(\"score=\", score)\nprint(f\"score={score}\")",
+      "explanation": "三行分别是 score、score= 25、score=25。"
+    }
+  },
+  {
+    "page": 30,
+    "title": "算术表达式的逐步追踪",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "本页用 a=15、b=30、c=2 演示加法和幂，并提醒复合赋值会改变后续表达式读取的值。",
+    "explanation": [
+      "total = a + b 得到 45，a_squared = a ** c 得到 225。这两个名字保存当时求出的结果，之后 a 改变不会自动重新计算 total 或 a_squared。",
+      "单独写 a - b 在交互解释器中会显示结果；放在普通脚本中，若不 print 则不会产生可见输出。a += 5 之后 a 成为 20，后面的运算应使用新值。读题时把“计算结果”和“是否输出”分开记录。"
+    ],
+    "takeaways": [
+      "赋值结果不会自动跟随源变量变化",
+      "脚本的裸表达式通常不显示"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = 15\nsquare = a ** 2\na += 5\nprint(a, square)",
+      "explanation": "输出 20 225；square 不会自动更新成 400。"
+    }
+  },
+  {
+    "page": 31,
+    "title": "字符串拼接要显式放分隔符",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "字符串 + 把左右字符直接连接；要显示单词间空格，空格本身也必须来自某个字符串。",
+    "explanation": [
+      "课件使用 string1 + \" \" + string2，所以 Hello 与 Python 之间有一个空格。若去掉中间的 \" \"，结果就变成 HelloPython，而不是自动保持自然语言格式。",
+      "字符串不可变，拼接产生结果对象，再由 string3 绑定。原来的 string1 和 string2 内容不变。读多段拼接题时按从左到右的文本串接顺序展开，尤其留意前后空格、换行以及数字是否已经转成字符串。"
+    ],
+    "takeaways": [
+      "+ 不自动插入空格",
+      "拼接不修改原字符串"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "first, last = \"Web\", \"Tech\"\njoined = first + \" / \" + last\nprint(joined)\nprint(first)",
+      "explanation": "输出 Web / Tech；first 仍是 Web。"
+    }
+  },
+  {
+    "page": 32,
+    "title": "反斜杠转义引号",
+    "section": "运算与集合",
+    "priority": "core",
+    "summary": "字符串界定符内若要包含同一种引号，可以用反斜杠转义，避免解释器提前认为字符串结束。",
+    "explanation": [
+      "课件的 \"Computer Science\" 在打印时保留双引号，但用于转义的反斜杠不显示。源码表示与终端显示不一定完全相同，正如 \n 在源码中是两个字符形式，打印时却表现为换行。",
+      "也可以交替使用单引号与双引号，减少转义。字符串 repr 更接近供程序员查看的表示，会保留必要的转义信息；print 输出面向人的内容。阅读输出题时先把转义序列解析成实际字符。"
+    ],
+    "takeaways": [
+      "转义符是反斜杠 \\",
+      "print 展示实际字符"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "heading = '\"Computer Science\"'\nprint(heading)\nprint(\"line 1\\nline 2\")",
+      "explanation": "第一行包括两侧双引号；后一个 print 产生两行文本。"
+    }
+  },
+  {
+    "page": 33,
+    "title": "if/elif/else 的互斥分支",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "if 链按顺序测试条件，执行第一个为真的分支后跳过其余 elif 和 else。冒号和缩进定义代码块。",
+    "explanation": [
+      "课件先判断 foo == 0，再判断 0 < foo <= 5，其他值进入 else。foo 为 3 时只输出中间分支，不会继续执行 else。elif 是“否则再判断”，与连续写两个独立 if 的控制流不同。",
+      "条件可以由 and 组合，也可以写链式比较 0 < foo <= 5。冒号后下一行必须正确缩进，同一代码块缩进一致。语法词是小写 if、elif、else；缩进错误会影响程序结构或直接引发异常。"
+    ],
+    "takeaways": [
+      "只有首个匹配分支执行",
+      "冒号与缩进不可省"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "x = 5\nif x == 0:\n    print(\"zero\")\nelif 0 < x <= 5:\n    print(\"small\")\nelse:\n    print(\"other\")",
+      "explanation": "输出 small。"
+    }
+  },
+  {
+    "page": 34,
+    "title": "二选一条件与语法大小写",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "最基本的 if/else 用一个真假条件决定两段代码中的哪一段执行，Python 不使用 Then 关键字。",
+    "explanation": [
+      "比较 user == \"John\" 返回布尔值，真时显示问候，假时显示其他消息。括号可用于组织复杂条件，但最外层括号不是 Python if 必需语法。",
+      "课件左侧 General format 中的 If 和 Else 是展示性伪代码，真实 Python 必须写小写 if 和 else。字符串比较区分大小写，所以 \"john\" 与 \"John\" 不相等；这一点可能改变整段代码的执行分支。"
+    ],
+    "takeaways": [
+      "真实关键字必须小写",
+      "条件外括号可省"
+    ],
+    "question": {
+      "prompt": "user = \"john\"，if user == \"John\" 会进入哪个分支？",
+      "answer": "进入 else；字符串按字符比较，j 与 J 不相同。"
+    }
+  },
+  {
+    "page": 35,
+    "title": "while：先判断，再执行与更新",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "while 在每轮开始时检查条件，条件为真才进入循环体。课件计数器从 0 增至 3，循环体执行三次。",
+    "explanation": [
+      "执行轨迹为 count=0、1、2 时打印，随后分别加一；count=3 时 count < 3 为假，退出。若初值已经为 3，循环体一次也不执行。",
+      "更新计数器是终止条件能被达到的原因。漏写 count += 1 会导致这个示例无限循环。真实代码关键字写 while；print 默认每次换行，所以课件把三次文本写在同一行只是结果摘要，不是精确终端布局。"
+    ],
+    "takeaways": [
+      "while 可能执行零次",
+      "确保循环状态向退出条件推进"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "count = 0\nwhile count < 3:\n    print(count)\n    count += 1\nprint(\"end\", count)",
+      "explanation": "依次输出 0、1、2，最后输出 end 3。"
+    }
+  },
+  {
+    "page": 36,
+    "title": "for 和 range 的半开区间",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "Python for 逐个取得可迭代对象中的元素；range 为整数迭代提供起点、终点和步长。",
+    "explanation": [
+      "range(5) 给出 0 到 4，不含 5；range(2, 8, 2) 给出 2、4、6。for letter in \"Hello\" 则每轮得到一个字符，而不是下标。真正语法是 for 名字 in 可迭代对象:，课件的 for condition 只是过度简化。",
+      "range 不会预先构造所有整数的列表，因此大范围也能以紧凑形式表示。需要看到列表时可用 list(range(...))。判断循环次数时特别注意终点排除、负步长和方向是否一致。"
+    ],
+    "takeaways": [
+      "range 终点不包含",
+      "for 遍历元素，不只用于数字"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "print(list(range(2, 8, 2)))\nfor ch in \"API\":\n    print(ch)",
+      "explanation": "先输出 [2, 4, 6]，随后 A、P、I 分三行输出。"
+    }
+  },
+  {
+    "page": 37,
+    "title": "datetime 与格式化日期",
+    "section": "控制流与函数",
+    "priority": "support",
+    "summary": "datetime.datetime.now() 取得运行时当前本地时间，strftime 把日期对象按格式字符串转换为显示文本。",
+    "explanation": [
+      "%Y 表示四位年份，%m 和 %d 分别是两位月份与日；某些系统支持 %-m、%-d 去掉前导零。格式化是展示，不改变日期对象本身，也不能任意改变真实星期。",
+      "课件假设 2012 年 4 月 1 日并写出 Wednesday，但这一天实际是 Sunday。复习时应以日期计算得到的星期为准。使用固定日期测试比依赖 now 更容易复现；本地时区也会影响“当前日期”落在哪一天。"
+    ],
+    "takeaways": [
+      "strftime：日期对象转文本",
+      "固定输入便于验证输出"
+    ],
+    "pitfall": "2012-04-01 是星期日，课件的 Wednesday 为笔误。",
+    "example": {
+      "lang": "python",
+      "code": "from datetime import datetime\nd = datetime(2012, 4, 1)\nprint(d.strftime(\"%Y/%m/%d\"))\nprint(d.strftime(\"%A\"))",
+      "explanation": "在英语 locale 下输出 2012/04/01 和 Sunday。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "日期格式符对照",
+    "section": "控制流与函数",
+    "priority": "support",
+    "summary": "表格区分月份数字、月份名称、日号和星期名称。大小写不同的格式符往往含义不同。",
+    "explanation": [
+      "%b 是月份简称如 Jan，%B 是月份全称如 January；%m 是两位月份。%d 是两位日号，%a 是星期简称，%A 是星期全称。可见 %m 与 %M 不能随意替换，后者通常用于分钟。",
+      "去掉前导零的 %-m/-d 或 Windows 的 %#m/#d 涉及平台扩展，不如标准格式可移植。月份和星期名称还受 locale 影响，不能在任何系统都断言输出英文。考试若明确给出平台与英语环境，应按题目条件推导。"
+    ],
+    "takeaways": [
+      "%m 月份；%d 日号",
+      "%A 星期全称；%B 月份全称"
+    ],
+    "question": {
+      "prompt": "希望显示 2026-10-04，应写什么标准格式？",
+      "answer": "%Y-%m-%d；年份四位、月份与日号两位，用连字符分隔。"
+    }
+  },
+  {
+    "page": 39,
+    "title": "函数定义与默认参数只求值一次",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "def 执行时创建函数并绑定名字，函数体在调用时执行；默认参数表达式在定义时求值一次。",
+    "explanation": [
+      "“先定义后调用”指运行到调用语句时函数名字必须已绑定，不要求文件里所有被调用函数都必须出现在调用者函数上方。调用者函数体可以在模块初始化完成后才执行。",
+      "可变默认参数是经典陷阱：def f(items=[]) 的同一个列表可能跨多次调用共享。常见写法改成 items=None，在函数体内为每次未提供参数的调用创建新列表。return 类型无需声明，类型注解可选。"
+    ],
+    "takeaways": [
+      "默认参数在 def 执行时求值",
+      "避免可变默认对象跨调用共享"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "def remember(x, items=[]):\n    items.append(x)\n    return items\nprint(remember(1))\nprint(remember(2))",
+      "explanation": "先输出 [1]，再输出 [1, 2]；第二次复用了默认列表。"
+    },
+    "links": [
+      {
+        "label": "Python 函数与默认参数",
+        "url": "https://docs.python.org/3/tutorial/controlflow.html"
+      }
+    ]
+  },
+  {
+    "page": 40,
+    "title": "参数、局部赋值与 return",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "课件函数接收两个参数、相乘并返回结果。调用表达式产生返回值，外部变量可以保存这个值。",
+    "explanation": [
+      "foo(12, 3) 把两个整数对象绑定给局部参数，再计算 36 并 return。result_1 保存的是结果 36，不是函数本身；如果要保存函数对象，应写 alias = foo 而不加调用括号。",
+      "函数内部重新给 arg_2 赋值，只改变局部名字，不会修改调用者原有整数变量。没有显式 return 或执行到函数末尾时返回 None。考试读调用要区分“传入值、函数内局部状态、返回值和打印输出”。"
+    ],
+    "takeaways": [
+      "foo 是函数对象；foo(...) 是调用",
+      "未返回具体值时结果为 None"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "def multiply(a, b):\n    b = a * b\n    return b\nn = 3\nresult = multiply(12, n)\nprint(result, n)",
+      "explanation": "输出 36 3，调用者的 n 没有被局部重新绑定改变。"
+    }
+  },
+  {
+    "page": 41,
+    "title": "lambda 与闭包示例",
+    "section": "控制流与函数",
+    "priority": "core",
+    "summary": "截图中的 make_incrementor(n) 返回 lambda x: x + n；返回的函数记住外层的 n，所以可以生成不同增量的函数。",
+    "explanation": [
+      "lambda 创建匿名函数对象，冒号后只能放一个表达式，该表达式结果自动成为返回值。它适合排序键或短回调，不用于写多条语句的大型逻辑。",
+      "make_incrementor(42) 的结果不是数字 42，而是等待 x 的函数。之后 f(0) 得到 42，f(1) 得到 43。这个保存外部名字绑定供以后使用的结构称为闭包；理解它也能帮助掌握 JavaScript 中类似的函数行为。"
+    ],
+    "takeaways": [
+      "lambda 产生函数对象",
+      "闭包保留对外层绑定的访问"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "def add_n(n):\n    return lambda x: x + n\nadd_ten = add_n(10)\nprint(add_ten(3), add_ten(5))",
+      "explanation": "输出 13 15；两次调用共用外层 n=10。"
+    }
+  },
+  {
+    "page": 42,
+    "title": "import 与 from import 的名字空间",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "导入模块和导入模块内的函数会创建不同的本地名字，因此后续调用写法也不同。",
+    "explanation": [
+      "import hello 后通过 hello.Hello() 调用函数；from hello import Hello 后可直接写 Hello()，但此语句本身不会在当前作用域创建 hello 名字。函数名大小写必须与定义一致。",
+      "import 不是简单把另一个文件文本复制粘贴到当前位置。模块顶层代码通常首次导入时执行，并由导入系统缓存。from package import * 也不等于保证递归导入所有子模块，其暴露内容受 __all__ 和包定义影响。"
+    ],
+    "takeaways": [
+      "import m → m.f()",
+      "from m import f → f()"
+    ],
+    "pitfall": "课件在两种导入形式后统一写 hello.Hello()，需要根据实际导入方式选择。"
+  },
+  {
+    "page": 43,
+    "title": "类、实例与继承",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "class 定义新的类型，调用类名创建实例，__init__ 初始化实例状态，点号用于访问属性和方法。",
+    "explanation": [
+      "self 是方法接收当前实例的惯用参数名，调用 obj.method() 时由机制自动传入 obj。self.name = name 把每个实例自己的数据与共享的类属性区分开。",
+      "class Child(Base) 表示继承，子类可以复用或覆盖父类行为。严格说 __init__ 是初始化方法，对象创建由 __new__ 负责，入门课常把前者称作 constructor。考试重点是看懂实例状态在哪创建、方法调用会返回什么。"
+    ],
+    "takeaways": [
+      "实例方法通常第一个参数为 self",
+      "__init__ 初始化实例"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "class Counter:\n    def __init__(self, start=0):\n        self.value = start\n    def next(self):\n        self.value += 1\n        return self.value\nc = Counter(4)\nprint(c.next(), c.value)",
+      "explanation": "输出 5 5，方法修改了这个实例的 value 属性。"
+    }
+  },
+  {
+    "page": 44,
+    "title": "官方示例的阅读方式",
+    "section": "模块与代码追踪",
+    "priority": "support",
+    "summary": "后续截图来自 Python 官方教程，主要通过交互解释器展示字符串、列表、函数、集合和字典。",
+    "explanation": [
+      "截图中的 >>> 是解释器提示符，... 表示多行输入继续；这些提示符不是复制进 .py 文件的程序代码。没有提示符的行通常是结果或异常信息。",
+      "复习时先遮住输出，自行写出每步对象状态，再与截图核对。特别关注原地修改方法、切片边界以及 range 的终点，这些细节往往比背诵函数名字更能检验是否真正理解。"
+    ],
+    "takeaways": [
+      "区分输入提示符与输出",
+      "先预测，再核对"
+    ],
+    "links": [
+      {
+        "label": "Python 基础官方教程",
+        "url": "https://docs.python.org/3/tutorial/introduction.html"
+      }
+    ]
+  },
+  {
+    "page": 45,
+    "title": "字符串示例：重复、正负索引",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "截图先把 \"un\" 重复三次再拼接 \"ium\"，随后以 Python 六个字符演示正索引和负索引。",
+    "explanation": [
+      "3 * \"un\" + \"ium\" 按运算优先级先重复，再拼接，得到 unununium。word[0] 是 P，word[5] 是 n；负索引从右数，word[-1] 是 n，word[-2] 是 o，word[-6] 是 P。",
+      "-0 与 0 是同一个整数，因此 word[-0] 仍等于 word[0]。单字符访问结果依然是长度 1 的字符串，Python 没有单独的 char 内置类型。超出合法范围的单索引会报 IndexError。"
+    ],
+    "takeaways": [
+      "负索引从 -1 开始",
+      "取出的单字符仍为 str"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "word = \"Python\"\nprint(word[0], word[-1], word[-2])\nprint(word[-0] == word[0])",
+      "explanation": "输出 P n o；下一行 True。"
+    }
+  },
+  {
+    "page": 46,
+    "title": "列表复制、拼接和元素替换",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "本页三个截图分别展示全切片复制、列表相加和把错误的立方数改正，说明列表支持创建新对象也支持原地更新。",
+    "explanation": [
+      "squares[:] 返回一个新列表，是浅拷贝；squares + [...] 也创建拼接后的新列表，而不是自动修改 squares。若元素自身是列表，浅拷贝中的嵌套对象仍然共享。",
+      "cubes[3] = 64 是原地替换第四个元素，因此后续读取同一列表能看到改正值。字符串不允许这种索引赋值，列表允许。做题时画两个层次：列表对象是否新建，列表内部元素指向的对象是否仍共享。"
+    ],
+    "takeaways": [
+      "[:] 创建浅拷贝",
+      "a[i] = x 原地替换元素"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = [[1], [2]]\nb = a[:]\nb[0].append(9)\nb.append([3])\nprint(a)\nprint(len(b))",
+      "explanation": "a 变为 [[1, 9], [2]]，但长度仍是 2；b 的长度是 3。"
+    }
+  },
+  {
+    "page": 47,
+    "title": "切片赋值可以改变列表长度",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "截图把 letters[2:5] 替换为 C、D、E，再替换为空列表删除区间，最后用 letters[:] = [] 清空整个列表。",
+    "explanation": [
+      "切片赋值先定位左闭右开的元素范围，再用右边可迭代对象中的元素替换。普通步长为 1 时，新元素数量可以与原区间长度不同，所以不仅能改值，也能插入和删除。",
+      "letters[:] = [] 保留原列表对象但清空内容，因此引用同一对象的别名也看到空列表。letters = [] 则只让这个名字改指向新空列表，其他别名仍引用旧对象。理解这个区别可避免把“相同打印结果”误当成“相同对象变化”。"
+    ],
+    "takeaways": [
+      "切片赋值可增删元素",
+      "清空对象与重新绑定不同"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = [\"a\", \"b\", \"c\", \"d\"]\nb = a\na[1:3] = [\"X\"]\nprint(a)\na[:] = []\nprint(b)",
+      "explanation": "先输出 [\"a\", \"X\", \"d\"] 的等价表示，再输出 []。"
+    }
+  },
+  {
+    "page": 48,
+    "title": "列表推导式：变换、过滤与嵌套",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "截图用列表推导式把循环收集结果压缩成表达式，涵盖翻倍、筛选非负数、abs、strip、生成元组以及展开嵌套列表。",
+    "explanation": [
+      "[x * 2 for x in vec] 对每个元素做变换；[x for x in vec if x >= 0] 只保留满足条件的元素。if 在这里是过滤条件，不是独立语句块。表达式产生一个新列表。",
+      "[(x, x*x) for x in range(6)] 的结果元素是元组，所以需要把二元组表达式用括号包好。[n for row in matrix for n in row] 按外层行、内层元素的顺序展开。推导式的 for 阅读顺序与对应嵌套循环一致。"
+    ],
+    "takeaways": [
+      "表达式 → for → 可选 if",
+      "嵌套 for 从左往右理解"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "nums = [-2, -1, 0, 1, 2]\nprint([x*x for x in nums if x > 0])\nprint([n for row in [[1, 2], [3]] for n in row])",
+      "explanation": "输出 [1, 4] 和 [1, 2, 3]。"
+    }
+  },
+  {
+    "page": 49,
+    "title": "for 遍历单词，range 控制步长",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "上半页按单词顺序输出每个词及 len；下半页展示起止边界和正负步长的变化。",
+    "explanation": [
+      "循环变量 w 每次直接绑定一个字符串，len(w) 数字符个数，包含字符串实际存在的空格等字符。range(5, 10) 是 5 到 9，range(0, 10, 3) 是 0、3、6、9。",
+      "负步长让序列递减：range(-10, -100, -30) 是 -10、-40、-70，下一项 -100 达到排除的 stop，故停止。步长不能是 0；方向与区间不匹配时范围为空。"
+    ],
+    "takeaways": [
+      "range(start, stop, step) 不含 stop",
+      "负步长用于递减"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "for word in [\"web\", \"Python\"]:\n    print(word, len(word))\nprint(list(range(5, -1, -2)))",
+      "explanation": "单词长度分别为 3 与 6；range 结果是 [5, 3, 1]。"
+    }
+  },
+  {
+    "page": 50,
+    "title": "ask_ok：循环、成员测试与异常",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "函数截图接受提示文字、重试次数和提醒语；循环读取输入，识别肯定或否定，否则递减重试计数，最终抛出异常。",
+    "explanation": [
+      "输入若属于 (\"y\", \"ye\", \"yes\") 就立即 return True；若属于否定选项就 return False。return 退出整个函数，所以其后的计数递减和提醒不会执行。",
+      "非法输入使 retries 减一；代码判断 retries < 0，所以初值 4 时，前四次非法输入仍打印提醒，第五次非法输入才触发 ValueError。边界是小于 0 而不是小于等于 0，必须按代码精确追踪，不能只看“4 次重试”的名字。"
+    ],
+    "takeaways": [
+      "return 结束函数",
+      "边界 <0 决定实际尝试次数"
+    ],
+    "question": {
+      "prompt": "初值 retries=1，连续两次非法输入会怎样？",
+      "answer": "第一次变成 0，打印提醒；第二次变成 -1，抛出 ValueError。"
+    }
+  },
+  {
+    "page": 51,
+    "title": "集合示例：去重和字符集合",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "水果集合示例显示重复项消失、成员测试返回布尔值；两个单词构成的字符集合再展示差集、并集、交集和对称差。",
+    "explanation": [
+      "set(\"abracadabra\") 把字符串迭代成字符再去重，并不会把整词作为唯一元素。如果希望集合里只有整个单词，应写 {\"abracadabra\"}。创建方式不同，元素层次也不同。",
+      "a - b 只留下 a 有而 b 没有的字符；a ^ b 删除双方共有字符。输出排列顺序不是集合语义的一部分，截图里的顺序不可当作固定答案；需要稳定展示时先 sorted。"
+    ],
+    "takeaways": [
+      "set(字符串) 得到字符集合",
+      "集合比较重成员，不重顺序"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "a = set(\"banana\")\nb = set(\"band\")\nprint(sorted(a))\nprint(sorted(a & b))\nprint(sorted(a - b))",
+      "explanation": "依次输出 [\"a\", \"b\", \"n\"]、相同三个字符，以及 []；展示时使用 Python 单引号也等价。"
+    }
+  },
+  {
+    "page": 52,
+    "title": "字典示例：增删查与键的列表",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "电话簿截图通过姓名键保存号码，展示读取、新增、删除、list、sorted 和 in。字典构造器还可接受键值对序列。",
+    "explanation": [
+      "tel[\"jack\"] 查值；del tel[\"sape\"] 删除该键值对；tel[\"irv\"] = ... 新增一项。list(tel) 按插入顺序列键，sorted(tel) 则新建一个排序后的键列表，并不把字典本身原地排序。",
+      "\"guido\" in tel 查询键是否存在，而非号码是否存在。dict([(\"a\", 1), (\"b\", 2)]) 把每个二元组当成一对键值。字典查不存在的键会 KeyError，可用 get 提供默认结果。"
+    ],
+    "takeaways": [
+      "in 查键；values() 可查值",
+      "sorted(d) 返回排序键列表"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "phones = {\"Zoe\": 10, \"Amy\": 20}\nprint(list(phones), sorted(phones))\nprint(phones.get(\"Lee\", \"missing\"))",
+      "explanation": "插入顺序是 Zoe、Amy；排序后 Amy、Zoe；缺失键返回 missing。"
+    }
+  },
+  {
+    "page": 53,
+    "title": "items、enumerate 与 zip",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "本页比较三种循环辅助工具：items 同时给字典键和值，enumerate 同时给位置和值，zip 把多条序列按位置配对。",
+    "explanation": [
+      "for k, v in d.items() 用拆包把每对键值分配给两个名字。enumerate(words) 默认从 0 开始编号，也可指定 start=1；它避免手动维护计数器。",
+      "zip(questions, answers) 每轮给一组对应元素，默认在较短序列结束时停止，不会自动为缺失部分补 None。截图使用 format 把问题和答案插入文本，原理是先配对，再格式化每个配对。"
+    ],
+    "takeaways": [
+      "items：键和值",
+      "enumerate：索引和值",
+      "zip：对应位置配对"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "for i, item in enumerate([\"HTML\", \"CSS\"], start=1):\n    print(i, item)\nprint(list(zip([1, 2, 3], [\"a\", \"b\"])))",
+      "explanation": "编号为 1、2；zip 结果只有 (1, \"a\")、(2, \"b\") 两对。"
+    }
+  },
+  {
+    "page": 54,
+    "title": "try/except 的控制流",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "代码反复把输入转成 int；转换成功就 break，转换失败则捕获 ValueError，显示提示后继续下一轮。",
+    "explanation": [
+      "发生异常时，try 内当前语句及其后未执行部分被中断，跳到匹配的 except。输入 \"abc\" 时 int 转换失败，因此 break 不执行；输入 \"12\" 时成功，except 被跳过且循环结束。",
+      "except ValueError 只捕获该类异常，不是所有故障。精确捕获能把“用户输入格式不对”与代码本身其他错误区分开。没有异常时 try 的正常控制流会继续，不会额外执行 except。"
+    ],
+    "takeaways": [
+      "异常发生后跳转到匹配 except",
+      "break 退出最近一层循环"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "for raw in [\"oops\", \"12\"]:\n    try:\n        n = int(raw)\n        print(n)\n        break\n    except ValueError:\n        print(\"retry\")",
+      "explanation": "输出 retry，然后 12。"
+    }
+  },
+  {
+    "page": 55,
+    "title": "模块导入的三种形式",
+    "section": "模块与代码追踪",
+    "priority": "core",
+    "summary": "import fibo、from fibo import fib, fib2 和星号导入，差别在于当前名字空间中增加哪些名字。",
+    "explanation": [
+      "第一种创建模块名 fibo，调用用 fibo.fib(...)；第二种直接绑定 fib 和 fib2，可以不加模块前缀。模块通常是 .py 文件，但 Python 也支持内置模块和扩展模块，不能把所有模块都限定为文本文件。",
+      "星号导入容易把多个来源的名字混在一起，导致同名覆盖且不容易判断函数来自哪里，因此实际代码更适合显式导入。判断一道题能否调用某个名字时，应逐句检查导入语句，不要假设模块中所有东西自动进入当前作用域。"
+    ],
+    "takeaways": [
+      "导入形式决定调用写法",
+      "显式导入便于追踪名字来源"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import math\nfrom math import sqrt\nprint(math.floor(2.8), sqrt(9))",
+      "explanation": "输出 2 3.0；floor 经模块访问，sqrt 直接访问。"
+    }
+  },
+  {
+    "page": 56,
+    "title": "Flask 与 WSGI 的职责",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "Flask 是轻量 Python Web 框架；WSGI 是 Web 服务器与 Python 应用之间的标准接口，而不是浏览器使用的协议。",
+    "explanation": [
+      "浏览器通过 HTTP 发请求，Web 服务器解析请求，再按 WSGI 约定把环境信息交给应用。Flask 提供路由、请求处理和响应构造等便利，帮助业务函数参与这条流程。",
+      "轻量意味着核心不过度绑定数据库或项目组织方式，并不表示只能做小网站。PEP 3333 描述适用于 Python 3 的 WSGI 接口。复习要能把 HTTP、WSGI、Flask 三层分开：网络消息、服务器调用约定和应用框架。"
+    ],
+    "takeaways": [
+      "HTTP 面向网络通信",
+      "WSGI 连接服务器与 Python 应用",
+      "Flask 提供路由与响应机制"
+    ]
+  },
+  {
+    "page": 57,
+    "title": "虚拟环境与 Flask 安装",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "虚拟环境为项目隔离 Python 包依赖，减少不同项目需要不同版本时互相影响。",
+    "explanation": [
+      "python3 -m venv .venv 创建环境；激活脚本调整当前 shell 中的解释器和工具搜索位置。激活不是把项目上传，也不自动安装 Flask。随后通过该环境的 pip 安装所需库。",
+      "使用 python -m pip 可以明确让当前解释器运行对应的包管理器。课件把第三方 virtualenv 与标准库 venv 并列介绍；复习重点是环境隔离与包安装的先后关系，而不是记旧 Python 2 的兼容方案。"
+    ],
+    "takeaways": [
+      "先创建环境，再安装项目依赖",
+      "虚拟环境与云部署是不同步骤"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "python3 -m venv .venv\nsource .venv/bin/activate\npython -m pip install Flask",
+      "explanation": "在 macOS/Linux shell 执行；Windows 的激活路径和命令不同。"
+    }
+  },
+  {
+    "page": 58,
+    "title": "Flask 的最小路由",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "Flask(__name__) 创建应用对象，@app.route(\"/\") 把 URL 路径关联到函数，函数返回值变成 HTTP 响应。",
+    "explanation": [
+      "装饰器在模块加载时注册路由；不是文件读到 def 就立刻执行 hello_world。只有请求匹配路径和允许的方法，框架才调用该视图函数。__name__ 帮框架定位应用资源等信息。",
+      "return \"Hello, World\" 返回响应正文；print 则通常写入服务器日志，不会把内容发送给浏览器。URL 的 / 是路径，不是操作系统目录。默认 route 支持 GET，并会处理相关的 HEAD/OPTIONS 行为。"
+    ],
+    "takeaways": [
+      "装饰器注册 URL 到函数的映射",
+      "return 提供响应，print 写服务器输出"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "from flask import Flask\napp = Flask(__name__)\n\n@app.route(\"/health\")\ndef health():\n    return \"ready\"",
+      "explanation": "GET /health 响应正文为 ready；GET /other 没有对应路由时通常是 404。"
+    },
+    "links": [
+      {
+        "label": "Flask 快速入门",
+        "url": "https://flask.palletsprojects.com/en/stable/quickstart/"
+      }
+    ]
+  },
+  {
+    "page": 59,
+    "title": "启动 Flask 与访问本机端口",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "课件通过 FLASK_APP 指定应用模块，再运行 flask run；终端显示本地服务地址，浏览器访问后得到问候文本。",
+    "explanation": [
+      "127.0.0.1 是回环地址，5000 是开发服务器默认端口。浏览器输入这个 URL 后发起 HTTP 请求，运行中的 Flask 进程才能响应；仅保存 hello.py 文件不会自动产生可访问服务。",
+      "可用 flask --app hello run 明确指定模块。截图地址若显示 /index，则需要有该路径对应的路由；上一页只注册 / 的最小代码，不能据截图推断它自动支持任意路径。开发服务适合本地调试，部署时由实际运行平台组织服务进程。"
+    ],
+    "takeaways": [
+      "服务必须处于运行状态",
+      "路径必须匹配已注册路由"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "flask --app hello run\n# 浏览器访问 http://127.0.0.1:5000/",
+      "explanation": "假设上一页代码保存为 hello.py，根路径返回 Hello World 类的文本。"
+    }
+  },
+  {
+    "page": 60,
+    "title": "在视图函数中拼接 HTML",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "同一个视图函数可由 / 与 /index 两条路由调用，函数把用户名字插进 HTML 字符串再返回。",
+    "explanation": [
+      "字典 user 提供 username 值，字符串拼接形成 <h1>Hello, Miguel!</h1>。这段 Python 在服务器执行，浏览器接收已经拼好的 HTML，然后根据标签显示大标题，不执行 Python 源码。",
+      "把整个页面直接写在函数中会使业务逻辑和界面结构混杂，因此下一页引入模板。需要理解的是渲染发生的位置：返回 HTML 时主要结构在服务器形成；返回 JSON 时则通常由客户端 JavaScript 决定如何展示。"
+    ],
+    "takeaways": [
+      "多个路径可映射同一函数",
+      "浏览器收到渲染后的 HTML"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "user = {\"username\": \"Derek\"}\nhtml = \"<h1>Hello, \" + user[\"username\"] + \"!</h1>\"\nprint(html)",
+      "explanation": "输出 HTML 字符串；当浏览器把它作为 HTML 正文解析时显示标题。"
+    }
+  },
+  {
+    "page": 61,
+    "title": "render_template：把数据交给模板",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "视图构造一个 user 字典与 posts 列表，再把它们连同 title 作为上下文传入 index.html 模板。",
+    "explanation": [
+      "posts 是“列表里面放字典，字典里面还有 author 字典”的嵌套结构。读 post.author.username 前，先画出 posts → 第一个 post → author → username 的层次，便不会把列表和单个对象混淆。",
+      "render_template 读取模板，把传入变量替换到模板表达式，并执行模板条件与循环，最终返回 HTML。参数 title=\"Home\" 是把字符串传给模板变量 title，不是立即改变浏览器标题；必须模板实际输出到 title 元素才生效。"
+    ],
+    "takeaways": [
+      "列表保存多条记录",
+      "模板上下文由关键字参数传入"
+    ],
+    "question": {
+      "prompt": "posts 有两项，模板中对 posts 循环会生成几组帖子？",
+      "answer": "两组，每次循环 post 绑定其中一个字典。"
+    }
+  },
+  {
+    "page": 62,
+    "title": "Jinja 模板：表达式、条件与循环",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "{{ ... }} 输出值，{% ... %} 控制模板逻辑；本页根据 title 选择页面标题，并逐条生成帖子 HTML。",
+    "explanation": [
+      "若 title 真值为真，输出 Home - Microblog；否则输出欢迎标题。{{ user.username }} 读取传入用户信息。for post in posts 逐项生成 div/p，作者名字普通显示，帖子正文放在 b 标签中加粗。",
+      "这些标记在服务器由模板引擎处理；发送给浏览器的最终 HTML 不应再包含未处理的 Jinja 控制语句。Jinja 的点号可用于字典属性式访问，但别因此断言普通 Python dict 也能直接 d.key 取值。"
+    ],
+    "takeaways": [
+      "{{ }} 输出；{% %} 控制流",
+      "Jinja 语法不是浏览器 HTML 语法"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<h1>Hi, {{ user.username }}!</h1>\n{% for post in posts %}\n  <p>{{ post.author.username }}: <b>{{ post.body }}</b></p>\n{% endfor %}",
+      "explanation": "这是模板源文件片段，需在服务端提供 user 与 posts 上下文后渲染。"
+    }
+  },
+  {
+    "page": 63,
+    "title": "模板输出截图的因果关系",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "浏览器截图显示 Hi, Miguel!，下面两条帖子分别来自 John 和 Susan；加粗部分正是模板中的 b 元素。",
+    "explanation": [
+      "页面标题 Home Page/Microblog 类文本来自 head 中的 title，正文的大标题来自 h1；二者用途不同，不能把标签页标题当成正文中多出来的一行。两条帖子由两次 for 循环生成。",
+      "要从截图反推数据流：视图提供 user 和 posts，模板逐项取字段，HTML 被浏览器解析，最终产生视觉结构。改变 posts 长度会改变帖子数量，改变 b 为普通文本只会改变视觉强调，不改变数据本身。"
+    ],
+    "takeaways": [
+      "输出数量由输入列表长度决定",
+      "标签页标题与页面正文分开处理"
+    ],
+    "question": {
+      "prompt": "若 posts=[] 且 user 不变，页面还会显示什么？",
+      "answer": "问候 h1 和页面标题仍在；帖子循环输出零条。"
+    }
+  },
+  {
+    "page": 64,
+    "title": "课程采用 API 与前端分离的模式",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "课件希望后端主要返回 JSON/XML 数据，由前端通过 AJAX 接收并更新页面，因此要求作业避免把动态页面逻辑塞进 render_template。",
+    "explanation": [
+      "传统模板模式在服务器把数据与 HTML 合并，再把整页返回；分离模式先发送页面资源，再由 JavaScript 调 API 取得数据。一个返回 JSON 的接口也能同时服务 Web 和移动端。",
+      "“模板是旧技术”应理解为本课程选用的架构方向，不是模板在现代开发中已失效。服务端渲染仍有适用场景，REST 也不强制只能返回 JSON。复习要准确回答本课的作业模式，同时保留通用概念边界。"
+    ],
+    "takeaways": [
+      "课程后端重点：数据 API",
+      "渲染位置决定前后端职责"
+    ],
+    "pitfall": "AJAX 不要求 JSON；REST 不禁止 HTML；这里是不使用动态模板的课程设计取向。"
+  },
+  {
+    "page": 65,
+    "title": "待办 API 的内存数据模型",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "示例先用 tasks 列表模拟数据存储，每项是包含 id、title、description、done 的字典，再准备创建 API 路由。",
+    "explanation": [
+      "列表表示资源集合，id 区分单个资源，done 在 Python 中是 False 布尔值。序列化成 JSON 后会变为小写 false；不要把 Python 字面量与 JSON 语法混用。",
+      "if __name__ == \"__main__\" 让直接运行脚本时启动服务，作为模块导入时不执行这一块。app.run 是阻塞的运行入口，因此路由定义应在启动语句之前。内存列表适合演示，但进程重启后不会自动保存用户修改。"
+    ],
+    "takeaways": [
+      "Python False 对应 JSON false",
+      "路由应在服务启动前定义"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "tasks = [{\"id\": 1, \"title\": \"Review HTTP\", \"done\": False}]\nprint(tasks[0][\"title\"])",
+      "explanation": "输出 Review HTTP；这个结构随后可由 jsonify 序列化。"
+    }
+  },
+  {
+    "page": 66,
+    "title": "GET 集合资源与 jsonify",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "GET /todo/api/v1.0/tasks 读取任务集合，jsonify 把 Python 字典及内部列表转成 JSON 响应。",
+    "explanation": [
+      "外层 {\"tasks\": tasks} 使响应根节点是对象，tasks 字段才是数组。客户端收到后应访问 data.tasks，而不是把整个 data 直接当数组遍历。methods=[\"GET\"] 限定路由接收的方法。",
+      "jsonify 不只是返回一个看起来像字典的字符串；它构造适合 HTTP 发送的响应并设置 JSON 媒体类型。GET 表示读取已有信息，应避免在读取时悄悄改变业务状态。实际 URL 中的 v1.0 是版本命名约定，不是 HTTP 版本。"
+    ],
+    "takeaways": [
+      "API 路径版本与 HTTP 版本不同",
+      "响应结构为对象内含 tasks 数组"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "@app.route(\"/tasks\", methods=[\"GET\"])\ndef get_tasks():\n    return jsonify({\"tasks\": tasks})",
+      "explanation": "此片段接在 Flask app、jsonify 导入及 tasks 数据定义之后。"
+    }
+  },
+  {
+    "page": 67,
+    "title": "集合 API 的 HTTP 输出",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "终端截图使用 curl -i 展示响应头和 JSON 正文：状态为 200，Content-Type 为 application/json，正文包含两个任务。",
+    "explanation": [
+      "-i 让 curl 连响应头一起显示，所以 HTTP/1.0 200 OK、Content-Length 等并不是 JSON 字段。JSON 正文从头部后的空行开始，tasks 值是数组，每个数组元素是一个任务对象。",
+      "Python 列表与字典经过序列化，变成 JSON 的数组与对象；False 写成 false，键和字符串值使用双引号。输出里的服务器版本和日期属于截图当时的环境，复习目标是识别结构，不背旧版本数字。"
+    ],
+    "takeaways": [
+      "空行分隔 HTTP 头和正文",
+      "JSON 类型转换应准确"
+    ],
+    "question": {
+      "prompt": "为什么 JSON 里是 false 而不是 False？",
+      "answer": "JSON 与 Python 是不同语法；JSON 布尔字面量必须小写。"
+    }
+  },
+  {
+    "page": 68,
+    "title": "路径参数、过滤与 404",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "单资源路由把 <int:task_id> 解析成整数，筛选对应 id 的任务，找不到时 abort(404)，找到时返回单条对象。",
+    "explanation": [
+      "列表推导式遍历 tasks，只保留 task[\"id\"] == task_id 的项。得到空列表时长度为 0，函数中止并产生 404；否则 task[0] 是匹配的第一项。这里假设 id 唯一，若重复只返回第一项。",
+      "课件路由字符串漏掉起始 /，实际 Flask 规则应写 /todo/api/v1.0/tasks/<int:task_id>。参数转换失败与资源不存在都可能最终表现为 404，但一个是路由不匹配，一个是已进入函数后找不到数据。"
+    ],
+    "takeaways": [
+      "路径转换器把参数变成 int",
+      "abort 中断正常返回"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "@app.route(\"/tasks/<int:task_id>\")\ndef get_task(task_id):\n    matches = [t for t in tasks if t[\"id\"] == task_id]\n    if not matches:\n        abort(404)\n    return jsonify({\"task\": matches[0]})",
+      "explanation": "需已有 app、tasks，并从 flask 导入 abort、jsonify。"
+    }
+  },
+  {
+    "page": 69,
+    "title": "单资源响应与集合响应对比",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "截图请求 id=2 的任务，200 响应正文只有 task 对象，其标题为 Learn Python；与前一页 tasks 数组的结构不同。",
+    "explanation": [
+      "集合端点常返回 {\"tasks\": [...]}，单资源端点常返回 {\"task\": {...}}。复习时不能只看字段名字相近，必须检查花括号与方括号层次：前者内含数组，后者内含单个对象。",
+      "客户端若需要读取任务标题，对单项结果使用 data.task.title；若对整个集合，则遍历 data.tasks 后再访问每条的 title。请求一个不存在的 id 应走上一页 404 分支，不能仍假定这个成功截图适用于所有 URL。"
+    ],
+    "takeaways": [
+      "task 是对象；tasks 是数组",
+      "响应形状取决于端点契约"
+    ],
+    "question": {
+      "prompt": "GET /tasks/999 不存在该任务时，是空成功对象还是 404？",
+      "answer": "按课件函数会 abort(404)，不是返回 200 加空对象。"
+    }
+  },
+  {
+    "page": 70,
+    "title": "静态文件与模板的区别",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "app.send_static_file(\"index.html\") 从应用静态目录发送文件，不需要在服务器把变量插进模板。",
+    "explanation": [
+      "静态 HTML 可以引用静态 CSS 和 JavaScript；页面加载之后，JavaScript 再调用后端数据 API。这正好与课程强调的前后端分离模式连接起来。静态表示服务器不为每次请求执行模板替换，并不等于页面不能在浏览器中交互。",
+      "send_from_directory 则允许明确指定目录，框架负责组织文件响应。文件返回给浏览器后仍由浏览器解析，Python 代码不会随之在前端运行。题目中看到 render_template 与 send_static_file，应先问是否存在服务器模板求值。"
+    ],
+    "takeaways": [
+      "静态发送不执行 Jinja 变量替换",
+      "静态页面仍可运行浏览器 JavaScript"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "@app.route(\"/\")\ndef homepage():\n    return app.send_static_file(\"index.html\")",
+      "explanation": "假设 index.html 位于 Flask 默认 static 目录。"
+    }
+  },
+  {
+    "page": 71,
+    "title": "Requests：Python 也能充当 HTTP 客户端",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "Requests 库使 Python 程序能向另一个服务发 HTTP 请求；Web 后端可以同时作为浏览器的服务器和外部 API 的客户端。",
+    "explanation": [
+      "requests.get(url, params=payload) 把字典编码成查询参数，而不是把它作为 JSON 请求体。返回的 Response 包含状态码、响应头和正文；r.json() 尝试把正文解析成 Python 对象。",
+      "成功解析 JSON 不等于 HTTP 请求业务成功，错误响应也可能是 JSON；应先检查状态码或调用 raise_for_status。反过来，非 JSON 正文会使 json() 解析失败。课件支持版本范围是材料快照，不是 Requests 永久兼容承诺。"
+    ],
+    "takeaways": [
+      "params 用于查询串",
+      "r.json() 解析正文，不判断请求成功"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "import requests\nr = requests.get(\"https://httpbin.org/get\", params={\"q\": \"web\"}, timeout=10)\nr.raise_for_status()\ndata = r.json()\nprint(data[\"args\"][\"q\"])",
+      "explanation": "联网成功时输出 web；示例展示服务器把查询参数回显为 JSON。"
+    }
+  },
+  {
+    "page": 72,
+    "title": "FastAPI、ASGI 与类型提示",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "FastAPI 侧重 API 开发，使用 ASGI 接口，并结合 Starlette 与 Pydantic 提供请求处理和数据验证。",
+    "explanation": [
+      "ASGI 是 Asynchronous Server Gateway Interface，面向异步服务器与应用交互，也适合长连接等场景。async/await 可在等待 I/O 时让出执行机会，但不会使 CPU 密集计算自动变快。",
+      "类型提示在普通 Python 中通常不强制检查；FastAPI 可以读取提示，把路径参数和请求数据转换、验证并用于生成文档。HTTP/2 支持还取决于实际部署服务器，不能只因为用了某个框架就断言线上协议版本。"
+    ],
+    "takeaways": [
+      "ASGI 面向异步应用接口",
+      "类型提示可被框架用于运行时验证"
+    ]
+  },
+  {
+    "page": 73,
+    "title": "FastAPI 的功能与性能边界",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "本页把自动文档、验证、异步执行和依赖注入列为主要能力；这些功能减少 API 的重复处理工作。",
+    "explanation": [
+      "自动文档来自端点路径、方法和类型模型等元信息；客户端可据此了解应该发送什么字段。依赖注入把数据库会话或共享检查等依赖声明出来，让框架按请求准备资源。",
+      "“媲美 Node.js/Go”“处理数千请求”是性能方向描述，实际吞吐取决于工作负载、I/O、数据库、部署和代码写法。考试复习应能把能力与作用对应，而不是把营销形容词当成所有应用都满足的固定数值。"
+    ],
+    "takeaways": [
+      "自动文档与类型模型相关",
+      "异步优势主要出现在适合并发等待的 I/O 工作"
+    ]
+  },
+  {
+    "page": 74,
+    "title": "修正 FastAPI 最小示例",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "正确的最小示例导入小写模块 fastapi，创建 FastAPI 对象，用 @app.get 注册 GET 端点，再由函数返回字典。",
+    "explanation": [
+      "课件 from FASTAPI import FastAPI 的模块名大小写不正确；async def root 还缺少 () 与冒号。Python 的语法错误会在应用启动前阻止执行，不能等到访问 URL 才修复。",
+      "框架将返回的字典编码为 JSON，message 是对象字段。这个例子本身没有等待操作，使用普通 def 也可以；async def 为后续可能的 await 操作提供协程函数形式。复习应先保证代码语法，再分析 HTTP 行为。"
+    ],
+    "takeaways": [
+      "模块名 fastapi 小写",
+      "函数头需要括号和冒号"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "from fastapi import FastAPI\napp = FastAPI()\n\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"Review ready\"}",
+      "explanation": "GET / 返回 JSON 对象，其 message 值为 Review ready。"
+    },
+    "links": [
+      {
+        "label": "FastAPI First Steps",
+        "url": "https://fastapi.tiangolo.com/tutorial/first-steps/"
+      }
+    ]
+  },
+  {
+    "page": 75,
+    "title": "Flask 与 FastAPI 的选择维度",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "对照表以异步能力、验证、文档、生态和用途比较两个框架；可以从接口标准与默认能力理解差异。",
+    "explanation": [
+      "Flask 核心建立在 WSGI 上，提供简洁路由并允许按需扩展；FastAPI 建立在 ASGI 生态上，类型驱动的请求验证和 API 文档是突出功能。两者都能构建 JSON API，不能把 Flask 等同于只能返回 HTML。",
+      "表格把 Flask 写成没有异步、FastAPI 写成天然更快，属于简化。Flask 存在 async 视图支持但受 WSGI 执行模型限制；性能须在具体环境比较。考试重点应是设计取向和接口层次，而非绝对优劣。"
+    ],
+    "takeaways": [
+      "Flask：轻量、扩展自由",
+      "FastAPI：ASGI、类型验证与 API 文档"
+    ],
+    "pitfall": "框架对照表是概括；异步支持和速度不能只用一个勾叉绝对化。"
+  },
+  {
+    "page": 76,
+    "title": "Django：更完整的 Web 框架",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "Django 提供较完整的 Web 应用组织方式，帮助项目快速形成可维护结构，并可经 WSGI 或 ASGI 部署。",
+    "explanation": [
+      "与只展示一个 Flask 文件不同，Django 通常从项目与应用的层次组织路由、视图、模型和配置。其内置功能多，适合把常见 Web 需求按约定组合。",
+      "“高层框架”意味着开发者使用更完整的抽象，不表示底层 HTTP 消失。请求仍需经过 URL 匹配、视图处理、响应返回。学习多个框架时抓住共同流程，再比较框架把哪些功能内置，能减少记忆负担。"
+    ],
+    "takeaways": [
+      "Django 支持 WSGI 和 ASGI",
+      "共同流程仍是请求→路由→视图→响应"
+    ]
+  },
+  {
+    "page": 77,
+    "title": "Django project 的文件分工",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "startproject 创建项目骨架；manage.py 是管理入口，settings.py 保存配置，urls.py 保存项目级路由。",
+    "explanation": [
+      "项目是整个站点的配置与组织单位，后面创建的 polls app 是某一项功能模块。把这两层区分开，才能理解为什么有一个总 urls.py，还能有每个 app 自己的 urls.py。",
+      "命令行安装包只是让工具可用，startproject 才生成项目文件。settings 决定已安装应用、数据库等运行环境，urls 将 URL 请求分派到处理函数。复习时按职责匹配文件名，比孤立背诵命令更稳固。"
+    ],
+    "takeaways": [
+      "manage.py 管理项目",
+      "settings.py 配置",
+      "urls.py 路由"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "python -m pip install Django\ndjango-admin startproject studyhub\ncd studyhub",
+      "explanation": "生成项目目录后，manage.py 位于外层 studyhub 目录中。"
+    }
+  },
+  {
+    "page": 78,
+    "title": "Django 开发服务器的终端反馈",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "python manage.py runserver 在当前项目上下文启动开发服务，截图显示检查信息、迁移提示及本地监听地址。",
+    "explanation": [
+      "运行位置需要能找到 manage.py，服务器通常默认使用 127.0.0.1:8000。这个端口与 Flask 示例的 5000 不同，是工具默认值，不是 HTTP 协议规定必须如此。",
+      "未应用 migrations 的提示表示数据库结构同步可能尚未完成，不一定意味着最简单纯文本路由无法访问。先辨认输出是警告还是导致进程退出的错误。浏览器只有在进程运行且访问正确端口时才能收到响应。"
+    ],
+    "takeaways": [
+      "runserver 从项目配置启动服务",
+      "8000 是默认开发端口"
+    ]
+  },
+  {
+    "page": 79,
+    "title": "创建 app 与编写 view",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "startapp polls 创建一个功能模块；views.py 中的 index 接收 request 并返回 HttpResponse。",
+    "explanation": [
+      "request 是框架传入的请求对象，可包含方法、参数和其他请求信息。HttpResponse 将字符串包装成 Django 期望的响应对象，框架随后把它发送给客户端。仅定义函数还不够，下一页必须把路径映射到它。",
+      "项目可包含多个应用，例如 polls、accounts、catalog；应用并非独立浏览器窗口，而是可组织和复用的功能单元。函数名 index 只是普通 Python 名字，不会因为叫 index 就自动对应根路径。"
+    ],
+    "takeaways": [
+      "定义视图后还需要配置路由",
+      "view 接收 request，返回 response"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "from django.http import HttpResponse\n\ndef index(request):\n    return HttpResponse(\"Study hub is ready.\")",
+      "explanation": "这是 views.py 的函数，需经 URL 配置才能被 HTTP 请求调用。"
+    }
+  },
+  {
+    "page": 80,
+    "title": "两层 URL 路由如何拼合",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "项目 urls.py 用 include 把 polls/ 前缀交给应用路由；应用 urls.py 的空路径再映射到 views.index。",
+    "explanation": [
+      "访问 /polls/ 时，项目先匹配 polls/ 并移除已消费的前缀，剩余空串交给 polls.urls；其 path(\"\", views.index) 匹配并调用函数。两层结构让应用路由不必反复写项目中的前缀。",
+      "path 接收函数对象 views.index，而不是 views.index() 的执行结果。name=\"index\" 是路由反向查找名称，和浏览器路径不一定相同。理解消费前缀的过程，就能推导 /polls/detail/ 一类嵌套路由。"
+    ],
+    "takeaways": [
+      "include 委派剩余路径",
+      "路由引用函数对象，通常不加调用括号"
+    ],
+    "question": {
+      "prompt": "项目前缀 polls/，应用路径 recent/，最终 URL 是什么？",
+      "answer": "/polls/recent/；项目和应用的路径片段依次匹配。"
+    }
+  },
+  {
+    "page": 81,
+    "title": "从浏览器结果反推 Django 请求链",
+    "section": "Python Web 框架",
+    "priority": "core",
+    "summary": "截图显示浏览器访问 127.0.0.1:8000/polls/，正文就是 views.index 返回的问候字符串。",
+    "explanation": [
+      "这一结果串联了三步：开发服务器监听 8000，项目路由把 polls/ 分派到应用，应用空路径触发 index。页面没有复杂 HTML 也能显示，因为响应正文可以只是文本内容。",
+      "如果改成访问 /，不一定会得到同样内容，因为它没有 polls/ 前缀。若看到 404，应先检查路径配置；连接失败则更可能是服务未启动或端口不对。二者发生在不同层次，不能都归为“Python 函数返回错了”。"
+    ],
+    "takeaways": [
+      "连接失败与 404 是不同问题",
+      "输出正文来自视图的 HttpResponse"
+    ],
+    "links": [
+      {
+        "label": "Django 官方入门",
+        "url": "https://docs.djangoproject.com/en/5.2/intro/tutorial01/"
+      }
+    ]
+  },
+  {
+    "page": 82,
+    "title": "Python 应用部署到 Google Cloud",
+    "section": "Python Web 框架",
+    "priority": "support",
+    "summary": "末页提供 Python、Cloud Code、App Engine 和 Cloud Run 的云端入口，连接本地后端代码与可公开访问的服务。",
+    "explanation": [
+      "本地运行证明应用能响应请求；云部署还要提供依赖、启动方式、监听端口和运行配置。Flask 是应用框架，Cloud Run 是托管运行环境，它们位于不同层次。",
+      "课件“不会超过免费配额”不能视为任何使用量下的保证；配额和计费受具体服务、地区和流量影响。复习目标是识别部署链：源码与依赖→构建或打包→云服务运行→通过 HTTPS URL 访问，而不必死记控制台截图。"
+    ],
+    "takeaways": [
+      "本地运行与云部署是两步",
+      "框架负责应用，云平台负责托管运行"
+    ],
+    "links": [
+      {
+        "label": "Google Cloud：部署 Flask 到 Cloud Run",
+        "url": "https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service"
+      }
+    ]
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "page": 1,
+    "title": "课程与教学联系",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "CSCI 571 Web Technologies为4学分课程，本学期线下课安排在周二、周四17:00–18:50。",
+    "explanation": [
+      "本页给出课程教师、助教、办公时间及上课方式。考前有关考试范围或题型的变更应查看教师在Brightspace与Piazza的通知；本站根据当前本地syllabus整理，不能替代更新通知。"
+    ],
+    "takeaways": [
+      "课程内容与行政安排以教师通知为准"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "整门课的技术范围",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "课程覆盖客户端、服务端、协议、数据交换、Web服务、云与AI辅助开发。",
+    "explanation": [
+      "这是整学期目标，不意味着所有列出的技术都属于midterm。HTML/CSS/JS处理浏览器端，Python和Node处理服务端，HTTP和JSON连接两者。复习范围要结合第8页课次表及教师明确排除项判断。"
+    ],
+    "takeaways": [
+      "整学期目录不等于期中考试范围"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "材料、作业与学习目标",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "课程使用Brightspace分发材料与提交内容，没有指定教材；作业逐步增加前端、Python后端和框架能力。",
+    "explanation": [
+      "作业用于实践集成，考试则强调理论与代码分析。会把应用部署上线不等于能解释每一段程序，反过来只背定义也不等于掌握开发流程。应通过例子把两种学习方式连接起来。"
+    ],
+    "takeaways": [
+      "作业实践与考试概念互相支撑"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "成绩组成",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "两次书面考试各占40%，作业1–2合计12%，最终项目8%，合计100%。",
+    "explanation": [
+      "本页还给出作业内部权重和分数区间。复习最直接的意义是midterm占比很高，应该给基础概念和代码分析足够时间。Process log是作业要求，不能把作业可使用AI的规则自动迁移到考试。"
+    ],
+    "takeaways": [
+      "Exam #1 = 总成绩40%"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "Midterm 时间与考试方式",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "Exam #1为2026年10月6日（周二）17:00，时长60分钟；理论题可能含代码分析，不要求写代码。",
+    "explanation": [
+      "现场使用Brightspace Quiz Tool及LockDown Browser，进入考场需要学生证核验。准备重点是能独立推演程序与机制；是否允许纸质资料等未在这页明确的规则，以教师通知为准。提前检查笔记本、充电、浏览器和账号。"
+    ],
+    "takeaways": [
+      "10月6日17:00，60分钟",
+      "理论＋代码分析；无需编写代码"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "课堂责任与 AI 使用",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "学生需要对课堂覆盖的内容和Piazza公告负责，课程鼓励适当使用AI支持学习。",
+    "explanation": [
+      "鼓励使用工具与允许任何场合使用工具不是同一句话。复习时可以让AI解释例子或出题，但应自己先回答，确保脱离工具也能完成分析。对具体考核的使用要求应单独核对。"
+    ],
+    "takeaways": [
+      "学习辅助不能替代独立理解"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "AI 输出需要验证",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "syllabus要求学生对提交内容的准确性、质量和完整性负责，并说明课程材料的使用政策。",
+    "explanation": [
+      "本网站用于已获授权的课程复习。学习上的关键是模型可能生成不准确内容，因此讲解要回到原始课件、语言语义、代码运行和官方文档进行交叉核对，而不是因为表述流畅就接受。"
+    ],
+    "takeaways": [
+      "理解、核对与验证是学生责任"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "按课次定位期中范围",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "课次表在10月6日Exam #1之前安排了Web Basics、HTML、CSS、JS、JSON、Python、DOM、Forms/CGI、Vibe Coding与HTTP/Networking。",
+    "explanation": [
+      "响应式设计、Node/React等后续专题安排在考试之后；但前面讲义已提及的相关概念仍应按实际授课说明复习。本站依课次建立目录，同时保留AI Basics全套讲解并标明其范围需确认。"
+    ],
+    "takeaways": [
+      "课次截止HTTP/Networking",
+      "最终范围以教师明确通知为准"
+    ]
+  },
+  {
+    "page": 9,
+    "title": "学习与考试支持资源",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "本页列出学习便利安排及学校提供的多类支持渠道。",
+    "explanation": [
+      "如有正式考试便利安排，应依据学校流程与教师沟通落实。此页属于行政支持信息，不是Web技术知识点；复习时记住从哪里取得帮助即可，不需背电话号码。"
+    ],
+    "takeaways": [
+      "支持资源属于行政信息"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "补充支持与反馈渠道",
+    "section": "考试与课程安排",
+    "priority": "admin",
+    "summary": "最后一页补充学校协调、生活支持与问题报告资源，结束syllabus。",
+    "explanation": [
+      "它与技术讲义的作用不同：syllabus界定课程规则与学习环境，具体语言和协议机制由各专题讲义解释。完成考试准备时，技术错题和设备/证件准备可以分别检查，避免遗漏。"
+    ],
+    "takeaways": [
+      "分开检查知识掌握与考试准备"
+    ]
+  }
+]

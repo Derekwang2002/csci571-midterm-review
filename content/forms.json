@@ -1,0 +1,996 @@
+[
+  {
+    "page": 1,
+    "title": "表单与 CGI：从输入到服务器响应",
+    "section": "表单控件与提交",
+    "priority": "admin",
+    "summary": "本讲把 HTML 表单控件、HTTP 数据提交以及服务器端 CGI 程序串成完整的交互链。",
+    "explanation": [
+      "用户看到输入框只是第一步，浏览器还要决定哪些字段提交、如何编码、用何种方法发往哪个地址。",
+      "服务器收到数据后执行处理逻辑，再返回 HTML 或其他响应。复习要能从表单源码推导请求内容，也要能从 CGI 输入输出解释浏览器最后看到什么。"
+    ],
+    "takeaways": [
+      "控件、请求与服务器处理是三个阶段",
+      "表单显示不等于业务完成"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "本讲路线：Forms、GET/POST 与 CGI",
+    "section": "表单控件与提交",
+    "priority": "admin",
+    "summary": "本页介绍表单收集数据、GET/POST 的发送位置，以及 CGI 如何让服务器程序生成动态内容。",
+    "explanation": [
+      "HTML form 声明交互界面与提交参数，GET 通常把字段编码进 URL 查询，POST 通常把字段放在请求体。请求方法描述 HTTP 行为，并不决定服务器必须使用哪一种编程语言。",
+      "CGI 是服务器与外部程序之间的接口，程序可用多种语言实现。课件中“把文档表示成树”更属于 DOM 主题，不能用来定义表单；表单固然存在于 DOM 树里，但其本讲重点是控件和数据提交。"
+    ],
+    "takeaways": [
+      "GET/POST 是HTTP方法",
+      "CGI 是服务器调用程序的接口"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "表单能力由前后端共同完成",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "本页强调两项工作：HTML 提供可输入的界面，服务器端程序接收字段并完成查询、登记或其他处理。",
+    "explanation": [
+      "创建 input 不会自动让数据进入数据库，form 的 action 也只指定目的地址。服务器需要在该地址配置可执行处理逻辑，读取字段、执行业务并构造响应，整个功能才完整。",
+      "现代服务器可能使用框架路由而非传统 cgi-bin 脚本，但分工不变。复习时把“用户输入”“浏览器组织请求”“服务器解释请求”“返回结果”画成四步，可以防止把浏览器 JavaScript 与服务器代码的执行位置混淆。"
+    ],
+    "takeaways": [
+      "action 指向处理入口",
+      "数据库写入需要服务器逻辑"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "原始表单控件概览",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "示意图把 input 的多种类型与 textarea、select 分开，说明一个元素名可以通过 type 产生不同交互控件。",
+    "explanation": [
+      "text 接收单行文字，checkbox 表示独立开关，radio 表示一组互斥选项，file 让用户选文件，submit 触发表单提交，reset 恢复初始状态。textarea 适合多行文字，select 让用户从候选项中选择。",
+      "这些图形由浏览器与操作系统绘制，外观可能不同，但字段的语义和提交规则应能独立判断。不要仅凭方形或圆形图标记答案：同一 name 的 radio 分组规则、checkbox 是否勾选等状态才决定实际发送的数据。"
+    ],
+    "takeaways": [
+      "input 类型决定交互语义",
+      "外观与提交规则要分开"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "form 属性与默认编码",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "action 指定处理地址，method 指定提交方法，enctype 指定 POST 请求体的编码方式，target 指定结果使用的浏览上下文。",
+    "explanation": [
+      "method 默认 GET；常见默认编码的准确拼写是 application/x-www-form-urlencoded，课件漏了 form。字段形成 name=value 对，以 & 连接，空格编码为 +，保留字符按字节做百分号编码，例如真正的加号要编码成 %2B。",
+      "target=_blank 改变结果在哪打开，不改变 HTTP 方法；autocomplete 影响浏览器填充提示，onsubmit/onreset 连接事件。POST 不自动加密、GET 也并非天然可被任何人读到，传输保护取决于 HTTPS 等机制，方法本身不是安全保证。"
+    ],
+    "takeaways": [
+      "默认method为GET",
+      "正确类型是application/x-www-form-urlencoded"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form action=\"/search\" method=\"get\">\n <label for=\"q\">关键词</label>\n <input id=\"q\" name=\"q\" value=\"CSS & HTML\">\n <button>搜索</button>\n</form>",
+      "explanation": "正常提交为 /search?q=CSS+%26+HTML。空格变+，值中的&变%26。"
+    },
+    "question": {
+      "prompt": "urlencoded中值A+B C应如何编码？",
+      "answer": "A%2BB+C。真正加号为%2B，空格为+，不能把两者混淆。"
+    },
+    "pitfall": "课件默认编码拼写缺少 form；正确为 application/x-www-form-urlencoded。POST 本身不提供加密。",
+    "links": [
+      {
+        "label": "MDN：发送表单数据",
+        "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Sending_and_retrieving_form_data"
+      }
+    ]
+  },
+  {
+    "page": 6,
+    "title": "input 属性：name、value 与状态",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "type 决定控件类型，name 是提交字段名，value 对多数输入类型表示初始值或提交值，checked 用于复选和单选初始状态。",
+    "explanation": [
+      "id 主要用于文档定位与 label 关联，不能代替 name 成为提交字段名。disabled 控件通常不进入提交数据；readonly 文本控件不可编辑但通常仍提交。size 影响可见尺寸，maxlength 限制适用输入类型的长度，两者不是同一概念。",
+      "checkbox/radio 没写 value 时常以 on 作为默认提交值，因此课件称“必须写 value”并非语法硬要求，但显式 value 更清晰。浏览器端校验便利用户，服务器仍需要解释与校验收到的数据，因为请求也能由其他客户端构造。"
+    ],
+    "takeaways": [
+      "name 决定字段名",
+      "disabled 通常不提交，readonly 通常提交"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form>\n <input name=\"a\" value=\"1\" disabled>\n <input name=\"b\" value=\"2\" readonly>\n <input id=\"c\" value=\"3\">\n <button>提交</button>\n</form>",
+      "explanation": "普通字段集只有 b=2：a禁用，c没有name。"
+    },
+    "question": {
+      "prompt": "name=x value=7 readonly与disabled输入框哪个会正常提交？",
+      "answer": "readonly文本框通常提交x=7；disabled控件通常被排除。"
+    },
+    "links": [
+      {
+        "label": "WHATWG：构造表单条目",
+        "url": "https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#constructing-the-entry-list"
+      }
+    ]
+  },
+  {
+    "page": 7,
+    "title": "全局属性与输入事件",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "input 也可以使用 class、id、hidden 等全局属性，并通过 focus、change、keyboard 等事件响应交互。",
+    "explanation": [
+      "全局 hidden 属性与 type=\"hidden\" 并不是同一个概念：前者隐藏普通元素的呈现，后者定义专门的隐藏表单控件。一个被视觉隐藏但仍有 name 且未禁用的控件，依然可能参与提交。",
+      "事件处理器名称也不意味着每个事件都会在每种 input 上自然发生；例如媒体播放事件主要针对媒体元素。change 常在值被确认时触发，input 事件更适合跟踪逐次编辑。复习应按具体控件与事件语义判断，而不把列表视为所有行为都通用。"
+    ],
+    "takeaways": [
+      "视觉隐藏不自动排除提交",
+      "事件需结合目标元素判断"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "checkbox、file 与 hidden",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "复选框只在勾选且符合提交条件时发送 name/value，文件控件选择本地文件，隐藏控件不显示但可携带字段值。",
+    "explanation": [
+      "MARRIED=yes 只在该 checkbox 勾选时出现；取消勾选通常意味着这个字段完全缺席，不是发送 MARRIED=false。file 上传一般使用 POST 配合 multipart/form-data，使文件内容与其他字段分成多个部分传输。",
+      "type=hidden 常用于传递上下文标识，但“隐藏”只是界面不可见，用户或脚本仍能修改其值，因此服务器不应把它当作不可变的可信来源。这是字段机制本身的性质，并不会因为使用 POST 就改变。"
+    ],
+    "takeaways": [
+      "未勾选 checkbox 通常不提交",
+      "hidden 字段仍是客户端数据"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form method=\"post\" enctype=\"multipart/form-data\" action=\"/upload\">\n <input type=\"file\" name=\"photo\">\n <input type=\"hidden\" name=\"album\" value=\"class\">\n <button>上传</button>\n</form>",
+      "explanation": "multipart可携带文件字节与album字段。隐藏字段依然会提交。"
+    },
+    "question": {
+      "prompt": "未勾选checkbox是否发送name=false？",
+      "answer": "通常不会，它直接缺席，服务器按业务规则解释缺失。"
+    }
+  },
+  {
+    "page": 9,
+    "title": "reset、submit 与 text",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "reset 把控件恢复到初始状态，submit 发起表单提交，text 提供单行可编辑文字。",
+    "explanation": [
+      "reset 不是一律清空：若文本 input 的 value 初始为某名字，重置后回到那个名字；若 checkbox 初始 checked，重置后重新勾选。它恢复的是默认状态而不是“空白模板”。",
+      "本页 text 的 value=\"type your last name\" 会成为真实输入值，若用户不改也可能提交这句话；提示应使用 placeholder，并另配 label。submit 的 value 通常是按钮文字，只有有 name 且它是本次提交按钮时，才按相应规则加入自己的字段。"
+    ],
+    "takeaways": [
+      "reset 恢复默认，不一定清空",
+      "value 不是 placeholder"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form><input name=\"topic\" value=\"HTML\"><input type=\"reset\" value=\"重置\"></form>",
+      "explanation": "编辑成CSS再重置，会恢复HTML，而不是空字符串。"
+    },
+    "question": {
+      "prompt": "初始value=\"HTML\"，改为CSS后点reset得到什么？",
+      "answer": "恢复HTML，因为reset回到默认状态而不是必然清空。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "image、password 与 radio",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "图像提交按钮、密码输入与单选组虽然都用 input，提交数据与交互语义却明显不同。",
+    "explanation": [
+      "type=image 会按规则提交点击坐标，例如带 name=\"pick\" 时出现 pick.x 与 pick.y；不是简单把图片文件本身作为字段发回。password 只遮住屏幕上的字符显示，并不自动加密网络数据。",
+      "radio 通过同一表单中相同 name 形成互斥组，选中的那个发送自己的 value。本页三个 AGE 候选初始选择51–100，所以默认提交 AGE=51-100；如果三个 radio 名字各不同，它们就不是同一互斥组。"
+    ],
+    "takeaways": [
+      "password 遮挡不等于加密",
+      "radio 组依据 name"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form><label><input type=\"radio\" name=\"mode\" value=\"fast\" checked>快速</label>\n<label><input type=\"radio\" name=\"mode\" value=\"full\">完整</label></form>",
+      "explanation": "两项同名互斥。初始提交mode=fast，选第二项后是mode=full。"
+    },
+    "question": {
+      "prompt": "把password放在POST表单中是否已经加密？",
+      "answer": "没有。password只是界面遮挡，POST只是请求方法，传输加密需要HTTPS等机制。"
+    }
+  },
+  {
+    "page": 11,
+    "title": "颜色、日期、邮件与月份输入",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "本页列出 color、date、email 与 month 等语义化输入类型，让浏览器提供更合适的界面和部分格式校验。",
+    "explanation": [
+      "date 的显示格式可以随地区变化，但提交值通常采用规范化日期格式，例如2026-10-06；month 提交年份与月份，email 可检查基本地址格式，却不能证明邮箱真实存在或属于用户。",
+      "课件包含 datetime 类型，这是被移除的旧提案，现代不应依赖它提供带时区控件；未知类型通常按 text 回退。日期时间需求可用 datetime-local 配合单独时区信息，但 local 本身不携带时区。"
+    ],
+    "takeaways": [
+      "语义输入提供界面与约束",
+      "datetime 旧类型不能当作现代标准"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<label for=\"exam\">考试日</label>\n<input id=\"exam\" name=\"exam\" type=\"date\" value=\"2026-10-06\" required>",
+      "explanation": "界面日期可能本地化，规范化值仍为2026-10-06；required不证明服务端无需校验。"
+    },
+    "links": [
+      {
+        "label": "MDN：input 类型与属性",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input"
+      }
+    ]
+  },
+  {
+    "page": 12,
+    "title": "number、range、search、tel、time",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "不同输入类型提供数字步进、滑块、搜索、电话号码和时间输入，但并非每种类型都做严格格式验证。",
+    "explanation": [
+      "number 的 min/max 为允许范围，step 决定可接受步长；range 更适合大致量级选择，通常有默认值，不能像文本框那样任意留空。search 与 text 的基本文本语义相近，但浏览器可能提供清除按钮等差异。",
+      "tel 主要提供适合电话输入的键盘与语义，世界各地电话格式差异很大，因此不会自动验证一套全球号码格式。time 不包含日期与时区，不能独立代表时间轴上的某个绝对时刻。"
+    ],
+    "takeaways": [
+      "min/max 与step共同约束数值",
+      "tel 不自动验证所有电话号码"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "URL、week 与 datetime-local",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "url 用于地址输入，week 表示某年某周，datetime-local 表示没有时区信息的本地日期与时间组合。",
+    "explanation": [
+      "URL 类型能做基本语法检查，不保证地址可访问、网站内容正确或请求成功。week 的值如2026-W40 表示周编号，它与某个月第几周不同，跨年边界尤其不能凭日历外观随意转换。",
+      "datetime-local 的2026-10-06T17:00 只表达本地钟表时间；要知道对应哪个 UTC 时刻，还需要地点或时区上下文。考试读代码时先看值格式，再确认它是否包含日期、时间和时区三个维度。"
+    ],
+    "takeaways": [
+      "语法有效不等于资源可达",
+      "datetime-local 不携带时区"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "输入类型演示页",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "本页给出集合式演示页截图，把前面各种 input 类型放在一起，便于观察浏览器提供的控件差异。",
+    "explanation": [
+      "同一个 HTML 在不同浏览器和系统上可能出现不同日期选择器、颜色面板或滑块外观，这属于用户代理的实现方式。类型的语义与提交值不能仅从视觉控件长相推断。",
+      "复习可按“用户界面、value 格式、约束校验、回退行为”四项比较类型：例如日期控件看起来本地化，但 value 可能规范化；未知类型能退回文本框。截图是一组历史示例，不是所有当前支持状态的完整证明。"
+    ],
+    "takeaways": [
+      "控件外观有平台差异",
+      "要同时检查value与校验行为"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "文本表单源码",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "示例包含 in_name、in_dob、in_ssn 三个文本字段，并把数据 POST 到 /cgi-bin/post-query。",
+    "explanation": [
+      "字段提交使用 name 属性，而屏幕上的 Name、Date of Birth 等提示只是周围文本。首个输入框 size=40 使它显示较宽，并不会规定名字必须40个字符，也不自动设置 maxlength。",
+      "SEND 按钮没有 name，因此尽管它触发提交，通常不会额外发送 SEND=... 字段。action 以 / 开头表示站点根路径，不是当前 HTML 所在文件夹下的相对路径；post-query 在这里是演示处理器，不应假定所有服务器都已安装。"
+    ],
+    "takeaways": [
+      "有name才形成普通字段",
+      "根相对action从站点根解析"
+    ]
+  },
+  {
+    "page": 16,
+    "title": "文本输入界面的输出",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "截图中用户填入 Sam Spade、Feb. 11, 1954 与示例编号，界面仍是三个文本框加一个 SEND 按钮。",
+    "explanation": [
+      "因为日期使用 type=text，浏览器把它当作普通字符串，不会自动转成 ISO 日期，也不保证输入的是合法日历日期。第一个输入框比其他框宽，是 size=40 的视觉作用。",
+      "此时看到的只是客户端状态，服务器是否已经收到数据要看是否提交。预测下一页结果时按字段顺序将输入值配给 in_name、in_dob、in_ssn，不要把可见提示文字当作请求中的键名。"
+    ],
+    "takeaways": [
+      "text 日期仍是任意字符串",
+      "界面值需与name逐一配对"
+    ]
+  },
+  {
+    "page": 17,
+    "title": "文本表单的服务器结果",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "结果页列出 in_name=Sam Spade、in_dob=Feb. 11, 1954 与 in_ssn 的输入值，说明处理器已解析表单字段。",
+    "explanation": [
+      "浏览器发送 urlencoded 请求体时，名字中的空格会编码为 +，日期里的逗号等字符也可能百分号编码；结果页显示的是服务器解码后的内容，而不是原始网络字节串。",
+      "标题 Query Results 是服务器生成的 HTML，不是浏览器提交表单后自动提供的固定页面。SEND 没有对应结果字段，与前页按钮缺少 name 一致。复习要区分输入值、编码后的请求体和解码后的服务器输出三种表示。"
+    ],
+    "takeaways": [
+      "结果页通常显示解码值",
+      "按钮文字不自动成为字段名"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "复选框表单源码",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "四个独立 checkbox 使用 house、car、boat、degree 四个名字，value 都为 yes，并提供 reset 与 submit。",
+    "explanation": [
+      "因为四个 name 不同，它们表达四个互不排斥的事实，用户可同时勾选多个。每个被选中的控件各贡献一对 name=yes；未选中的项不会自动生成 name=no，服务器需要根据缺席规则解释状态。",
+      "源码未设置任何 checked，因此初始均未勾选，RESET 会回到全部未选。按钮没有 name，仅负责交互，不进入普通字段集。这里的 BR 只调整显示行断开，与是否提交或字段分组无关。"
+    ],
+    "takeaways": [
+      "checkbox 独立可多选",
+      "缺席字段不等于显式false"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form><input type=\"checkbox\" name=\"topic\" value=\"html\" checked>HTML\n<input type=\"checkbox\" name=\"topic\" value=\"css\" checked>CSS\n<input type=\"checkbox\" name=\"topic\" value=\"js\">JS</form>",
+      "explanation": "正常提交条目为topic=html与topic=css；JS未选，不提交。"
+    }
+  },
+  {
+    "page": 19,
+    "title": "复选框界面的状态",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "截图勾选了 own a car 与 have a college degree，而 house 与 boat 保持未勾选。",
+    "explanation": [
+      "因此下一次正常提交应该包含 car=yes 与 degree=yes，数据由控件的 name/value 决定，不是把屏幕上整句“own a car”发送给服务器。可见文案与提交值可以使用完全不同的语言。",
+      "RESET 位于复选区旁边但对整个表单有效，会按初始状态重置四项，并非只清理附近一个框。SEND 则提交当前选中集合。此页适合遮住下一页，先列出预计字段，再比较服务器实际结果。"
+    ],
+    "takeaways": [
+      "从当前勾选状态构造字段集",
+      "可见标签不等于value"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "复选框提交结果",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "结果页只出现 car=yes 和 degree=yes，与上一页两个勾选项一一对应。",
+    "explanation": [
+      "house 与 boat 没有出现在列表中，证明未选 checkbox 被省略，而不是发送空字符串或 no。服务器若需要四个布尔值，应在业务层把缺失项转换成适当状态，而不是期待浏览器发送全部控件名称。",
+      "如果同名 checkbox 有多个不同 value，提交可以出现重复键，例如 topic=html&topic=css；本例恰好使用不同名字。数据结构最好理解成有序的名称—值条目序列，不应一开始就假设是绝不重复键的普通对象。"
+    ],
+    "takeaways": [
+      "未选字段完全缺席",
+      "表单允许重复name"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "单选支付方式源码",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "五个 radio 全部使用 paymethod 作为 name，因此无论视觉上位于哪层列表，都属于同一互斥选择组。",
+    "explanation": [
+      "Bill me 的 value 是 billme 并且初始 checked；其他值为 check、mastercard、visa、amex。Credit Card 只是分类标题，没有独立 radio，所以用户不能提交一个名为“Credit Card”的中间选项。",
+      "ol 与 ul 只组织显示结构，不会自动拆分 radio 组；组关系主要由表单归属和 name 决定。若用户改选 Visa，浏览器取消同组原有选中状态，最终提交 paymethod=visa。"
+    ],
+    "takeaways": [
+      "radio 分组不看视觉列表层级",
+      "提交选中项value"
+    ],
+    "question": {
+      "prompt": "两层不同ul中的radio同属一个form且name相同，会互斥吗？",
+      "answer": "会，视觉列表层级不划分radio组。"
+    }
+  },
+  {
+    "page": 22,
+    "title": "单选支付方式输出",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "截图把 Bill me、Check 与 Credit Card 分类以列表显示，信用卡下方又有三种卡片，初始勾选 Bill me。",
+    "explanation": [
+      "虽然页面有两层项目符号，所有可选 radio 共享同名组，所以不能同时保留 Bill me 和 Visa 两个选择。视觉缩进是 HTML 列表结果，互斥行为由 input 属性决定，两种机制相互独立。",
+      "点击 Submit Query 时若未改变选择，提交一对 paymethod=billme。按钮显示什么文字并不影响这对字段；若想在结果中区分不同提交按钮，需要给按钮合适的 name/value，而不是只改显示文本。"
+    ],
+    "takeaways": [
+      "嵌套列表不拆分radio组",
+      "默认checked决定初始结果"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "单选提交结果",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "结果页只列出 paymethod=billme，印证单选组只贡献当前选中的一个值。",
+    "explanation": [
+      "多个同名 radio 并不意味着一定发送五个重复字段；恰恰相反，其互斥状态使只有选中项参与普通提交。没有任何选中且不受 required 约束时，这个字段可能完全缺席。",
+      "服务器看到 billme 时需要按约定映射为“稍后寄账单”，它不知道页面上每个 radio 的排版方式。这个例子强调 name 是字段身份，value 是选项编码，标签是面向用户的描述，三者不应混淆。"
+    ],
+    "takeaways": [
+      "radio 只提交选中项",
+      "name、value、标签各有职责"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "textarea 的多行输入",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "textarea 提供可编辑的多行文本，name 指定字段名，rows 与 cols 主要控制初始可见尺寸。",
+    "explanation": [
+      "rows 表示可见文本行数，cols 近似以字符宽度衡量可见列数，它们不是最大允许行数或最大总字符数。内容超过可见区域时可换行或滚动，具体还取决于 wrap、CSS 与浏览器行为。",
+      "textarea 的初始内容写在开始和结束标签之间，而不是像 input 那样主要放在 value 属性。读取提交值时，换行属于字段内容的一部分；现代可以用 maxlength 约束长度，但不能用 rows=2 推断用户最多只能写两行。"
+    ],
+    "takeaways": [
+      "rows/cols 管尺寸，不是内容上限",
+      "初始值位于标签内容中"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<textarea name=\"notes\" rows=\"2\" cols=\"30\">第一行\n第二行</textarea>",
+      "explanation": "初始值在标签内容中。rows=2只指定可见高度，仍可继续输入更多行。"
+    }
+  },
+  {
+    "page": 25,
+    "title": "三个 textarea 的源码",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "示例分别建立 largearea 10×30、smallarea 2×20、narrowarea 1×40 三个区域，并提供各自初始文字。",
+    "explanation": [
+      "第一个更高，第三个更宽但只显示一行；即使 rows=1，它仍是 textarea，可保存多行文本，不等同于 type=text 的单行控件。控件身份由元素类型决定，而不是当前显示高度。",
+      "用户完全不编辑时，提交的也是标签间的初始文本。示例 action 在这一页写成 postquery 而非前页 post-query，若真实部署需确保端点一致；教学时把它看作演示处理器位置，不能忽略路径拼写的实际影响。"
+    ],
+    "takeaways": [
+      "textarea 一行高仍是多行控件",
+      "默认文本也会提交"
+    ]
+  },
+  {
+    "page": 26,
+    "title": "textarea 界面输出",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "截图依次显示高大的10行区域、较小2行区域和很宽的1行区域，三者都已有初始内容。",
+    "explanation": [
+      "用户可以在每个区域继续输入，控件不会因为显示区填满就自动生成第二个表单字段。滚动条或右下角缩放手柄是浏览器提供的交互外观，不改变字段 name 与提交规则。",
+      "页面下方 Submit Comments 按钮提交三个当前值，旁边的说明段落不会被当成字段发送。观察这页时可对照 rows/cols 推断相对尺寸，而不要尝试把字符列数当作在所有字体、浏览器里恒定的像素宽度。"
+    ],
+    "takeaways": [
+      "显示窗口不等于数据容量",
+      "说明文字不属于字段值"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "textarea 默认值的结果",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "结果页列出 largearea、smallarea、narrowarea 及其各自初始文字，说明没有编辑也能提交默认内容。",
+    "explanation": [
+      "服务器接收到的是三个字符串，不会同时收到 rows=10 或 cols=30 这些界面属性；除非另行创建字段，否则布局参数属于客户端 HTML，不参与常规表单数据集。",
+      "textarea 内容若包含真实换行，编码时通常按表单规则处理行结束，解码后仍是一个字段里的多行文本。结果页若直接用普通 HTML 文本显示，空白还可能折叠，所以“看起来一行”不证明原字符串没有换行。"
+    ],
+    "takeaways": [
+      "表单通常提交值，不提交布局属性",
+      "HTML显示可能折叠文本空白"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "select 的尺寸与选择界面",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "select 用 option 提供候选，name 指定提交键，size 指定界面一次显示多少行选项。",
+    "explanation": [
+      "size=1 或未设定且非 multiple 的常见界面是下拉框；size>1 常形成可滚动列表。无论显示一个还是多个选项，是否允许同时选多个仍由 multiple 决定，size=5 本身不等于多选。",
+      "选中的 option 产生 value，select 提供共享 name；未选中的候选不各自发送。复习时把“显示几行”“允许选几个”“实际选中了哪个”三件事分开，可以直接避免最常见的 select 提交错误。"
+    ],
+    "takeaways": [
+      "size 控制可见行数",
+      "multiple 才控制多选"
+    ],
+    "question": {
+      "prompt": "select size=5是否意味着可选五项？",
+      "answer": "不是，它表示可见行数；允许多选需multiple。"
+    }
+  },
+  {
+    "page": 29,
+    "title": "select 的 multiple、required 与 form",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "multiple 允许同时选多个候选，每个选中项都可用同一个 name 贡献独立条目。",
+    "explanation": [
+      "例如 select name=topic 选中 html 与 css，编码可为 topic=html&topic=css；服务器解析器需按多值参数处理，不能只保留一个值。required 要求选择满足规则的有效值，常与空值提示选项配合。",
+      "form 属性的值应是所属表单的 id，用于关联一个表单，并非课件所说“一个或多个表单”。autofocus 请求初始焦点，属于交互行为，不会自动选中某个 option；焦点与选中状态不同。"
+    ],
+    "takeaways": [
+      "多选可产生重复键",
+      "form 属性关联一个表单"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<select name=\"topic\" multiple>\n <option value=\"html\" selected>HTML</option>\n <option value=\"css\" selected>CSS</option>\n</select>",
+      "explanation": "编码可为topic=html&topic=css，同名字段允许多个值。"
+    }
+  },
+  {
+    "page": 30,
+    "title": "option 的显示文字与提交值",
+    "section": "表单控件与提交",
+    "priority": "core",
+    "summary": "option 的正文显示给用户，value 决定选中后发送什么，selected 设置默认选中，disabled 表示不可正常选择。",
+    "explanation": [
+      "若未显式提供 value，浏览器根据选项文本得到提交值；因此选项显示“工程学院”却希望发送代码 eng 时，要写 value=\"eng\"。selected 是布尔属性，selected=\"false\" 仍表示出现了该属性。",
+      "课件说 option 新增 required 不准确，required 主要设在 select 等可验证控件上，不是用来把某个 option 强制变成必选项。disabled 候选即使在界面中显示，也不能简单等同普通成功提交的选择值。"
+    ],
+    "takeaways": [
+      "option正文与value可不同",
+      "required 应写在select上"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<select name=\"school\" required>\n <option value=\"\">请选择学院</option>\n <option value=\"eng\">工程学院</option>\n</select>",
+      "explanation": "选择工程学院后发送school=eng；屏幕文案不是实际value。"
+    },
+    "question": {
+      "prompt": "option显示工程学院但value=\"eng\"，提交什么？",
+      "answer": "select字段名对应eng；可见文字与传输值分离。"
+    },
+    "pitfall": "required 应用于 select 等表单控件，不是 option 的标准必选属性。"
+  },
+  {
+    "page": 31,
+    "title": "学院与入学学期选择源码",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "第一个 select 名为 school、size=5，第二个名为 semester 且采用默认下拉显示；初始分别选择 Engineering 与 Fall。",
+    "explanation": [
+      "第一个虽然同时显示五行，但没有 multiple，所以仍为单选。两个 select 各自维护选择状态，修改学院不会自动改变学期；reset 会分别恢复 selected 指定的初始候选。",
+      "option 没写 value，提交值来自文本，所以原代码应发送 Engineering 与 Fall。Letters&Science 中的 & 在正文最好正确写成 &amp;，并注意表单编码时真正的 & 数据需要变成 %26，以免被当成字段分隔符。"
+    ],
+    "takeaways": [
+      "size=5仍可单选",
+      "无value时采用选项文本"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "选择控件的界面输出",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "截图上方把五个学院全部列出来，Engineering 高亮；下方学期仅显示 Fall 并带下拉箭头。",
+    "explanation": [
+      "两个界面形式不同，但都可产生一个 name/value 对。高亮不表示 school 一定支持多选，因为 size 只决定可见行数；需要回看源码是否有 multiple 才能判断。",
+      "Reset 恢复工程学院与秋季，并非把两个选择框都清成空白。提交按钮使用当前选择值，因此任何键盘或鼠标改变都可能影响下一页结果；复习时始终以当前状态为准，不能只背初始 selected 属性。"
+    ],
+    "takeaways": [
+      "列表框与下拉框都能是单选",
+      "reset 恢复默认选项"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "select 的提交结果与大小写差异",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "截图显示 school=Engineering 与 semester=FALL，说明服务器结果保留的是选中的字段，而不是全部候选。",
+    "explanation": [
+      "前面给出的源码选项文本是 Fall 且没有 value，因此仅从该源码正常推导应得到 Fall；截图中的全大写 FALL 可能来自另一版示例或服务器处理，不能据此总结 select 会自动把文字转大写。",
+      "这类源代码与输出不一致的地方需要明确标记。考试若给出完整源代码，应按实际 value 或文本规则推导，除非题目另行说明服务器转换。school 的五个选项不会因为 size=5 就全进入结果，依然只有选中的一个。"
+    ],
+    "takeaways": [
+      "select 不自动转大写",
+      "按实际代码推导而非机械照抄截图"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "fieldset 与 legend",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "fieldset 把相关控件组织成逻辑组，legend 为这组内容提供标题，有助于视觉和辅助技术理解长表单。",
+    "explanation": [
+      "例如联系方式、订单项目、支付信息分别成组，用户就能知道一个输入框属于哪部分。单纯画边框的 div 可以模仿视觉，却不一定提供与 fieldset/legend 相同的分组语义。",
+      "现代 fieldset 可有一个可选 legend，存在时应位于适当的开头位置；课件说必须总有 legend 过于绝对，但有意义的组标题通常值得提供。fieldset 还能整体 disabled，多数后代控件因此禁用，但第一个 legend 内的控件有特殊例外。"
+    ],
+    "takeaways": [
+      "fieldset表达控件组",
+      "legend提供组标题"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "三组表单的输出与键盘导航",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "截图把联系方式、订单与信用卡信息放在三个带边框标题的组中，并提示使用 Tab 依次移动焦点。",
+    "explanation": [
+      "Tab 顺序通常与可聚焦元素的文档顺序有关，不是看屏幕上哪个控件离当前最近。联系信息中的 Name、E-mail、Mailing Address 先出现，之后进入产品选择与支付字段，清晰分组帮助用户保持位置感。",
+      "课件给出的 accesskey 按键组合依浏览器与操作系统而变，不能把某个 Windows 组合直接套到所有 Mac 环境。accesskey 是快捷访问提示，不等于 tabindex，也不会自动代替正常标签与键盘焦点设计。"
+    ],
+    "takeaways": [
+      "键盘导航依控件顺序",
+      "accesskey组合随平台变化"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "fieldset、label 与多值字段源码",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "本页完整展示三个 fieldset，每组有 legend，文本控件通过 label 的 for 与 input/textarea 的 id 关联。",
+    "explanation": [
+      "for=name 必须匹配 id=name，而不是只匹配 name 属性；另一种关联方式是把控件直接嵌入 label。产品复选框共享 products 名称但 value 不同，因此选两项会产生两个 products 条目；card 的 radio 则只发送一种卡值。",
+      "fieldset 与 legend 自身不会因为文字很多就产生提交字段。可见联系方式、产品名和信用卡组标题是语义说明，真正数据来自带 name 的成功控件。截图中布局表格只是排版手段，不是表单分组或提交机制的要求。"
+    ],
+    "takeaways": [
+      "label的for关联id",
+      "同名checkbox可贡献多个值"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form><fieldset><legend>联系方式</legend>\n<label for=\"mail\">邮箱</label><input id=\"mail\" name=\"email\" type=\"email\">\n</fieldset></form>",
+      "explanation": "label通过id建立关联；提交字段名为email，与id mail可以不同。"
+    }
+  },
+  {
+    "page": 37,
+    "title": "HTTP 携带数据的不同位置",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "数据可以放在 URL 的路径、查询字符串，或请求体中；表单支持几种固定编码，而 JSON 通常通过脚本等机制发送。",
+    "explanation": [
+      "默认 application/x-www-form-urlencoded 用键值串，multipart/form-data 为字段与文件建立分段，text/plain 更适合简单调试而非稳健解析。普通 HTML form 不会因为 enctype=\"application/json\" 就自动把字段转成 JSON。",
+      "课件 applications/json 多了一个 s，正确媒体类型是 application/json。POST URL 也可以同时有查询参数，所以“POST 数据全部只能在body”同样过度简化；请求方法、数据位置和编码格式要分别讨论。"
+    ],
+    "takeaways": [
+      "正确JSON类型为application/json",
+      "POST可同时有query与body"
+    ],
+    "example": {
+      "lang": "http",
+      "code": "POST /apply?source=review HTTP/1.1\nHost: example.test\nContent-Type: application/x-www-form-urlencoded\nContent-Length: 24\n\nname=Alex+Lee&school=eng",
+      "explanation": "URL查询source与正文name、school同时存在；正文共24个ASCII字节。"
+    },
+    "question": {
+      "prompt": "普通HTML form设置enctype=\"application/json\"会自动提交JSON吗？",
+      "answer": "不会。原生表单不把这当作JSON序列化机制，需脚本或其他客户端构造。"
+    },
+    "pitfall": "正确媒体类型是 application/json；原生HTML表单不直接自动编码JSON。"
+  },
+  {
+    "page": 38,
+    "title": "CGI 的目的",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "Common Gateway Interface 规定服务器如何调用外部程序并交换数据，让程序从数据库等来源生成动态 Web 响应。",
+    "explanation": [
+      "静态服务器可以直接返回磁盘文件；动态入口则可能执行查询、计算或格式转换再输出内容。CGI 的“gateway”指它连接 Web 请求与其他数据或服务，不是某一种特定语言的名称。",
+      "cgi-bin 是常见目录约定，但目录名本身不会让任意文件自动执行，服务器需要配置相应映射。课程关注 CGI/1.1 的输入输出约定，现代框架可能使用其他运行接口，仍能帮助理解前后端请求处理的基础分工。"
+    ],
+    "takeaways": [
+      "CGI是接口而非语言",
+      "动态内容在服务器端生成"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "CGI 请求与响应的四步流程",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "图中浏览器向服务器发请求，服务器把输入交给脚本，脚本可访问数据库，再把输出交回服务器返回浏览器。",
+    "explanation": [
+      "a 是客户端到服务器，b 是服务器调用网关程序，c 是程序返回生成内容或指令，d 是服务器形成客户端响应。数据库画在旁边并标为可选，说明 CGI 并不要求每次请求都必须查询数据库。",
+      "浏览器不直接执行服务器上的 CGI 源代码，它只接收响应结果。脚本也通常不直接管理用户浏览器连接，而按接口读输入、写输出；服务器负责 HTTP 交互。返回 URL 时可能涉及重定向，具体是服务器内部处理还是客户端新请求需看 Location 的形式。"
+    ],
+    "takeaways": [
+      "浏览器不执行CGI源码",
+      "服务器负责连接和协议封装"
+    ]
+  },
+  {
+    "page": 40,
+    "title": "实现网关程序的语言",
+    "section": "CGI 请求与响应",
+    "priority": "support",
+    "summary": "本页列出 C/C++ 与多种脚本语言，强调只要能按 CGI 约定读取输入并产生输出，就可以参与服务器处理。",
+    "explanation": [
+      "“可执行”不只意味着编译成原生二进制；脚本也可由解释器运行。语言选择影响开发体验、依赖和性能，但客户端一般只看到 HTTP 响应，不能仅凭返回的 HTML 确认服务器用了哪种语言。",
+      "图中的语言市场比例属于历史统计，不是 CGI 必须使用某语言的规则。“解释语言更快写，速度不重要”也只能是场景概述；请求量、启动成本与程序工作量都可能让性能变得重要。复习优先掌握接口与实现语言独立。"
+    ],
+    "takeaways": [
+      "CGI可由多语言实现",
+      "服务器语言通常对浏览器透明"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "超链接也能触发 CGI",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "a 的 href 可以指向静态文件，也可以指向服务器脚本入口，还可以附加查询参数。",
+    "explanation": [
+      "点击普通 HTTP 链接通常发 GET，请求 /cgi-bin/search?q=bicycle+tours 时，服务器可以把查询字符串交给处理器，而不需要页面上先出现 form。URL 路径是否执行程序由服务器配置决定，不由文件扩展名单独决定。",
+      "q=bicycle+tours 中的 + 在表单式查询编码下表示空格；旧 CGI 的 ?arg1+arg2 命令行约定不能简单当作现代通用键值表单。课件旧搜索引擎地址用于说明参数形态，不代表那些历史端点今天仍可用。"
+    ],
+    "takeaways": [
+      "链接可调用动态入口",
+      "HTTP链接通常发GET"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "CGI 环境变量的来源",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "服务器在执行 CGI 程序前准备环境变量，程序据此了解请求方法、路径、查询以及服务器环境。",
+    "explanation": [
+      "环境变量是进程收到的字符串键值映射，名称如 REQUEST_METHOD 与 QUERY_STRING 是 CGI 约定；它们不是用户在网页 JavaScript 全局对象里自动得到的变量。不同操作系统可用各自的进程机制传递。",
+      "这些变量主要描述请求元信息，POST 的请求体通常通过标准输入提供，不会全部塞进 QUERY_STRING。复习需要把环境变量、stdin 与 stdout 三个通道分清：元信息、正文输入、程序输出各有职责。"
+    ],
+    "takeaways": [
+      "CGI环境由服务器准备",
+      "POST body通常从stdin读取"
+    ],
+    "links": [
+      {
+        "label": "RFC 3875：CGI/1.1",
+        "url": "https://www.rfc-editor.org/rfc/rfc3875"
+      }
+    ]
+  },
+  {
+    "page": 43,
+    "title": "服务器相关 CGI 变量",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "SERVER_SOFTWARE 描述服务器软件，GATEWAY_INTERFACE 描述 CGI 接口版本，SERVER_NAME、PORT 与 PROTOCOL 描述访问上下文。",
+    "explanation": [
+      "例如 SERVER_PORT=8088 是接收请求的服务端端口，不能当作客户端临时端口；GATEWAY_INTERFACE 常为 CGI/1.1，和 HTTP/1.1 不是同一个协议层。SERVER_PROTOCOL 则说明本次服务器接口所报告的协议版本。",
+      "课件把这些全部称为“所有请求都不变”过于绝对：虚拟主机、不同端口或协议请求都可能使值变化。更稳妥的分类是“与服务器和请求上下文相关”，不必记成跨所有请求永恒相同的常量。"
+    ],
+    "takeaways": [
+      "CGI版本与HTTP版本不同",
+      "SERVER_*不保证跨请求恒定"
+    ]
+  },
+  {
+    "page": 44,
+    "title": "请求方法、脚本路径与额外路径",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "本页区分 REQUEST_METHOD、SCRIPT_NAME、PATH_INFO、PATH_TRANSLATED 和 QUERY_STRING，适合做 URL 拆解练习。",
+    "explanation": [
+      "对于 /cgi-bin/test.cgi/extra/path?x=1，SCRIPT_NAME 通常是 /cgi-bin/test.cgi，PATH_INFO 是 /extra/path，QUERY_STRING 是 x=1。问号不是 QUERY_STRING 值的一部分，片段 #... 通常也不会传给服务器。",
+      "PATH_TRANSLATED 是服务器可能根据映射得到的本地路径，它不同于客户端 URL，且取决于部署配置。不能把所有 URL 后半段都当成物理文件路径；现代路由常根本没有对应磁盘文件。"
+    ],
+    "takeaways": [
+      "SCRIPT_NAME与PATH_INFO要分开",
+      "QUERY_STRING不含问号"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "URL: https://example.test/cgi-bin/show.py/unit/3?q=css\nSCRIPT_NAME=/cgi-bin/show.py\nPATH_INFO=/unit/3\nQUERY_STRING=q=css\nREQUEST_METHOD=GET",
+      "explanation": "脚本入口、额外路径和查询属于三个不同CGI字段。"
+    },
+    "question": {
+      "prompt": "QUERY_STRING是否包含开头的问号？",
+      "answer": "不包含，?x=1对应QUERY_STRING=x=1。"
+    }
+  },
+  {
+    "page": 45,
+    "title": "客户端、身份与请求体变量",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "REMOTE_ADDR 表示远端地址，身份相关变量描述服务器已识别的认证状态，CONTENT_TYPE 与 CONTENT_LENGTH 帮助程序读取请求体。",
+    "explanation": [
+      "CONTENT_LENGTH 的长度通常按字节，而不是中文字符个数；程序应按约定读取正文。CONTENT_TYPE 决定解析方式，例如 urlencoded 与 multipart 使用不同解码规则，不能看到POST就全部按JSON读取。",
+      "REMOTE_HOST 可能不存在或未做反向解析，REMOTE_USER 也只有相关认证机制建立后才有意义。课件 REMOTE_IDENT 属于历史 ident 机制，不能把它当成可靠的现代登录身份。经代理部署时，连接远端地址与最终用户设备地址也可能不同。"
+    ],
+    "takeaways": [
+      "请求体按类型解析",
+      "CONTENT_LENGTH是字节长度"
+    ]
+  },
+  {
+    "page": 46,
+    "title": "HTTP 头到 CGI 变量的映射",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "常见请求头通过大写、把连字符变下划线、加 HTTP_ 前缀的方式映射，例如 User-Agent 变 HTTP_USER_AGENT。",
+    "explanation": [
+      "Accept 变 HTTP_ACCEPT，Referer 变 HTTP_REFERER；HTTP 协议中的 Referer 拼写本身就是这个历史形式。Accept 描述客户端可接受的响应类型，不能误当成当前请求体的 Content-Type。",
+      "课件称“每个头都如此”过于绝对：Content-Type 与 Content-Length 有专门 CGI 变量，某些头还可能因服务器规则被排除。HTTP_REFERER 也可能缺席或受策略裁剪，因此程序不能假设每次请求必有完整来源页面 URL。"
+    ],
+    "takeaways": [
+      "常见头映射为HTTP_前缀",
+      "Content-Type/Length有专门变量"
+    ],
+    "question": {
+      "prompt": "Content-Type总映射为HTTP_CONTENT_TYPE吗？",
+      "answer": "不是，CGI为它提供专门CONTENT_TYPE变量。"
+    }
+  },
+  {
+    "page": 47,
+    "title": "CGI 的标准输出",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "脚本将响应信息写到 stdout，服务器解析相应头部并把内容作为 HTTP 响应交给浏览器。",
+    "explanation": [
+      "输出不仅能是 HTML，也可声明 text/plain、图像或其他媒体类型；浏览器按响应类型处理字节，因此同一正文在不同 Content-Type 下可能被当成标记或普通文本。CGI 不要求程序一定生成可视网页。",
+      "stderr 通常用于错误与诊断，不应把调试文本随意插在正常响应头之前，否则服务器可能无法解析输出。概念上需分清“脚本写出的 CGI 响应头”和“最终浏览器看到的完整 HTTP 响应”，后者还由服务器封装。"
+    ],
+    "takeaways": [
+      "stdout承载CGI响应",
+      "媒体类型决定客户端解释方式"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "CGI 响应头与空行",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "CGI 输出先给出若干头部字段，再用一个空行分隔正文；Content-Type、Location、Status 是本讲的三类关键字段。",
+    "explanation": [
+      "空行是结构分隔符，不是可有可无的排版：没有它，服务器可能继续把正文当成头部解析。程序只想返回文本时，也要按接口提供合适的响应格式，而不只是打印几行页面文字。",
+      "Content-Type 说明正文媒体类型，Location 说明转移目标，Status 给出响应状态。它们是脚本传给服务器的指示，服务器再形成实际 HTTP 头或内部动作；不能把Status字段逐字当成HTTP/1.1状态行。"
+    ],
+    "takeaways": [
+      "头与正文之间需要空行",
+      "三种CGI字段职责不同"
+    ],
+    "example": {
+      "lang": "python",
+      "code": "print(\"Content-Type: text/plain; charset=utf-8\")\nprint()\nprint(\"Hello from CGI\")",
+      "explanation": "空print产生头和正文之间的空行。该片段需在已配置CGI的服务器中运行。"
+    },
+    "question": {
+      "prompt": "CGI头部与正文之间缺少空行有什么问题？",
+      "answer": "服务器可能把正文当头部解析，导致响应格式错误。"
+    }
+  },
+  {
+    "page": 49,
+    "title": "Content-Type 与 Location",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "Content-Type 告诉服务器和客户端如何解释正文；Location 可以要求客户端跳转或触发 CGI 规则中的本地重定向。",
+    "explanation": [
+      "Content-Type:text/html 表示正文可被解析成 HTML，text/plain 则按文本展示。拼写和斜杠都属于媒体类型语法，不能省略后半部分或把文件扩展名直接当类型。",
+      "Location 为绝对 URI 时常产生客户端重定向，浏览器再发新请求；符合 CGI 本地重定向规则的 /path/doc.txt 则可由服务器内部重新处理。两种流程的网络请求次数与地址栏变化不同，不能统一说“服务器总把目标文件下载回来”。"
+    ],
+    "takeaways": [
+      "绝对Location与本地重定向流程不同",
+      "Content-Type说明正文类型"
+    ]
+  },
+  {
+    "page": 50,
+    "title": "Status：程序指定响应状态",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "CGI 的 Status 字段采用三位状态码加说明文字，例如 Status:403 Forbidden，让服务器生成适当的客户端响应状态。",
+    "explanation": [
+      "状态码表示请求处理结果，403 表示服务器拒绝执行该请求；正文仍可同时提供 HTML 或纯文本说明。返回一个写着“403”的页面但 HTTP 状态仍200，与真正的403响应不是同一回事。",
+      "普通 CGI 代码打印 Status:404 Not Found，而不是自己随意打印 HTTP/1.1 404 Not Found 作为正文。特殊 NPH 模式另有规则，本讲基本模型是由服务器处理协议封装，因此应保持接口字段与HTTP状态行的区别。"
+    ],
+    "takeaways": [
+      "状态码不是正文中的普通文字",
+      "CGI Status由服务器转换"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "Status: 404 Not Found\nContent-Type: text/plain; charset=utf-8\n\nThe requested item does not exist.",
+      "explanation": "这是CGI输出结构，服务器据Status形成HTTP 404响应。"
+    }
+  },
+  {
+    "page": 51,
+    "title": "运行 CGI 前的条件",
+    "section": "CGI 请求与响应",
+    "priority": "support",
+    "summary": "服务器进程需要能够访问脚本、所调用程序及路径目录，还要有正确的执行配置与运行依赖。",
+    "explanation": [
+      "Unix 中文件读取权限、执行权限与目录遍历权限分别有作用；文件存在并不代表服务进程有能力运行，用户自己在终端能运行也不证明服务器身份有同样权限。解释器路径或依赖缺失同样会导致失败。",
+      "Windows 与其他部署环境则通过相应服务器和文件权限配置完成。复习应能列出“URL映射、执行权限、解释器/依赖、输出格式”这几类条件，并避免把所有CGI失败都归因于HTML表单写错。"
+    ],
+    "takeaways": [
+      "能访问文件不等于能执行",
+      "CGI运行依赖服务器配置"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "show_vars.php 的作用",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "示例页面把服务器环境、POST 字段和 GET 查询参数并排显示，用可见输出帮助观察请求被怎样解析。",
+    "explanation": [
+      "PHP 提供 $_SERVER、$_POST、$_GET 等关联数组，脚本读取它们并生成HTML。浏览器收到的是生成后的页面，不需要安装PHP解释器，也通常看不到服务器执行时的变量存储过程。",
+      "截图两侧长列表主要来自 $_SERVER，不代表用户填写了上百个表单字段。GET/POST列可能为空，取决于访问方式与请求内容；直接打开页面通常先发GET，填写并提交表单后再观察相应数组变化。"
+    ],
+    "takeaways": [
+      "服务器环境与用户字段分开",
+      "PHP在服务器执行"
+    ]
+  },
+  {
+    "page": 53,
+    "title": "递归输出关联数组",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "print_tabs 根据深度打印缩进，print_array 用 foreach 遍历键值，遇到数组再递归，因此能展示嵌套结构。",
+    "explanation": [
+      "$k 表示键，$v 表示值，$tabs+1 使内层缩进比外层深一级；empty 分支处理没有条目的数组。HTML 的普通连续空格会折叠，所以示例用 &nbsp; 让缩进能够显示出来。",
+      "课件在检查 is_array 前就把$v连接到字符串，这会在数组值时产生“Array”或转换警告，健壮实现应先分支再输出。若把任意字段值写入HTML，还应进行文本转义以保持字面显示，否则尖括号可能被浏览器解释为标签。"
+    ],
+    "takeaways": [
+      "递归处理嵌套数组",
+      "先判断类型再格式化值"
+    ]
+  },
+  {
+    "page": 54,
+    "title": "三个 PHP 超全局数组并排显示",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "表格三列分别调用 print_array($_SERVER)、print_array($_POST)、print_array($_GET)，对应环境信息、表单请求体参数与URL查询参数。",
+    "explanation": [
+      "$_GET 是名字容易误导的一处：它收集查询字符串，所以POST请求只要URL带 ?x=1，也能同时具有 $_GET['x']。$_POST 主要自动解析指定表单编码的POST正文，不表示任何POST媒体类型都会自动进入它。",
+      "因此POST发送JSON时通常要从原始输入读取并解析，不能简单期待 $_POST 已有全部字段。表格的33%、34%、33%只是输出布局，与三个数组中参数数量或数据来源比例没有关系。"
+    ],
+    "takeaways": [
+      "POST请求也可有$_GET",
+      "JSON正文不自动成为$_POST"
+    ],
+    "question": {
+      "prompt": "POST /show.php?a=1 能同时出现$_GET与$_POST吗？",
+      "answer": "能，$_GET读取URL查询a=1，$_POST可读取符合表单编码的POST正文。"
+    },
+    "links": [
+      {
+        "label": "PHP：$_POST 解析范围",
+        "url": "https://www.php.net/manual/en/reserved.variables.post.php"
+      }
+    ]
+  },
+  {
+    "page": 55,
+    "title": "同页 POST 表单与查询链接",
+    "section": "CGI 请求与响应",
+    "priority": "core",
+    "summary": "最后一页在同一PHP页面放置查询链接与 method=POST 表单，展示URL查询和表单正文可以分别改变两个参数集合。",
+    "explanation": [
+      "链接 href=\"?fname=Hello&lname=World\" 被点击时通常发GET，即使链接文字写着“A form with method=POST”也不会改变请求方法。表单 action 为空表示提交到当前文档地址，若当前URL已有查询，POST可以同时保留查询并发送正文。",
+      "fname、lname来自文本框，提交按钮有name=submit，所以点击它时还可发送submit=Submit。label的for与控件name同名不够，仍需对应id才能显式关联。此页综合考查方法、位置、字段筛选和HTML关联规则，不能只看页面文案。"
+    ],
+    "takeaways": [
+      "链接文案不决定方法",
+      "被点击且有name的提交按钮可贡献字段"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form method=\"post\" action=\"/show.php?source=review\">\n <input name=\"fname\" value=\"Alex\">\n <button name=\"operation\" value=\"save\">保存</button>\n</form>",
+      "explanation": "点击保存会发送POST正文fname=Alex&operation=save；URL仍有source=review查询。"
+    },
+    "question": {
+      "prompt": "一个a链接的文字写POST，它会因此发POST吗？",
+      "answer": "不会。普通HTTP链接导航通常是GET，请求方法不由可见文本决定。"
+    }
+  }
+]

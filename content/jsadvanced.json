@@ -1,0 +1,1138 @@
+[
+  {
+    "page": 1,
+    "title": "JavaScript 与浏览器操作",
+    "section": "课程导读",
+    "priority": "admin",
+    "summary": "本讲把语言基础接到窗口、文档、表单和事件，再进入函数语义与正则表达式。",
+    "explanation": [
+      "复习时沿“用户动作 → 读取控件状态 → 验证 → 更新页面”追踪程序。后半部分重点解释对象共享、this 和隐式转换。"
+    ],
+    "takeaways": [
+      "先确认事件入口，再跟踪数据与输出"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "窗口、表单与事件的组合",
+    "section": "课程导读",
+    "priority": "support",
+    "summary": "三条主线共同组成交互网页：窗口对象提供环境，表单提供输入，事件连接用户动作和函数。",
+    "explanation": [
+      "同一个函数可能通过 onclick 或 addEventListener 注册，两者都在未来事件发生时才调用。表单值通常以字符串形式读出，需要检查空值、格式或显式转换。",
+      "窗口特征、浏览器名称等例子有明显历史背景。复习应既读懂旧写法，又认识现代环境可能忽略部分窗口设置；程序分析要把语言逻辑与宿主实际能力分开。"
+    ],
+    "takeaways": [
+      "表单输入、事件回调、DOM 输出构成数据流"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "2009 年 SunSpider：耗时越小越快",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "截图比较课件 2009 年测试中的 Firefox 3.0、Safari 3.2 与 IE 7.0，指标单位为毫秒。",
+    "explanation": [
+      "图上 5103 ms、6202 ms、45928 ms 是完成这套工作负载所需时间，所以较小的数字表示较快。在这个实验里 IE 耗时明显更长，但只能说明给定环境和测试组合中的表现。",
+      "不能把历史结果当作今天浏览器的排名。不同硬件、引擎版本、负载和测量方法都会影响结果；本页的学习作用是说明引擎实现对同一语言程序的运行速度有很大影响。"
+    ],
+    "takeaways": [
+      "完成时间指标越低越好",
+      "历史基准测试不代表当前排名"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "2010 年：引擎优化带来明显进步",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "本页展示 Firefox 3.6 为 772 ms、Safari 4.0 为 408 ms、Chrome 4.0 为 396 ms，并另列 Chrome 14.0 的 214 ms。",
+    "explanation": [
+      "与前页相比，课件记录的数值显著降低，说明 JavaScript 引擎优化曾快速发展。这里仍然使用完成耗时，不能把 772 比 396 大解释成得分更好。",
+      "同页包含不同版本时期，不能只看年份标题就认定所有测量在完全相同条件下完成。没有硬件、重复次数与误差资料时，适合读总体趋势，不适合做严格因果归因。"
+    ],
+    "takeaways": [
+      "先辨认单位，再解释性能方向"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "2011 年：同一浏览器的版本差异",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "截图分别列出两个 Firefox、Safari 与 IE 版本的测试耗时，强调版本升级后的变化。",
+    "explanation": [
+      "Firefox 示例由 798 ms 降至 187 ms，Safari 由 310 ms 降至 198 ms，IE 由 476 ms 降至 314 ms。这些是课件所记录的特定测试数据，不是通用速度系数。",
+      "读图时同时比较横向的浏览器差异和纵向的版本差异。性能不能仅靠语言名字推断，也不能把一次微基准的改善直接当作所有网页交互同等加速。"
+    ],
+    "takeaways": [
+      "引擎版本是性能实验中的重要变量"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "2012 年汇总：从秒级到百毫秒级",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "本页把 2009—2012 年结果汇总，2012 年所列四个浏览器均在约一百多毫秒范围。",
+    "explanation": [
+      "汇总表的行是年份、列是浏览器，数值仍为耗时。Firefox 166、Safari 138、IE 141、Chrome 149 ms 相互接近，与早期较大的差距形成对照。",
+      "这支持“引擎生态整体进步”的教学结论，但表格没有展示置信区间，也未保证跨年硬件一致。考试若问数据含义，应解释单位和趋势，而不把微小差距夸大成稳定产品优劣。"
+    ],
+    "takeaways": [
+      "看跨年趋势，也看实验条件缺失"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "2012—2014 年移动设备性能",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "三个手机截图记录 Safari 在 iPhone 5、5S、6 上分别为 718、416、352 ms。",
+    "explanation": [
+      "这些数据把讨论从桌面移到移动设备。相同品牌浏览器的表现也会随处理器、系统和引擎版本变化，不能把浏览器视为脱离硬件的独立速度常数。",
+      "本页指标依旧是运行时间，数字下降表示测试完成得更快。它不直接测量网速、页面下载时延或用户点击后的完整响应时间；JavaScript 计算只是网页性能的一部分。"
+    ],
+    "takeaways": [
+      "执行耗时不同于页面整体加载时间"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "JetStream：从耗时切换到分数",
+    "section": "历史性能测试",
+    "priority": "skim",
+    "summary": "本页列出 JetStream 与 JetStream2 的历史结果，单位变为 score，因此不能沿用前页“越小越好”的阅读方式。",
+    "explanation": [
+      "这类综合分数通常越大表示该套基准表现越好。课件混合桌面、手机、不同系统以及不同代基准，必须先确认测试版本相同才适合直接比较。",
+      "标题给出历史时间段，但下方还增补较新设备的记录，说明这是持续整理的例表。复习重点是测量指标、工作负载与环境会影响结论；不要把不同版本的 score 直接算倍数当作精确提升。"
+    ],
+    "takeaways": [
+      "score 与毫秒的好坏方向不同",
+      "不同基准版本的分数未必可直接比较"
+    ]
+  },
+  {
+    "page": 9,
+    "title": "浏览器对象层级图",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "图把 window 放在顶部，下接 document、frames、location、history、navigator，再由 document 连到表单、图片和链接集合。",
+    "explanation": [
+      "这里的连线表示对象可访问关系，不是 JavaScript 原型继承图。window.document 指向当前文档，document.forms 指向表单集合，表单再包含控件，因此可以沿属性链找到输入值。",
+      "图中的 applets、layers 等是历史对象，不能据此假设现代浏览器仍完整支持。学习时保留 window → document → 元素/集合 的访问思路，并用现代 DOM 查询方式定位实际节点。"
+    ],
+    "takeaways": [
+      "对象包含关系不等于原型继承关系"
+    ],
+    "question": {
+      "prompt": "document.forms[0].elements[0] 沿什么路径定位？",
+      "answer": "当前文档的第一个表单，再取其第一个表单控件。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "window：浏览上下文的接口",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "window 提供 location、history、navigator 等属性及 open、close、focus 等方法，连接脚本与当前浏览环境。",
+    "explanation": [
+      "window 是浏览器宿主对象，不是所有 JavaScript 环境都有的核心内置对象。self 通常指向当前窗口，parent 指向父浏览上下文；最顶层页面中 parent 通常就是自身。",
+      "某些方法受浏览器策略约束，例如网页不能任意关闭用户手动打开的窗口，也不能保证强制抢焦点或随意调整大小。课件属性名首字母偶尔写成 Window，实际访问实例通常使用小写 window。"
+    ],
+    "takeaways": [
+      "window 属于宿主 API",
+      "方法存在不保证浏览器允许每次操作"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "window.open 的返回值与空窗口",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "示例先打开空白窗口，再通过保存的引用写入内容；检查返回值是避免对 null 访问属性的关键。",
+    "explanation": [
+      "target 必须是字符串 \"_blank\"，课件首行省略引号会把 _blank 当变量。open 可能因弹窗拦截返回 null，不能无条件调用 newWindow.document。",
+      "能否操作返回窗口的文档还取决于同源关系。初始空白窗口适合教学演示，但打开外部网页后不代表可继续随意读取其 DOM；窗口尺寸与位置也不保证按课件旧式默认规则出现。"
+    ],
+    "takeaways": [
+      "保存返回引用后再检查可用性",
+      "\"_blank\" 是字符串参数"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const win = window.open(\"\", \"Preview\");\nif (win) win.document.body.textContent = \"Review notes\";",
+      "explanation": "成功打开时显示文字；被拦截时跳过文档访问。"
+    }
+  },
+  {
+    "page": 12,
+    "title": "open 的 URL、target 与 features",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "前三个参数分别控制加载资源、选择浏览上下文、请求窗口特征，职责不同。",
+    "explanation": [
+      "\"_self\" 在当前上下文导航，\"_blank\" 创建新上下文，普通名称可复用已有同名窗口。URL 为空字符串时可以得到空白文档，之后再填充内容。",
+      "课件展示的第四个 replace 参数属于历史签名，不应视为现代可靠能力。要替换当前历史条目，应理解 location.replace；现代 open 主要按 url、target、windowFeatures 三个参数使用。"
+    ],
+    "takeaways": [
+      "第二参数选择目标，第三参数描述特征"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "window.open(\"review.html\", \"ReviewWindow\", \"popup,width=600,height=450\");",
+      "explanation": "请求在名为 ReviewWindow 的上下文显示资源；后续同名调用可复用它。"
+    }
+  },
+  {
+    "page": 13,
+    "title": "窗口特征是请求而非绝对控制",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "features 是逗号分隔的名称和值，常见项包括 popup、width、height、left、top、noopener 与 noreferrer。",
+    "explanation": [
+      "课件列出的 toolbar、menubar、status 等多为旧式控制项，现代浏览器可能忽略或只据此判定弹窗。尺寸与位置也可被屏幕可用区域、最小尺寸和用户设置修正。",
+      "noopener 使新窗口不拥有指向原窗口的 opener，noreferrer 还影响 Referer 信息。阅读代码时关注每个参数的目的，不能用“设置了 width”就断定最终屏幕像素尺寸一定精确相等。"
+    ],
+    "takeaways": [
+      "features 是一个字符串，不是对象",
+      "宿主可修正尺寸和忽略历史特征"
+    ],
+    "links": [
+      {
+        "label": "MDN：window.open",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/open"
+      }
+    ]
+  },
+  {
+    "page": 14,
+    "title": "触发时机影响弹窗行为",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "课件给出 load、链接点击、按钮点击三种触发 open 的入口，程序文本相同也可能因触发时机得到不同结果。",
+    "explanation": [
+      "现代浏览器通常要求弹窗直接来自用户操作；页面刚加载就自动调用容易被拦截。按钮 click 回调更能明确表达用户确实希望打开窗口。",
+      "javascript: 链接与内联事件可解释老代码，但普通链接或 addEventListener 更清晰。void 0 的用途是让 javascript: URL 的完成值为 undefined，避免把表达式结果当作导航文档内容。"
+    ],
+    "takeaways": [
+      "用户激活状态会影响 open 是否成功"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "navigator 与特性检测",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "navigator 暴露语言、cookie 状态、userAgent 等环境信息；历史 appName/appVersion 不宜直接当准确产品身份。",
+    "explanation": [
+      "parseFloat 从字符串起始解析可识别的数值前缀，遇到后续非数值部分停止。因此 appVersion 即使后面包含真正产品版本，也可能只解析出前面的兼容性数字。",
+      "更稳妥的问题是“有没有我需要的 API”，而不是“浏览器叫什么”。语言偏好、cookieEnabled 也只说明相应环境信息，不能推断所有功能或所有来源的 cookie 操作都一定可用。"
+    ],
+    "takeaways": [
+      "环境描述字符串不等于可靠能力清单"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(parseFloat(\"5.0 (compatible; Example 120)\"));\nconsole.log(typeof window.fetch === \"function\");",
+      "explanation": "前者为 5；后者才是检查 fetch 方法是否存在的方式。"
+    }
+  },
+  {
+    "page": 16,
+    "title": "版本判断程序为什么会误判",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "例子把 parseFloat(navigator.appVersion) 与 7 比较，再决定是否显示“up-to-date”。",
+    "explanation": [
+      "程序本身先输出原始名称和版本字符串，再执行数值条件。但 appVersion 中的前缀可能长期保持 5.0，即使真正产品版本很新，条件仍然为假。",
+      "这道例题适合分两层回答：按给定字符串可以精确推导分支，而“是否最新”的业务结论却不可信。语法执行正确不代表用于判断的输入信息可靠。"
+    ],
+    "takeaways": [
+      "正确执行的代码也可能使用错误判断依据"
+    ],
+    "question": {
+      "prompt": "若 appVersion 为 \"5.0 (... Version/20.0 ...)\"，条件 >=7 成立吗？",
+      "answer": "不成立，parseFloat 只得到前面的 5。"
+    }
+  },
+  {
+    "page": 17,
+    "title": "浏览器截图暴露兼容名称问题",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "Chrome、Firefox 与 IE 的旧截图说明历史兼容字符串不能简单对应真实产品名字。",
+    "explanation": [
+      "图中课件指出多个浏览器返回 Netscape 等名称。这样的兼容标记通常服务于旧网页，不是给程序提供可靠的品牌鉴别码；显示结果与用户看到的浏览器品牌可能不同。",
+      "课件提示分析 userAgent，但它也不能保证永久稳定或不可伪装。复习要抓住从“浏览器嗅探”转向“功能检测”的动机：直接检查需要的能力，减少版本假设。"
+    ],
+    "takeaways": [
+      "兼容性字符串不能按字面理解为产品身份"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "不存在的名字与不存在的属性",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "本页建议检测功能后再调用，但 if(something) 对完全未声明的标识符并不安全，必须修正。",
+    "explanation": [
+      "读取对象上不存在的属性通常得到 undefined，例如 window.someAPI；读取未声明变量 something 则会抛 ReferenceError，因此还没进入 if 分支就已经失败。",
+      "typeof undeclaredName 通常可以安全得到 \"undefined\"，适合检测全局名称；但 let/const 暂时性死区仍是例外。检测方法时还应确认它是 function，而不只是任意真值，随后才执行调用。"
+    ],
+    "takeaways": [
+      "缺失属性返回 undefined，未声明标识符可能报错"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "if (typeof window.someAPI === \"function\") {\n  window.someAPI();\n}",
+      "explanation": "API 缺失时跳过调用，不会读取一个未声明变量。"
+    },
+    "pitfall": "原页“条件中的任意未定义名称都会返回 false”不成立。"
+  },
+  {
+    "page": 19,
+    "title": "document 与 HTML 元素集合",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "每个加载的页面对应 Document，forms、images、body 等属性让脚本访问文档内容。",
+    "explanation": [
+      "document.forms 是表单集合，document.images 是图片集合；它们是集合对象，不应默认拥有所有 Array 方法。document.cookie 返回当前脚本可见的 cookie 字符串，并非所有站点或所有 cookie 的数据库。",
+      "open/write/close 这一组操作的是文档写入流，和 window.open/close 管理窗口不是一回事。原页的 applets 等是历史接口；新代码应优先通过查询和 DOM 节点方法更新页面。"
+    ],
+    "takeaways": [
+      "document.close 不等于关闭浏览器窗口",
+      "DOM 集合不一定是 Array"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "旧式文档颜色属性与 CSS",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "SetColors 先设置全局前景白色、背景黑色；嵌套的红色 font 再改变局部文字表现。",
+    "explanation": [
+      "本例展示“默认颜色”与“局部指定颜色”的关系。普通文字采用文档前景色，显式指定红色的片段仍显示红色，不会因背景黑色而自动继承白色。",
+      "document.fgColor/bgColor 与 font 元素属于历史写法。现代代码可以设置 document.body.style.color 和 backgroundColor，并给局部元素独立样式；数据流仍是函数调用 → 修改样式 → 浏览器重绘。"
+    ],
+    "takeaways": [
+      "局部颜色可以覆盖继承的默认颜色"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "document.body.style.backgroundColor = \"black\";\ndocument.body.style.color = \"white\";\ndocument.querySelector(\".warning\").style.color = \"red\";",
+      "explanation": "正文白字黑底，warning 元素红字。"
+    }
+  },
+  {
+    "page": 21,
+    "title": "黑底、白字与红字的输出",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "截图显示页面黑色背景，上方说明和第一行文字为白色，显式设置的下一行为红色。",
+    "explanation": [
+      "图示正好验证前页两级颜色设置：文档级默认色影响未单独设置的文字，font color=red 影响指定子内容。它不表示 JavaScript 把每个文本节点逐个改成白色。",
+      "当题目给出样式变化与截图时，先判断修改作用于哪个元素、哪些后代继承、哪些后代有自己的设置。这个思路之后同样适用于 DOM 修改 style 的代码。"
+    ],
+    "takeaways": [
+      "样式结果取决于作用范围与局部设置"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "location：把 URL 拆成字段",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "Location 提供 href、protocol、hostname、port、host、pathname、search、hash 和 origin，并支持导航方法。",
+    "explanation": [
+      "host 包含主机名与非默认端口，hostname 只含主机名；pathname 不含查询串和片段，search 含问号，hash 含 #。protocol 的实际值包括冒号，例如 \"http:\"，原页表格省略了冒号。",
+      "assign 通常添加导航历史，replace 替换当前条目，reload 重新加载。课件 href 中 site.com 与 big.com 不一致是示例笔误，完整 href 应与拆分字段来自同一个 URL。"
+    ],
+    "takeaways": [
+      "protocol 含冒号",
+      "host 与 hostname 的区别在端口"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const u = new URL(\"https://example.com:8443/a?q=1#part\");\nconsole.log(u.host, u.search, u.hash);",
+      "explanation": "example.com:8443、?q=1、#part。"
+    }
+  },
+  {
+    "page": 23,
+    "title": "history.length 是会话历史条目数",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "按钮调用 showHistNumber，把 history.length 放入提示文字；该值不是用户一生访问过的网站总数。",
+    "explanation": [
+      "History 作用于当前浏览上下文的会话历史，包含当前条目，也可能包含同文档导航产生的条目。同一个页面多次进入可能形成多个条目，不能把 length 当作不同 URL 的数量。",
+      "浏览器不会因此开放所有历史 URL 列表给网页读取。课件的“already visited web pages”是简化提示文字，分析时应准确说“当前上下文会话历史的条目数”。"
+    ],
+    "takeaways": [
+      "history.length 不是全浏览器访问记录数量"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(window.history.length);\n// history.back() 请求回到前一个可用历史条目",
+      "explanation": "第一行得到当前上下文的历史长度；不列出所有 URL。"
+    }
+  },
+  {
+    "page": 24,
+    "title": "历史长度弹窗的含义",
+    "section": "浏览器对象",
+    "priority": "support",
+    "summary": "截图中按钮弹出包含 24 的消息，表示示例运行时读到了对应历史长度。",
+    "explanation": [
+      "24 不是程序常量，也不是每次执行必然得到的结果。新标签、前进后退和页面导航状态不同，都可能让会话历史长度不同。",
+      "考试若只给源码而没有浏览上下文，无法算出精确数字；可以确定的是点击触发读取，模板字面量把数值嵌入消息，alert 将结果显示出来。"
+    ],
+    "takeaways": [
+      "依赖浏览会话状态的值不能脱离环境求定值"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "Image：显示尺寸与自然尺寸",
+    "section": "浏览器对象",
+    "priority": "core",
+    "summary": "图片元素同时有 src、alt、width/height 和 naturalWidth/naturalHeight，分别对应资源、替代文字、展示尺寸与图片固有尺寸。",
+    "explanation": [
+      "改变 img.src 会请求并展示另一张图；只创建 new Image() 并设置 src 可发起加载，但不自动把它插到可见文档里。必须 append 等操作才能作为页面元素出现。",
+      "document.images 可按索引定位已有图像，集合不是普通数组。responsive 属性应为 sizes，课件 sizews 是拼写错误；currentSrc 表示浏览器最终选择的资源，未必等于 src 字面值。"
+    ],
+    "takeaways": [
+      "创建 Image 不等于插入页面",
+      "自然尺寸与 CSS 展示尺寸可能不同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const pic = new Image();\npic.alt = \"示意图\";\npic.src = \"diagram.png\";\ndocument.body.append(pic);",
+      "explanation": "创建、配置、插入三步完成后，图片才参与文档显示。"
+    }
+  },
+  {
+    "page": 26,
+    "title": "单选按钮组与当前 checked 状态",
+    "section": "表单操作",
+    "priority": "core",
+    "summary": "相同 name 的 radio 形成一组，代码读取被选项的 value，再读取 song 文本框值组成提示。",
+    "explanation": [
+      "this.form 从点击按钮定位其所属表单；radio 的显示标签 John 与 value=\"Lennon\" 可以不同，程序读的是 value。checked 属性读取当前状态，而 HTML checked 属性负责默认选中。",
+      "课件 form.Beatles.find(...) 存在问题：RadioNodeList 并非 Array，没有标准 find 方法。可使用表单内 :checked 查询，或 Array.from 后 find；并处理无选中项时得到 null 的情况。"
+    ],
+    "takeaways": [
+      "同名 radio 组通常只能选一项",
+      "标签文字与提交 value 可不同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const chosen = form.querySelector(\"input[name=Beatles]:checked\");\nif (chosen) alert(`${chosen.value}: ${form.elements.song.value}`);",
+      "explanation": "读取选中的 value 与当前歌曲输入。"
+    },
+    "pitfall": "RadioNodeList 不能直接假定具有 Array.prototype.find。",
+    "links": [
+      {
+        "label": "MDN：RadioNodeList",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/RadioNodeList"
+      }
+    ]
+  },
+  {
+    "page": 27,
+    "title": "Beatle 表单截图：状态变成消息",
+    "section": "表单操作",
+    "priority": "support",
+    "summary": "截图中 John 被选中、歌曲框填入 let it be，结果消息读出 Lennon 与歌曲文字。",
+    "explanation": [
+      "这说明程序输出使用控件 value，而不是旁边展示的 John 标签。用户改变单选项后，下一次点击才会重新读取状态，旧提示文字不会自行随控件改变。",
+      "截图属于示例的有效运行结果，但不能消除前页新版源码中集合 find 的问题。应按修正版先找 checked 控件，再取值，才能把视觉操作和代码路径一致对应起来。"
+    ],
+    "takeaways": [
+      "从截图识别选中状态，再推导读取值"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "空字段检查的页面效果",
+    "section": "表单操作",
+    "priority": "support",
+    "summary": "截图展示部分填写的表单和缺失字段提示：姓名、街道已有内容，城市、电话和邮箱仍为空。",
+    "explanation": [
+      "校验不是只报告“失败”，而是收集所有缺失项再一起显示。这样用户可以一次看到需要补充哪些字段，对应下一页 filter 生成缺失字段列表的实现。",
+      "本页只能验证非空检查的交互，不代表电话或邮箱格式正确，也不代表资料已经保存到服务器。按钮的文案与程序实际执行的检查行为要分开理解。"
+    ],
+    "takeaways": [
+      "非空校验不等于格式校验或数据保存"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "filter 收集缺失字段",
+    "section": "表单操作",
+    "priority": "core",
+    "summary": "fields 列表保存控件名，filter 对每个控件读取 value，把假值对应的名字留下，再用 join 生成消息。",
+    "explanation": [
+      "文本输入框的 value 是字符串，因此空字符串会被 ! 转成 true 并保留；\"0\" 和空格字符串都是真值，不会被这一规则判断为空。若希望空白也无效，应先 trim。",
+      "invalidFields.length===0 才代表所有列出的字段非空。函数实际返回 true/false，和注释中的 1/0 不完全一致；课件弯引号需替换成正常引号，代码才能解析。"
+    ],
+    "takeaways": [
+      "filter 返回符合条件的新数组",
+      "只有空字符串被当前规则判断为空"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const values = {name:\"Ana\", city:\"   \", email:\"\"};\nconst missing = Object.keys(values).filter(k => !values[k].trim());\nconsole.log(missing);",
+      "explanation": "输出 [\"city\", \"email\"]；trim 使纯空格也算缺失。"
+    }
+  },
+  {
+    "page": 30,
+    "title": "控件 name、required 与提交入口",
+    "section": "表单操作",
+    "priority": "core",
+    "summary": "表单的 name 属性为脚本定位字段提供键，required 可启用浏览器内置必填验证。",
+    "explanation": [
+      "原例按钮 type=button 仅运行 checkEmpty，不会自动提交到服务器。函数返回 false 也不会凭空阻止一个不存在的提交动作；若要拦截实际提交，应在 submit 事件处理并 preventDefault。",
+      "required 检查是浏览器的约束验证流程，和脚本手工扫描可以配合。字段 size 影响显示宽度，不等于最大字符数，不能把布局属性当作输入内容长度限制。"
+    ],
+    "takeaways": [
+      "type=button 没有默认提交行为",
+      "size 与 maxlength 的意义不同"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<form><input name=\"email\" type=\"email\" required>\n<button type=\"submit\">提交</button></form>",
+      "explanation": "正常用户提交时，浏览器会先检查必填与邮箱类型约束。"
+    }
+  },
+  {
+    "page": 31,
+    "title": "单选下拉框：selectedIndex 与 value",
+    "section": "表单操作",
+    "priority": "core",
+    "summary": "函数通过 options[selectedIndex].value 得到选中项的程序值；select.value 是常见简写。",
+    "explanation": [
+      "selectedIndex 从 0 开始，指向第一个选中的 option；如果没有选择项，它可能为 -1，此时直接读取 options[-1].value 会失败。",
+      "可见文字 Dodgers 与 value=\"dodgers\" 大小写不同。阅读表单题应分别记录显示文本、选项 value 和索引；提交数据通常使用 value，而不是选项在列表中的编号。"
+    ],
+    "takeaways": [
+      "selectedIndex 是索引，不是选项内容",
+      "单选框可直接读取 value"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const select = document.querySelector(\"select\");\nconsole.log(select.selectedIndex, select.value);",
+      "explanation": "若选中第二项 Yankees，通常得到 1 和 \"yankees\"。"
+    }
+  },
+  {
+    "page": 32,
+    "title": "下拉结果截图：读 value 而非 text",
+    "section": "表单操作",
+    "priority": "support",
+    "summary": "截图选择 Yankees 后，弹窗显示小写 yankees，印证函数返回 option.value。",
+    "explanation": [
+      "界面标签为了阅读可以使用首字母大写，但传给程序的标识可以统一小写。二者不一致不是错误，而是 UI 文案与数据标识分离。",
+      "若题目把 return 后的 .value 改成 .text，输出就会变成可见标签。做这类题应找准最后读取的属性，而不是仅凭截图选择文字猜答案。"
+    ],
+    "takeaways": [
+      "value 与 text 都可读，但含义不同"
+    ],
+    "question": {
+      "prompt": "同一选择项将 .value 改为 .text，示例会输出什么？",
+      "answer": "Yankees，保留可见标签的首字母大写。"
+    }
+  },
+  {
+    "page": 33,
+    "title": "多选列表：逐个检查 selected",
+    "section": "表单操作",
+    "priority": "core",
+    "summary": "multiple 允许多项被选中，因此代码遍历所有 options，收集 selected 为真的选项文字。",
+    "explanation": [
+      "selectedIndex 只能定位一个位置，无法表达完整多选集合。课件循环从 0 到 length−1，按选项在文档中的顺序追加 text，而不是按用户点击的先后顺序输出。",
+      "代码随后打开命名窗口并写入结果，需要先检查 open 的返回值是否存在。现代实现可以 Array.from(select.selectedOptions, option=>option.value) 获取所有选中值，再在当前页展示，逻辑更直接。"
+    ],
+    "takeaways": [
+      "多选结果是集合，不能只读一个索引"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const select = document.querySelector(\"select[multiple]\");\nconst labels = Array.from(select.selectedOptions, o => o.text);\nconsole.log(labels);",
+      "explanation": "返回所有选中项的显示文字，顺序依照选项列表。"
+    }
+  },
+  {
+    "page": 34,
+    "title": "多选截图：三个标签按列表顺序显示",
+    "section": "表单操作",
+    "priority": "support",
+    "summary": "截图同时选中 Dodgers、Yankees、Angels，新窗口逐行列出三项，与循环和 <BR> 拼接相符。",
+    "explanation": [
+      "这里读取的是 .text，所以显示首字母大写的球队名字，与前页单选示例读取 .value 的小写结果不同。展示格式来自插入的 HTML 换行标签。",
+      "多选控件的 size=3 只指定可见行数，允许多选来自 multiple 属性。去掉 multiple 后仍可显示多行列表，但不会因此保留多个选中项，两个属性作用不能混淆。"
+    ],
+    "takeaways": [
+      "size 决定可见行数，multiple 决定可否多选"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "addEventListener 注册函数值",
+    "section": "事件监听",
+    "priority": "core",
+    "summary": "addEventListener 把函数登记到事件目标，可以在同一目标上保存多个不同监听器。",
+    "explanation": [
+      "第二个参数应是函数引用，例如 displayDate，而不是 displayDate() 的调用结果。后者会在注册语句执行时立即运行，并把返回值交给监听接口。",
+      "相同事件可有多个监听器，适合把不同职责独立组织。它与 element.onclick=f 的单一属性槽不同；但同一 target、type、callback、capture 的重复注册不会简单无限叠加同一个监听器。"
+    ],
+    "takeaways": [
+      "传递回调时通常不写调用括号",
+      "事件名为 click 而非 onclick"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const button = document.querySelector(\"button\");\nbutton.addEventListener(\"click\", () => console.log(\"A\"));\nbutton.addEventListener(\"click\", () => console.log(\"B\"));",
+      "explanation": "点击一次时两个不同监听器依次输出 A、B。"
+    }
+  },
+  {
+    "page": 36,
+    "title": "三个文档事件累积输出",
+    "section": "事件监听",
+    "priority": "core",
+    "summary": "mouseover、click、mouseout 的回调分别把一条描述追加到 demo，形成事件日志。",
+    "explanation": [
+      "+= 的行为是先读取旧 innerHTML，再拼接新片段并重新设置；因此日志累积而不是覆盖。文档上监听冒泡事件时，子元素触发的事件也可能被收到，日志次数可能比“进出整个页面”更多。",
+      "innerHTML 重新解析会替换内部节点，日志场景可用 append 文本节点与 br 保留已有节点。预测输出时需要给定用户动作序列，而不能仅根据注册顺序认定三个事件会自动依次发生。"
+    ],
+    "takeaways": [
+      "注册顺序不是事件发生顺序",
+      "文档监听可接收来自后代的冒泡事件"
+    ],
+    "question": {
+      "prompt": "只注册三个监听器，尚未操作页面，日志有三行吗？",
+      "answer": "没有。注册不触发事件，必须发生相应动作。"
+    }
+  },
+  {
+    "page": 37,
+    "title": "匿名箭头函数为回调携带参数",
+    "section": "事件监听",
+    "priority": "core",
+    "summary": "本页把重复的追加逻辑提取成 append，再用三个匿名箭头函数传入不同文字。",
+    "explanation": [
+      "()=>append(\"Clicked!\") 创建一个稍后可调用的函数，点击时它才把指定文本传给 append。若直接写 append(\"Clicked!\") 作为监听器参数，则会立刻修改页面，而且传入的是返回值。",
+      "这个例子也展示闭包用途：回调能访问定义位置附近的 append 绑定。复用公共函数减少重复，但每个事件仍保留独立入口及对应信息，便于分析行为。"
+    ],
+    "takeaways": [
+      "包装函数延迟调用并绑定所需参数"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const report = message => console.log(message);\ndocument.addEventListener(\"click\", () => report(\"clicked\"));",
+      "explanation": "只有点击发生时才调用 report，并输出 clicked。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "从浏览器 API 转向语言语义",
+    "section": "语言语义",
+    "priority": "admin",
+    "summary": "这一页是分隔页：后续重点从窗口与表单转到函数值、this、对象传递和正则表达式。",
+    "explanation": [
+      "做后半部分练习时，减少对界面的依赖，直接在纸上记录变量值、对象引用关系与每步返回值。"
+    ],
+    "takeaways": [
+      "把宿主行为题与核心语言题分开推理"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "语言专题的复习顺序",
+    "section": "语言语义",
+    "priority": "support",
+    "summary": "目录把函数作为对象、方法、构造器三种用法放在一起，再连接传参、类型转换、运算符与正则。",
+    "explanation": [
+      "同一个函数可以存入变量，也可以作为对象属性被调用；调用形式改变 this 的确定方式。对象共享又决定函数内的修改是否能被外部观察到。",
+      "正则章节则把语言机制用到输入校验：返回布尔值控制分支、返回匹配数组提取信息。复习时应先会追踪函数和对象，再学习模式匹配，避免只背正则符号。"
+    ],
+    "takeaways": [
+      "函数调用形式、共享对象和校验结果互相关联"
+    ]
+  },
+  {
+    "page": 40,
+    "title": "函数是一等值",
+    "section": "函数与对象",
+    "priority": "core",
+    "summary": "函数可以赋给变量、放入数组、成为对象属性或作为参数，因此函数名可以有多个指向同一函数的别名。",
+    "explanation": [
+      "var twice_again=twice 不执行函数，只复制函数引用。twice(5) 才执行函数体。课件把函数命名为 twice，但实际返回 x*x，所以行为是平方而非翻倍，应按函数体推理。",
+      "因此原例 sum=twice(5)+twice_again(10) 等于 25+100=125。名字只能帮助理解意图，不能替代代码语义；这种不准确命名很适合训练独立追踪。"
+    ],
+    "takeaways": [
+      "赋值函数引用不等于调用",
+      "结果由函数体决定，不由名字决定"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function twice(x) { return x*x; }\nconst another = twice;\nconsole.log(another === twice, twice(5)+another(10));",
+      "explanation": "输出 true、125。"
+    }
+  },
+  {
+    "page": 41,
+    "title": "方法调用中的 this",
+    "section": "函数与对象",
+    "priority": "core",
+    "summary": "把 compute_area 放到 rect.area 后，使用 rect.area() 调用，普通函数中的 this 指向 rect。",
+    "explanation": [
+      "函数本身不需要永久属于某个对象；obj.method() 这种调用表达式提供接收者，从而决定普通函数的 this。若另一个对象也使用同一函数，就可按另一个对象的字段计算面积。",
+      "把 const f=rect.area 再调用 f() 会丢失方法调用的接收者，不能保证 this 仍是 rect。严格模式下普通裸调用的 this 为 undefined；箭头函数的 this 则由外层词法环境决定。"
+    ],
+    "takeaways": [
+      "普通函数的 this 与调用方式有关"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function area() { return this.w*this.h; }\nconst a={w:3,h:4,area};\nconst b={w:5,h:2,area};\nconsole.log(a.area(), b.area());",
+      "explanation": "输出 12、10，同一函数从不同接收者读取字段。"
+    }
+  },
+  {
+    "page": 42,
+    "title": "new 与方法引用的区别",
+    "section": "函数与对象",
+    "priority": "core",
+    "summary": "Rectangle 通过 this 初始化 length、width 和 area；new 创建新实例并调用构造逻辑。",
+    "explanation": [
+      "实例建立后 rect1.area 是函数值，rect1.area() 才是计算结果。课件写 var rect1_area=rect1.area，变量虽然名为 area，却保存方法本身，不会自动得到 15000。",
+      "分析 new 时可按步骤思考：分配对象、建立原型联系、让 this 指向它、执行构造器。若构造器没有特殊返回对象，表达式结果就是这个实例；缺少 new 会导致完全不同的 this 行为。"
+    ],
+    "takeaways": [
+      "属性读取不调用函数",
+      "new 为构造器建立实例 this"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function Rectangle(l,w) { this.l=l; this.w=w; this.area=function(){return this.l*this.w;}; }\nconst r = new Rectangle(150,100);\nconsole.log(typeof r.area, r.area());",
+      "explanation": "输出 function、15000。"
+    },
+    "pitfall": "原页 rect1.area 缺少括号，所得是函数，不是面积。"
+  },
+  {
+    "page": 43,
+    "title": "传值与共享对象：准确的模型",
+    "section": "函数与对象",
+    "priority": "core",
+    "summary": "课件用 by-value/by-reference 对照帮助理解复制与共享，但 JavaScript 的参数统一按值传递。",
+    "explanation": [
+      "原始值参数收到原始值的副本；对象参数收到指向同一对象的引用值副本。函数能通过这个副本修改共享对象，但不能重新绑定调用者原来的变量。",
+      "真正的引用参数可让函数替换调用者变量本身，JavaScript 不具有这种普通传参机制。代码题画两个变量箭头指向同一对象，分别追踪“改对象字段”与“改箭头指向”，最容易避免误判。"
+    ],
+    "takeaways": [
+      "传入对象时复制引用值",
+      "改属性可见，重赋参数不替换外部变量"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const obj={n:1};\nfunction change(x){ x.n=2; x={n:3}; }\nchange(obj);\nconsole.log(obj.n);",
+      "explanation": "输出 2；改属性影响共享对象，随后重赋 x 只改变局部参数。"
+    },
+    "links": [
+      {
+        "label": "MDN：函数与参数",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions"
+      }
+    ]
+  },
+  {
+    "page": 44,
+    "title": "复制、传参、比较三件事分开",
+    "section": "函数与对象",
+    "priority": "core",
+    "summary": "类型表强调对象属性修改可被外部观察；更准确地说，赋值和参数传递复制的是对象引用值。",
+    "explanation": [
+      "数字和布尔值按自身值比较，字符串按字符序列比较；对象、数组、函数的相等比较关注是否为同一个对象，而不是内容是否恰好一致。",
+      "const a=[1]; const b=a 让两个绑定共享一个数组，b.push(2) 会改变 a 看到的内容；const c=[1,2] 是独立新数组，即使内容相同，a===c 仍为 false。必要时逐字段定义内容相等，而不是期待 === 深度比较。"
+    ],
+    "takeaways": [
+      "对象相等检查身份，不做深比较"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const a=[1], b=a;\nb.push(2);\nconsole.log(a, a===b, a===[1,2]);",
+      "explanation": "输出 [1,2]、true、false。"
+    }
+  },
+  {
+    "page": 45,
+    "title": "不可变字符串与垃圾回收",
+    "section": "类型与运算符",
+    "priority": "core",
+    "summary": "字符串拼接产生新值，变量重新赋值后旧值可能不再被引用；内存回收由运行时管理。",
+    "explanation": [
+      "+= 并不是在原字符串末尾原地追加字符，而是计算连接结果后更新变量绑定。其他变量如果原先保存相同字符串，仍保持旧值，不会跟着变长。",
+      "“不能删除字符串”应理解为不能像可变对象那样删除内部字符，不能理解成字符串内存永远无法释放。垃圾回收处理不再可达的分配对象/内部存储，程序通常无需手动释放字符串。",
+      "若有两个变量起初都保存同一段文字，对其中一个执行拼接不会改变另一个；用这个实验可以把不可变字符串与共享可变对象区分开。"
+    ],
+    "takeaways": [
+      "拼接改变变量所保存的值",
+      "不可变不等于永不回收"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "let a=\"web\";\nconst b=a;\na += \" tech\";\nconsole.log(a,b);",
+      "explanation": "输出 web tech 和 web；b 未被修改。"
+    }
+  },
+  {
+    "page": 46,
+    "title": "字符串 API 的大小写与边界",
+    "section": "类型与运算符",
+    "priority": "core",
+    "summary": "本页复习 length、查找和截取；方法名区分大小写，toLowerCase 和 toUpperCase 必须拼写准确。",
+    "explanation": [
+      "课件写成 tolowerCase/toupperCase 是大小写错误，调用不存在的方法会导致 TypeError。indexOf 返回索引或 -1，charAt 越界返回空字符串；这些返回值差异直接影响条件判断。",
+      "substring 终点不包含，且会处理负值与交换反向参数；因此不能把它与所有语言里的切片完全等同。仍要记住 length 计 UTF-16 码元，换行转义在值中只占一个。"
+    ],
+    "takeaways": [
+      "正确方法名是 toLowerCase、toUpperCase"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(\"WEB\".toLowerCase());\nconsole.log(\"abcd\".substring(3,1));\nconsole.log(\"abc\".charAt(9));",
+      "explanation": "输出 web、bc、空字符串。"
+    }
+  },
+  {
+    "page": 47,
+    "title": "优先级、结合性与短路",
+    "section": "类型与运算符",
+    "priority": "core",
+    "summary": "运算符表从低到高列出逗号、赋值、条件、逻辑、比较和算术等层级，用于判断表达式结构。",
+    "explanation": [
+      "2+3*4 先做乘法，但优先级不是所有求值次序问题的唯一答案：逻辑与/或会短路，条件运算符只执行被选中的分支。括号能显式改变分组，适合解释复杂题目。",
+      "赋值运算通常右结合，a=b=5 等价 a=(b=5)。逻辑操作可返回操作数本身，不必得到布尔值；位运算与逻辑运算不同，不能因为符号相似就交换使用。",
+      "不要把 = 当成相等判断；赋值表达式本身还有结果值，因此放在 if 条件中可能既修改变量又决定分支，产生看似异常却符合规则的结果。"
+    ],
+    "takeaways": [
+      "先分组，再考虑短路和副作用"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "let n=0;\nconst x = false && ++n;\nconst y = 2 + 3*4;\nconsole.log(x,n,y);",
+      "explanation": "输出 false、0、14；短路使 ++n 未执行。"
+    }
+  },
+  {
+    "page": 48,
+    "title": "隐式转换：加号与乘号不同",
+    "section": "类型与运算符",
+    "priority": "core",
+    "summary": "乘号会尝试数值转换，而加号还可能执行字符串连接；相同操作数换个运算符就可能得到不同类型。",
+    "explanation": [
+      "\"3\"*\"5\" 得到数字 15，\"3\"+\"5\" 得到字符串 \"35\"。课件把 \"a\"*\"b\" 称为 illegal 不准确：它语法合法，转换失败得到 NaN，而不是自动抛语法异常。",
+      "连续加法按左结合逐步处理，因此 1+2+\"3\" 为 \"33\"，\"1\"+2+3 为 \"123\"。赋值链则右结合，应把每一步的值与类型都写下来，防止只看最终字符。"
+    ],
+    "takeaways": [
+      "NaN 是计算结果，不等于语法错误"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(\"3\"*\"5\", \"a\"*\"b\");\nconsole.log(1+2+\"3\", \"1\"+2+3);",
+      "explanation": "输出 15、NaN；然后是字符串 \"33\" 与 \"123\"。"
+    }
+  },
+  {
+    "page": 49,
+    "title": "==、=== 与对象身份",
+    "section": "类型与运算符",
+    "priority": "core",
+    "summary": "宽松相等可能转换类型，严格相等不做这类类型转换；对象在两种比较下都不能自动按内容判断相等。",
+    "explanation": [
+      "\"1\"==1、true==1、false==0 均可为 true，原因是宽松比较规则。\"1\"===1 为 false，因为类型不同；同类型仍需继续比较值或对象身份。",
+      "NaN 是重要例外：NaN===NaN 仍为 false，应使用 Number.isNaN 检测。课件后半用 X 而前文声明 x，需要注意大小写，不要把未声明变量错误当成相等运算结果。"
+    ],
+    "takeaways": [
+      "严格相等先区分类型",
+      "两个相同内容的新对象仍不相等"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(\"1\"==1, \"1\"===1);\nconsole.log({a:1}==={a:1}, NaN===NaN);",
+      "explanation": "依次 true、false、false、false。"
+    }
+  },
+  {
+    "page": 50,
+    "title": "RegExp 是描述字符串模式的对象",
+    "section": "正则表达式",
+    "priority": "support",
+    "summary": "正则把字符集合、重复次数和位置条件组合成模式，可用于查找、提取、替换和简单格式校验。",
+    "explanation": [
+      "RegExp 不是只能以 new 构造，/pattern/ 字面量同样创建正则对象；历史浏览器版本只是说明该能力发展背景。正则描述文本形状，不自动理解电话号码真实存在或输入业务有效性。",
+      "学习时逐个拆模式：字面字符匹配自身，字符类规定一个位置可用哪些字符，量词决定前一个单元出现几次，锚点限制边界。先解释每个符号再尝试完整例子。"
+    ],
+    "takeaways": [
+      "模式匹配验证文本形状，不等于业务有效性"
+    ]
+  },
+  {
+    "page": 51,
+    "title": "test、exec、match、search",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "正则对象方法 test 返回布尔，exec 返回匹配数组或 null；字符串方法 match、search 从输入字符串发起搜索。",
+    "explanation": [
+      "exec 成功时结果[0] 是整个匹配，后续元素是捕获组；search 返回起始索引或 -1。match 的结果会因 g 标志变化：全局模式主要返回所有完整匹配，非全局可包含捕获组信息。",
+      "构造器参数是字符串，反斜杠需要同时经过字符串解析和正则解析，因此数字类通常写 new RegExp(\"\\\\d+\")；字面量直接写 /\\d+/。带 g/y 的 test/exec 会影响 lastIndex，重复调用可能得到不同结果。"
+    ],
+    "takeaways": [
+      "exec 失败为 null，search 失败为 -1"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const re = /ab+c/;\nconsole.log(re.test(\"xxabbc\"));\nconsole.log(\"xxabbc\".search(re));\nconsole.log(re.exec(\"xxabbc\")[0]);",
+      "explanation": "true、2、abbc。"
+    }
+  },
+  {
+    "page": 52,
+    "title": "捕获组与全局 exec 的状态",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "/d(b+)d/g 寻找 d、一个或多个 b、再一个 d；括号把中间 b 序列保存为捕获组。",
+    "explanation": [
+      "在 \"cdbbdbsbz\" 中匹配从索引 1 开始，完整匹配为 dbbd，第一捕获组为 bb。带 g 的正则第一次成功后 lastIndex 变为匹配结束位置 5，后续 exec 从那里继续找。",
+      "三种写法创建的模式含义相同，但持续复用同一个正则对象会保留 lastIndex；每次重新写一个字面量对象则从新的初始状态开始。它们在只调用一次时相同，在循环中不一定相同。"
+    ],
+    "takeaways": [
+      "result[0] 是完整匹配，result[1] 是第一组"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const re=/d(b+)d/g;\nconst m=re.exec(\"cdbbdbsbz\");\nconsole.log(m[0],m[1],m.index,re.lastIndex);",
+      "explanation": "dbbd、bb、1、5。"
+    }
+  },
+  {
+    "page": 53,
+    "title": "replace 用捕获组交换姓名",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "两个括号分别捕获单词，替换字符串中的 $1、$2 引用这些捕获结果，从而调换顺序。",
+    "explanation": [
+      "/（组1）空白（组2）/ 这样的结构将名与姓分开；课件 \\w+ 表示字母数字下划线，\\s 匹配一个空白字符。对于 \"John Smith\"，$1=John、$2=Smith，所以得到 \"Smith, John\"。",
+      "replace 返回新字符串，原字符串不可变；没有 g 标志时只替换第一次匹配。该简化模式不涵盖所有真实姓名格式，重点是捕获与替换的关联，而非建立完整姓名解析器。"
+    ],
+    "takeaways": [
+      "$n 引用第 n 个捕获组",
+      "replace 不原地修改字符串"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const original=\"Ada Lovelace\";\nconst result=original.replace(/(\\w+)\\s(\\w+)/,\"$2, $1\");\nconsole.log(result,original);",
+      "explanation": "Lovelace, Ada；原值仍为 Ada Lovelace。"
+    }
+  },
+  {
+    "page": 54,
+    "title": "g、i 与匹配末尾空白",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "g 表示全局匹配，i 表示忽略大小写；课件示例要求每个单词后还必须有一个空白。",
+    "explanation": [
+      "\"fee fi fo fum\" 最后一个 fum 后没有空格，所以 /\\w+\\s/g 只匹配 \"fee \"、\"fi \"、\"fo \"。不要因最后一个也像单词就忽略模式中的空白要求。",
+      "本页只介绍两种常见标志，不代表 JavaScript 只有两个标志。实际代码 /pattern/gi 才是组合写法，课件方括号和竖线是选项说明，不应原样抄进正则字面量。"
+    ],
+    "takeaways": [
+      "匹配必须满足整个模式",
+      "g 与 i 可以组合使用"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "console.log(\"fee fi fo fum\".match(/\\w+\\s/g));\nconsole.log(/web/i.test(\"WEB\"));",
+      "explanation": "数组中有前三个带空格的单词；第二项输出 true。"
+    }
+  },
+  {
+    "page": 55,
+    "title": "电话号码正则与反向引用",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "模式用三位区号、三位本地号、四位尾号及分隔符描述电话形状，并用反向引用要求两处分隔符一致。",
+    "explanation": [
+      "捕获组 ([-/\\.]) 保存一种分隔符，后面的 \\1 必须匹配同一种字符；因此 213-555-0123 与 213.555.0123 可匹配，而混用 - 和 . 不满足此规则。",
+      "原式没有 ^ 和 $，所以可能只匹配较长输入里的一个片段；左右括号分别可选，也可能接受不成对括号。作为严格验证器需要额外修正，exec 的存在结果只能证明找到了匹配子串。"
+    ],
+    "takeaways": [
+      "反向引用匹配先前捕获的具体文本",
+      "没有锚点通常是在找子串"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const re=/^\\d{3}([-.])\\d{3}\\1\\d{4}$/;\nconsole.log(re.test(\"213-555-0123\"),re.test(\"213-555.0123\"));",
+      "explanation": "true、false；该简化修正版要求完整字符串与相同分隔符。"
+    }
+  },
+  {
+    "page": 56,
+    "title": "密码校验：返回值必须向上传递",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "逐项校验用户名、确认密码、长度以及字符类别，目的在于每次失败都给出明确原因。",
+    "explanation": [
+      "原页 helper 里 return false 只结束 helper，自身名称虽叫 throwPasswordError 却并未 throw。外层 checkForm 若不写 return throwPasswordError(...)，会继续运行，甚至最后提示有效并返回 true，这是实质控制流错误。",
+      "每次失败必须让整个校验函数终止。正则只检验所写规则，密码符合这些字符组合规则不代表真实强度高；本例是正则与表单流程练习，不应当作现代完整密码策略。"
+    ],
+    "takeaways": [
+      "内层函数 return 不会自动结束外层函数"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function validate(value) {\n  const fail = msg => ({ok:false,message:msg});\n  if (value.length < 6) return fail(\"长度不足\");\n  return {ok:true};\n}\nconsole.log(validate(\"abc\"));",
+      "explanation": "返回失败对象，外层函数立即结束。"
+    },
+    "pitfall": "原课件多处缺少外层 return，不能按注释认定失败会阻止提交。"
+  },
+  {
+    "page": 57,
+    "title": "正向预查组合多个条件",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "(?=...) 在当前位置向前检查条件，但不消耗字符，因此多个预查可同时要求出现数字、小写和大写。",
+    "explanation": [
+      "(?=.*\\d) 允许任意前缀后出现数字；接着的小写、大写预查仍从同一位置检查，而不是接着数字后面找。最后 .{6,} 才实际消费至少六个字符。",
+      "原页模式缺少首尾锚点，适合说明预查思想，但作为完整字段验证应说明边界与换行规则。单一正则使条件紧凑，却减少了逐项错误信息；与前页多步骤写法是可读性和反馈粒度的取舍。"
+    ],
+    "takeaways": [
+      "预查验证条件而不移动匹配位置"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "const re=/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;\nconsole.log(re.test(\"Abc123\"),re.test(\"abcdef\"));",
+      "explanation": "true、false；第二个缺数字与大写。"
+    },
+    "links": [
+      {
+        "label": "MDN：正向预查",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Lookahead_assertion"
+      }
+    ]
+  },
+  {
+    "page": 58,
+    "title": "onsubmit 的布尔返回与模式差异",
+    "section": "正则表达式",
+    "priority": "core",
+    "summary": "HTML 使用 onsubmit=\"return checkForm(this)\"，把校验结果交回事件处理机制，以决定是否继续提交。",
+    "explanation": [
+      "返回 false 可以取消内联事件处理所关联的默认提交。若换成 addEventListener，监听函数单纯 return false 不会自动取消提交，需要 event.preventDefault()；两种注册方式不可混用假设。",
+      "本页把末尾从 .{6,} 改成 \\w{6,}，只允许通常的字母、数字、下划线，因此会拒绝部分特殊符号；它也未保留前页“密码不同于用户名”的全部条件，所以并非完全等价重构。"
+    ],
+    "takeaways": [
+      "内联 return false 与监听器 preventDefault 不同",
+      "点号与 \\w 的允许字符集合不同"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "form.addEventListener(\"submit\", event => {\n  if (!checkForm(form)) event.preventDefault();\n});",
+      "explanation": "验证失败时取消表单提交；成功则保留默认动作。"
+    }
+  },
+  {
+    "page": 59,
+    "title": "随机词组与组合数量",
+    "section": "密码规则背景",
+    "priority": "support",
+    "summary": "课件通过 Diceware 解释：可记忆的词组也能有很大组合空间，前提是每个词随机独立选取。",
+    "explanation": [
+      "五次六面骰结果共有 6^5=7776 种，可对应词表中的一个词。独立选择七个词时组合数为 7776^7；如果所有组合等概率，单次猜中概率就是该数量的倒数。",
+      "引用名句虽然长，却可能出现在攻击者优先尝试的列表中，因此长度本身不足以证明随机性。课件给出的猜测年数依赖固定猜测速率与均匀随机假设，应理解其数学前提，不把它作为现实服务的保证。"
+    ],
+    "takeaways": [
+      "随机独立选择决定组合空间",
+      "背熟名句不等于均匀随机词组"
+    ],
+    "question": {
+      "prompt": "若每词有 N 种等概率选择，k 个独立词有多少组合？",
+      "answer": "N 的 k 次方；前提是独立选择且允许相应词序组合。"
+    }
+  },
+  {
+    "page": 60,
+    "title": "历史密码规则的反思",
+    "section": "密码规则背景",
+    "priority": "support",
+    "summary": "此页回顾 2017 年对机械要求大小写、数字、特殊字符规则的反思，并链接词组生成与强度评估资源。",
+    "explanation": [
+      "教学重点是把“正则检查某种形式”与“估计猜测难度”区分开。Password1 满足多种字符类别，却高度可预测；随机选择的较长词组可能更易记且有更大的组合空间。",
+      "课件把 NIST 建议概括为推荐 Diceware 过于具体；这里按历史讨论阅读，不将整页作为当前标准原文。考试可用这一对比解释为什么格式正确只是一种输入约束，而不是强度证明。"
+    ],
+    "takeaways": [
+      "形式复杂不代表难猜",
+      "正则校验与强度评估目标不同"
+    ]
+  },
+  {
+    "page": 61,
+    "title": "严格模式：把部分静默失败变为错误",
+    "section": "语言语义",
+    "priority": "core",
+    "summary": "\"use strict\" 放在脚本或函数的指令序言中启用严格规则；模块和 class 代码本来就具有严格语义。",
+    "explanation": [
+      "给未声明标识符赋值会抛 ReferenceError，给不可写属性赋值等情况会抛 TypeError，帮助暴露拼写错误和无效操作。指令位置很关键，普通执行语句后再写同样字符串不会启用整段严格模式。",
+      "课件说给“不存在属性”赋值都会出错不准确：可扩展对象新增属性仍然合法。严格模式拒绝的是无法完成的写入，如不可扩展对象新增属性或写不可写属性，而不是禁止对象增加一切字段。"
+    ],
+    "takeaways": [
+      "严格模式不禁止给可扩展对象新增属性"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "\"use strict\";\nconst obj={};\nobj.x=1;\nconsole.log(obj.x);\n// missingName=2; // ReferenceError",
+      "explanation": "新增 x 合法并输出 1；未声明赋值才会报错。"
+    }
+  },
+  {
+    "page": 62,
+    "title": "空值、同名函数与意外全局复查",
+    "section": "语言语义",
+    "priority": "core",
+    "summary": "总结页再强调三种常见误区：undefined 不是 null、没有基于参数数量的重载、漏声明可能造成全局污染。",
+    "explanation": [
+      "undefined 常表示缺失或没有返回结果，null 常表示显式空值；宽松相等特例让二者相等，严格比较仍不同。少传参数也不会自动选择另一个函数，而是使相应参数为 undefined 或使用默认值。",
+      "漏声明赋值只在某些非严格代码中生成全局属性，严格模式直接报错。答题时先确定执行模式、声明方式与作用域，再判断后续输出，避免把运行时错误忽略掉继续算下去。"
+    ],
+    "takeaways": [
+      "先判断是否报错，再预测输出"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function label(x=\"default\") { return x; }\nconsole.log(label(),label(undefined),label(null));",
+      "explanation": "default、default、null；默认参数只替代 undefined 类缺省，不替代 null。"
+    }
+  },
+  {
+    "page": 63,
+    "title": "五个进阶提问的可验证答案",
+    "section": "拓展与复习",
+    "priority": "support",
+    "summary": "末页以面试问题引出 call/apply、map/reduce、bind、闭包和性能诊断，适合把概念转成简短代码实验。",
+    "explanation": [
+      "call(thisArg,a,b) 与 apply(thisArg,[a,b]) 都立即调用普通函数；bind 创建预设 this/参数的新函数但不立即调用。map 逐项转换产生新数组，reduce 把多项累积为一个结果。",
+      "闭包让函数保留对定义环境中变量的访问，外层函数返回后仍可使用；性能问题则需要实际测量和定位。课件对“怎样评价程序员”的措辞是个人观点，复习只需掌握可检验的语义。"
+    ],
+    "takeaways": [
+      "call/apply 立即调用，bind 返回函数",
+      "闭包保留环境访问"
+    ],
+    "example": {
+      "lang": "javascript",
+      "code": "function makeCounter(){ let n=0; return ()=>++n; }\nconst next=makeCounter();\nconsole.log(next(),next());\nconsole.log([1,2,3].map(x=>x*2));",
+      "explanation": "1、2；随后 [2,4,6]。"
+    }
+  }
+]
