@@ -33,3 +33,17 @@
 - 浏览器验证总结目录、课程入口、章节导航、课件切换、全页对照、返回原页、历史提醒，以及原有自测流程；桌面1440×960和手机390×844检查通过，手机未横向溢出。
 
 执行：`python3 scripts/validate_interpretations.py`。
+
+## 交互实验室扩充验收 · 2026-10-05
+
+- 从4个实验扩充到19个：HTML 3、CSS 5、JavaScript 6、DOM 2、数据与网络3。含44道实验自查题，关联135个不同课件页。
+- 实验目录分类筛选、关键词搜索、独立路由、重置、逐页课件映射及原页反向链接通过。关联页码合法且不含被标记为发展历史的页面。
+- 浏览器实际操作验证：HTML容错解析与字符引用；4×4表格跨2行3列得到11个真实单元格；选择器直接匹配与非法输入提示；!important、继承与computedStyle；content-box的248px与border-box的200px/内容152px；relative、absolute与float；599/600/800px真实iframe媒体条件。
+- 表单验证无name仍可触发required，readonly不参与约束校验但保留字段，disabled不贡献字段；重复字段、GET/POST位置与编码正确，未实际发送请求。
+- JavaScript验证类型转换、TDZ、var/let闭包、浅拷贝、push/reverse返回值与空数组reduce；正则连续exec的lastIndex为0→5→13→0，保留原生返回类型并正确报告非法模式；三个事件循环预设实际输出符合解释。
+- DOM验证childNodes/children、重复插入同一节点、静态与实时集合、textContent；直接点击复选框时preventDefault后最终状态正确，stopPropagation的目标捕获/冒泡细节按真实行为说明。
+- JSON溢出与非法尾逗号、URL默认端口同源/不同端口跨源、IPv4默认/26与/31、非法地址提示通过。
+- 手机390×844下19个实验均正常挂载，文档宽度均为390px；实验目录无横向溢出。课件CSS39标记掌握后跳转40页正常。
+- 原有content/、assets/、interpretations.js与styles.css无修改；原816页内容和14篇整体总结验证均通过。
+
+执行：`node scripts/validate_labs.mjs`、JavaScript语法检查、`git diff --check`，并通过浏览器操作核对上述行为。
