@@ -1,3 +1,4 @@
+import {report, pending, invalid} from './lab-feedback.js?v=20261006-feedback';
 const q = (root, selector) => root.querySelector(selector);
 const qa = (root, selector) => [...root.querySelectorAll(selector)];
 const pretty = value => JSON.stringify(value, null, 2);
@@ -77,6 +78,7 @@ function mountForms(root) {
     sync();
     result.className = 'lab-result';
     result.textContent = '控件已改变。先预测结果，再点击“检查并生成数据”查看当前快照。';
+    pending(root,`${method.value} / student：name=${student.hasAttribute('name')}，disabled=${student.disabled}，readonly=${student.readOnly}，required=${student.required}`);
   }
   form.addEventListener('submit', event => {
     event.preventDefault();
@@ -110,6 +112,18 @@ function mountForms(root) {
       '',
       valid ? '以上仅为快照，没有发送网络请求。' : 'FormData 构造器本身不执行约束校验，非法值也可能进入此快照。常规未设 novalidate 的用户提交会被浏览器阻止；本实验只为观察而生成快照，没有发送。'
     ].join('\n');
+
+    const email=q(root,'#data-form-email'),newsletter=q(root,'[name="newsletter"]');
+    report(root,`${valid?'校验通过':'校验未通过'}；FormData 收集 ${pairs.length} 条字段`,[
+      [`student：name=${student.hasAttribute('name')} / disabled=${student.disabled}`,data.has('student')?`收集 student=${JSON.stringify(data.get('student'))}`:'不收集 student',!student.hasAttribute('name')?'缺少 name；id 不能代替字段名。':student.disabled?'disabled 控件不参加字段收集，也不参加约束校验。':'有 name 且未禁用，姓名字段进入 FormData。'],
+      [`student：readonly=${student.readOnly} / required=${student.required}`,`值=${JSON.stringify(student.value)}；willValidate=${student.willValidate}`,!student.willValidate?'readonly 或 disabled 使这个文本框不参加约束校验；readonly 本身不会排除字段收集。':student.validity.valueMissing?'当前 required 且为空，valueMissing=true；即使没有 name，仍会校验。':'当前姓名满足此控件的约束。required 只检查是否缺值。'],
+      ['邮箱：required + type=email',`${JSON.stringify(email.value)} → ${email.validity.valid?'通过':email.validity.valueMissing?'valueMissing（空值）':'typeMismatch（格式不符）'}`,'校验基本格式，不验证邮箱是否真实存在；FormData 构造器本身不负责校验。'],
+      [`newsletter：${newsletter.checked?'选中':'未选中'}`,data.has('newsletter')?'newsletter=yes':'字段缺席',newsletter.checked?'有 name 的已选复选框贡献其 value。':'未选中时不提交该字段，不会自动提交 false。'],
+      ['topic / day 的选择',`topic=${pretty(data.getAll('topic'))}；day=${pretty(data.getAll('day'))}`,'每个选中项贡献一条记录；同名字段用 getAll() 完整读取。'],
+      ['隐藏字段 course',JSON.stringify(data.get('course')),'隐藏不等于禁用；有 name 的隐藏字段仍会被收集。'],
+      ['备注的编码',new URLSearchParams([['note',data.get('note')]]).toString(),'空格变为 +，原本的 + 变为 %2B，& 变为 %26。'],
+      [`模拟方法 ${method.value}`,method.value==='GET'?'编码数据放在 URL 查询中':'编码数据放在请求体中','本实验只展示请求示意，不发送。POST 使用此表单编码时不会自动变为 JSON。'],
+      ['checkValidity() 与 FormData',`${valid} / 仍构造出 ${pairs.length} 条快照`,valid?'本次所有参与校验的控件均通过。':'校验失败不妨碍显式构造 FormData；普通未设 novalidate 的用户提交会被浏览器阻止。']]);
   });
   qa(root, '[data-option]').forEach(control => control.addEventListener('change', markStale));
   method.addEventListener('change', markStale);
@@ -124,7 +138,7 @@ function mountForms(root) {
     method.value = 'GET';
     markStale();
   });
-  sync();
+  markStale();
 }
 
 const jsonPresets = [
@@ -210,12 +224,16 @@ JSON.stringify(value, null, 2);</pre>
   const input = q(root, '#data-json-input');
   const output = q(root, '[data-parse-result]');
   function parse() {
+    const preset=jsonPresets.findIndex(([,text])=>text===input.value);
+    const notes=['成员名用双引号，对象、数组、字符串和布尔值均可嵌套。','JSON 根可以是一个数字，不要求包在对象或数组里。','null 是合法 JSON 值；这里单列 null 类型，避免 typeof null 的 object 规则造成误解。','JSON 字符串和成员名必须用双引号，不能用单引号。','最后一个成员后不能有尾随逗号。','undefined 不是 JSON 字面量；可按需要省略成员或明确使用 null。','NaN 不是 JSON 数字字面量。','Infinity 字面量不合法；这和合法数字写法 1e400 发生运行时溢出不同。','1e400 / -1e400 文法合法，但转成 JavaScript Number 时超出有限范围，得到 Infinity / -Infinity。','本浏览器 JSON.parse 对重复 score 保留最后一个值 95；交换数据应避免重复键。','JSON 文本只能有一个根值；可用数组包裹两个对象。','超出安全整数范围后，Number 可能已舍入；这次 9007199254740993 解析为 9007199254740992。'];
+    const choice=preset<0?'自定义 JSON':jsonPresets[preset][0],why=preset<0?'按当前输入解析；根类型与数值提醒取自这次实际结果。':notes[preset];
     let value;
     try {
       value = JSON.parse(input.value);
     } catch (error) {
       output.className = 'lab-result error';
       output.textContent = `非法 JSON\n${error.message}\n\n先检查双引号、逗号、括号和字面量。错误位置与措辞由当前浏览器给出。`;
+      report(root,`${choice}：解析失败`,[[choice,error.message,preset<0?'浏览器未接受当前文本，请按错误提示检查引号、逗号、括号及字面量。':why]],'error','parse');
       return;
     }
     const type = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
@@ -229,8 +247,14 @@ JSON.stringify(value, null, 2);</pre>
       warnings.length ? `\n数值提醒：\n${warnings.join('\n')}` : '',
       '\nJSON.stringify(value, null, 2) 的结果：',
       normalized,
-      '\n重复键提醒：JSON.parse 接受同一对象中的重复成员名，并留下最后一个值。其他解析器未必一致；交换数据时应使用唯一键。'
+      preset===9?'\n'+why:''
     ].filter(Boolean).join('\n');
+
+    report(root,`${choice}：解析成功，根类型 ${type}`,[
+      [choice,`根类型：${type}`,why],
+      ['解析后再 stringify',normalized,warnings.length?'请与数值提醒对照；格式化后的 JSON 不能反映已丢失的原始数值。':'这是重新序列化的 JSON 文本；缩进变化不代表数据类型变化。'],
+      ...(warnings.length?[['数值检查',warnings.join('\n'),'语法合法不保证 JavaScript Number 能精确保存数值；溢出的非有限数再次 stringify 会变成 null。']]:[])
+    ],'ready','parse');
   }
   function serialize() {
     const item = serializationCases[Number(q(root, '#data-json-serialize').value)];
@@ -239,6 +263,11 @@ JSON.stringify(value, null, 2);</pre>
     q(root, '[data-serialize-result]').textContent = text === undefined
       ? `JSON.stringify 的返回值：undefined\n返回类型：undefined\n\n${item.note}`
       : `JSON.stringify 的返回值（字符串内容）：\n${text}\n\nJSON.parse 后再格式化：\n${pretty(JSON.parse(text))}\n\n${item.note}`;
+
+    report(root,`序列化：${item.label}`,[
+      [item.label,text===undefined?'undefined（不是字符串）':text,item.note],
+      ['再次 JSON.parse',text===undefined?'未执行：没有 JSON 文本':pretty(JSON.parse(text)),text===undefined?'JSON.stringify(undefined) 没有返回 JSON 字符串，所以不能继续 parse。':'这里只能恢复 JSON 文本保留的信息，无法还原已经省略或转换的值。']
+    ],'ready','serialize');
   }
   q(root, '#data-json-preset').addEventListener('change', event => {
     input.value = jsonPresets[Number(event.target.value)][1];
@@ -292,6 +321,7 @@ function mountURL(root) {
       if (![base, target, other].every(url => ['http:', 'https:'].includes(url.protocol))) {
         result.className = 'lab-result error';
         result.textContent = '本实验比较 HTTP / HTTPS 来源，请使用这两种协议。data:、file: 等 URL 的 origin 可能为 "null"；两个 "null" 字符串不能据此证明同源。';
+        invalid(root,result.textContent);
         return;
       }
       const effectivePort = url => url.port || (url.protocol === 'https:' ? '443（默认）' : '80（默认）');
@@ -316,9 +346,18 @@ function mountURL(root) {
         `目标 vs 基准地址：${target.origin === base.origin ? '同源' : '不同源'}`,
         '\n这里只解析字符串，没有访问这些地址。同源结果本身不表示资源存在，也不代表服务器是否设置了 CORS 授权。'
       ].join('\n');
+
+      const comparisons=[['协议',target.protocol,other.protocol],['主机',target.hostname,other.hostname],['有效端口',effectivePort(target),effectivePort(other)]];
+      const different=comparisons.filter(([,a,b])=>a!==b).map(([label])=>label);
+      report(root,`目标与比较地址：${different.length?'不同源（'+different.join('、')+'不同）':'同源（三项全部相同）'}`,[
+        ['基准 + 目标引用',`${base.href}\n+ ${JSON.stringify(referenceInput.value)}\n→ ${target.href}`,'相对路径基于基准的目录解析；末尾没有 / 的最后一段会被替换。绝对 URL 自带来源，// 引用沿用基准协议。'],
+        ...comparisons.map(([label,a,b])=>[label,`目标 ${a} / 比较 ${b} → ${a===b?'相同':'不同'}`,label==='有效端口'?'省略端口时 HTTPS 默认 443，HTTP 默认 80；显式写默认端口不改变来源。':label==='主机'?'按规范化后的完整主机名比较；子域名不同也算不同。':'HTTP 与 HTTPS 是不同协议，即便主机和端口相同仍不同源。']),
+        ['路径 / 查询 / 片段',`${target.pathname} / ${target.search||'无查询'} / ${target.hash||'无片段'}`,'这三项不参与同源比较；片段还不会出现在 HTTP 请求目标中。'],
+        ['查询参数解码',pretty([...target.searchParams.entries()]),'保留重复参数；+ 解码为空格，%2B 解码为真正的加号。']]);
     } catch (error) {
       result.className = 'lab-result error';
       result.textContent = `URL 无法解析：${error.message}\n基准地址需包含协议和主机，例如 https://example.com/dir/page.html。`;
+      invalid(root,result.textContent);
     }
   }
   function preset() {
@@ -365,6 +404,7 @@ const count = 2 ** (32 - prefix);</pre>
     if (!match || match.slice(1, 5).some(part => Number(part) > 255) || Number(match[5]) > 32) {
       result.className = 'lab-result error';
       result.textContent = '请输入四段 0–255 的 IPv4 地址和 0–32 的前缀，例如 192.168.1.8/24。不要填写负数、小数、缺少斜杠或 /33。';
+      invalid(root,result.textContent);
       return;
     }
     const bits = Number(match[5]);
@@ -409,6 +449,13 @@ const count = 2 ** (32 - prefix);</pre>
     }
     result.className = 'lab-result';
     result.textContent = lines.join('\n');
+    const position=bits===32?'单个地址 / 主机路由':bits===31?'点到点链路的端点地址':number===network?'网络地址':number===last?'广播地址':'处于普通主机范围';
+    report(root,`${ipv4(number)}/${bits} → ${bits===0?'整个 IPv4 空间（不等于都能分配）':position}`,[
+      [`前缀 /${bits}`,`${bits} 位前缀 + ${32-bits} 位主机；总数 2^${32-bits}=${size}`,'主机位能组成的组合数决定整个地址块的大小。'],
+      ['IP AND 掩码',`${ipv4(number)} AND ${ipv4(mask)} = ${ipv4(network)}`,'按位 AND 清空主机位，得到当前地址块的起点。'],
+      ['地址范围',`${ipv4(network)} – ${ipv4(last)}`,bits<=30?'普通子网把起点留作网络地址、终点留作广播地址。':bits===31?'点到点 /31 可用两个端点，不套用普通子网减 2。':'/32 只有一个地址，不套用减 2。'],
+      ['可用主机的解释',bits<=30?`${size} − 2 = ${size-2}；${ipv4(network+1)} – ${ipv4(last-1)}`:bits===31?'2 个端点':'1 个地址',bits===0?'/0 覆盖整个 IPv4；减 2 只是算术结果，包含大量保留地址，不代表实际都能分配。':bits<=30?`当前输入${position==='处于普通主机范围'?'位于这个主机区间':'是'+position+'，不能当普通主机'}。范围尚未扣除其他保留或特殊用途地址。`:'这里按这个前缀的特殊用法解释。'],
+      ['所选父网',parentValue===''?'未选择，不计算子网数量':Number(parentValue)>bits?`/${parentValue} 不能作为 /${bits} 的父网`:`/${parentValue} → /${bits}：2^(${bits}−${parentValue})=${2**(bits-Number(parentValue))} 个`,parentValue===''?'子网个数需要指定父网，不能只凭当前主机地址猜出。':Number(parentValue)>bits?'父网前缀必须不大于子网前缀；请改选更大的地址块。':'增加的前缀位用于区分子网；当前所属地址块仍按输入的前缀计算。']]);
   }
   q(root, '#data-subnet-preset').addEventListener('change', event => {
     input.value = subnetPresets[Number(event.target.value)];
