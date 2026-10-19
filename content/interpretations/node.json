@@ -1,0 +1,385 @@
+{
+  "id": "node",
+  "title": "Node.js · 重点串讲",
+  "intro": "把 Node 当成会处理文件和 HTTP 的 JavaScript 运行时。读题时追踪：模块怎样加载、结果什么时候到达、请求经过哪些处理、最终发送什么响应。",
+  "goals": [
+    "能区分 CJS/ESM、同步/回调/Promise。",
+    "能跟踪 HTTP 与 Express 的一次完整请求。",
+    "能解释 Buffer、streams、包与云部署各自解决的问题。"
+  ],
+  "sections": [
+    {
+      "title": "Node：浏览器外执行 JavaScript",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "Node.js 是基于 V8 的 JavaScript 运行时，不是另一门语言，也不是浏览器。它提供文件、网络、进程等服务器能力；不会自动提供 window 或 document。",
+        "非阻塞 I/O 让程序等待文件或网络时继续处理其他工作，完成后再处理结果。它不意味着普通 JS 计算会自动并行；一个很长的同步循环仍会阻塞当前事件循环。",
+        "课件目录提到 Authentication / Angular，但正文主要展开 Node 核心 API、模块、服务器框架与生态。不要把目录的一行扩写成课件没有实际讲授的完整认证系统。"
+      ],
+      "takeaways": [
+        "异步 I/O ≠ CPU 密集 JS 自动并行。",
+        "浏览器与 Node 都能执行 JS，但宿主 API 不同。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nconsole.log('C');",
+        "explanation": "在 Node 中输出 A、C、B。0ms 表示尽早安排回调，不表示打断当前同步代码；真正的 I/O 回调同样需要等待适当的调度时机。"
+      },
+      "question": {
+        "prompt": "Node 使用非阻塞 I/O，为什么一个 5 秒的同步 while 循环仍让其他请求变慢？",
+        "answer": "循环占住当前执行 JS 的线程，事件循环暂时无法运行其他回调；非阻塞 I/O 不会自动把这段 CPU 计算搬到其他线程。"
+      },
+      "anchor": 4
+    },
+    {
+      "title": "发布、工具热度与安装历史：按需查",
+      "pages": [
+        5,
+        25,
+        31,
+        34,
+        35
+      ],
+      "kind": "background",
+      "paragraphs": [
+        "版本支持周期、框架热度、旧 AWS 编译命令、安装截图和链接属于环境背景。当前安装应选项目支持的版本，而不是照抄课件多年以前的版本号或用 sudo 启动普通学习程序。",
+        "这组页面不增加代码分析规则。复习先放在模块、异步结果、HTTP 报文和路由流程上。"
+      ],
+      "takeaways": [
+        "不背版本发布时间、热度排名或旧编译步骤。"
+      ]
+    },
+    {
+      "title": "CommonJS 与 ES Modules",
+      "pages": [
+        6,
+        7
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "CommonJS 常用 `require` / `module.exports`；ESM 常用 `import` / `export`。明确文件模式能避免“代码看着对却运行失败”：`.cjs` 用 CommonJS，`.mjs` 用 ESM；package.json 的 type 也可以指定 .js 的模式。",
+        "课件第 12 页用 require 却命名为 .mjs，会混淆模式。本版把该例改成 .cjs。ESM 的静态结构有利于工具分析依赖与 tree shaking，但不表示 Node 自动删除所有没用的代码。",
+        "ESM 可以动态 import，也支持 top-level await；不要简化成“ESM 的每条 import 都等于后台异步执行”。模块模式与业务函数是否异步是两个问题。"
+      ],
+      "takeaways": [
+        "CJS：require / module.exports；ESM：import / export。",
+        "Node ESM 的相对导入通常要写完整扩展名。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// math.mjs\nexport const twice = n => n * 2;\n\n// app.mjs（另一个文件）\nimport { twice } from './math.mjs';\nconsole.log(twice(3)); // 6",
+        "explanation": "把两个片段分别保存到对应文件，再运行 node app.mjs。浏览器也有 ESM，但 node:fs 等 Node 专属 API 不能直接搬到浏览器。"
+      },
+      "question": {
+        "prompt": "一个 run.mjs 中直接写 const fs = require(\"fs\")，为什么可能报 require is not defined？",
+        "answer": "扩展名 .mjs 使它按 ESM 执行，默认没有 CommonJS 的 require。改用 import，或把 CommonJS 示例保存为 .cjs。"
+      },
+      "links": [
+        {
+          "label": "Node：ECMAScript modules",
+          "url": "https://nodejs.org/api/esm.html"
+        }
+      ]
+    },
+    {
+      "title": "fs：回调、Promise、同步调用",
+      "pages": [
+        9,
+        12,
+        13
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "文件 API 的三种常见风格要分清：同步方法直接返回结果但阻塞；回调方法把结果交给 `(err, data)`；Promise 方法供 await 等待。await 暂停的是这个 async 流程，不是让整个 Node 进程停工。",
+        "回调式 readFile 先检查 err 再用 data。没指定编码通常得到 Buffer，指定 utf8 得到字符串。readFile 的返回值不是文件内容，不能在调用后一行直接拿到异步结果。"
+      ],
+      "takeaways": [
+        "结果在哪个位置到达，是读异步代码的第一步。",
+        "异常要在回调中检查 err，或在 await 外用 try/catch。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// read.mjs；先在同一目录准备 message.txt\nimport { readFile } from 'node:fs/promises';\nconsole.log('开始');\ntry {\n  const text = await readFile('./message.txt', 'utf8');\n  console.log(text.trim());\n} catch (error) {\n  console.log('读取失败：', error.code);\n}\nconsole.log('结束');",
+        "explanation": "message.txt 内容为 hello 时依次输出“开始 / hello / 结束”。文件不存在时输出“开始 / 读取失败： ENOENT / 结束”。await 后面的流程等待此读取完成，但运行时仍能处理其他 I/O。"
+      },
+      "question": {
+        "prompt": "const result = fs.readFile(path, callback) 后立即打印 result，能得到文件内容吗？",
+        "answer": "不能。回调式 readFile 的文件结果在 callback 的 data 参数中到达；result 不是文件内容。"
+      },
+      "links": [
+        {
+          "label": "Node：文件系统 API",
+          "url": "https://nodejs.org/api/fs.html"
+        }
+      ],
+      "anchor": 13
+    },
+    {
+      "title": "Buffer：字节与字符串编码",
+      "pages": [
+        10,
+        11
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "Buffer 是字节序列，适合文件和网络数据。字符串是字符层面的表示，必须指定编码才能在两者之间转换；字符数与字节数不必相同。",
+        "hex 与 base64 是编码，不是加密。转成 base64 不会让敏感数据自动保密；只要按同样编码规则就能还原。"
+      ],
+      "takeaways": [
+        "Buffer.length 数字节；字符串 length 数 UTF-16 code units。",
+        "同一数据可以显示为文本、十六进制或 base64。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "const bytes = Buffer.from('中', 'utf8');\nconsole.log('中'.length);       // 1\nconsole.log(bytes.length);      // 3\nconsole.log(bytes.toString('hex'));    // e4b8ad\nconsole.log(bytes.toString('base64')); // 5Lit\nconsole.log(Buffer.from('5Lit', 'base64').toString('utf8')); // 中",
+        "explanation": "这个汉字在 UTF-8 中需要 3 个字节，在 JS 的 UTF-16 字符串中占 1 个 code unit。不要进一步推成“所有字符的 string.length 都等于 1”，例如部分 emoji 会占两个。"
+      },
+      "question": {
+        "prompt": "Buffer.from(\"中\").length 为什么不是 1？",
+        "answer": "默认 UTF-8 编码下“中”占三个字节；Buffer 数字节，不是屏幕上看到的字形数量。"
+      }
+    },
+    {
+      "title": "断言、测试与静态检查",
+      "pages": [
+        14,
+        17
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "断言表达预期，失败就抛出错误；测试把这些预期组织成可重复运行的检查。课件 `1 == 2` 是故意失败的例子，不是 Node 断言 API 损坏。",
+        "Lint 根据源码结构检查风格和可疑写法；测试实际运行代码并验证行为。语法正确、lint 通过，不代表业务结果正确。"
+      ],
+      "takeaways": [
+        "assert 与 test 用来验证结果。",
+        "Lint 不能代替运行、边界检查和测试。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// sum.test.mjs；运行 node --test sum.test.mjs\nimport test from 'node:test';\nimport assert from 'node:assert/strict';\ntest('两个数相加', () => {\n  assert.equal(1 + 2, 3);\n});",
+        "explanation": "本例通过；把预期 3 改成 4 就失败。断言的实际值与预期值要分清。使用 strict 版本避免宽松相等掩盖类型差异。"
+      },
+      "question": {
+        "prompt": "程序把 1+2 写成了 1+3，但语法完全正确。Lint 一定能发现吗？",
+        "answer": "不能保证。它可能符合所有静态规则，需要像 assert.equal(result,3) 这样的行为测试发现结果错误。"
+      }
+    },
+    {
+      "title": "Streams 与 pipeline：边读边处理",
+      "pages": [
+        15
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "readFile 通常把整个文件读入内存；stream 可以分块读、处理、写。pipeline 把多个流连起来，并处理错误传播和背压，让下游来不及时上游不要无限堆积数据。",
+        "gzip 是转换流：输入普通字节，输出压缩字节。使用 Promise 版 pipeline 并 await，才能知道整个链条已经完成，而不是刚创建流就宣布写入成功。"
+      ],
+      "takeaways": [
+        "readable → transform → writable。",
+        "流降低整文件缓冲需求，但不是零内存。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// gzip.mjs；先准备 input.txt\nimport { createReadStream, createWriteStream } from 'node:fs';\nimport { pipeline } from 'node:stream/promises';\nimport { createGzip } from 'node:zlib';\ntry {\n  await pipeline(createReadStream('input.txt'),\n    createGzip(), createWriteStream('input.txt.gz'));\n  console.log('压缩完成');\n} catch (error) {\n  console.error('压缩失败：', error.message);\n}",
+        "explanation": "读取、压缩和写入按块衔接。只有 pipeline 成功完成才打印“压缩完成”；input.txt 不存在时进入 catch。"
+      },
+      "question": {
+        "prompt": "为什么处理大文件时可能选 stream 而不是 readFile？",
+        "answer": "stream 可分块处理并通过背压控制速度，避免一次把整个文件读入内存；readFile 则通常先获得完整内容。"
+      }
+    },
+    {
+      "title": "HTTP：请求对象进入，响应对象出去",
+      "pages": [
+        8,
+        16
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "`createServer((req,res)=>...)` 注册处理请求的函数；listen 开始监听端口。req 提供 method、url、headers 等信息，res 用来设置状态码、响应头和 body。`res.end` 标记响应结束。",
+        "Node 的 HTTP 模块不会自动提供 Express 风格路由，也不会自动把请求 body 解析成 JSON。req 是可读流，res 是可写流；`http.get` 则用于作为客户端发起请求，角色不同。"
+      ],
+      "takeaways": [
+        "先看方法与路径，再构造状态、头、body。",
+        "客户端 HTTP 方法和服务器处理函数不能混为一谈。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// server.mjs；运行 node server.mjs\nimport { createServer } from 'node:http';\ncreateServer((req, res) => {\n  const path = new URL(req.url, 'http://localhost').pathname;\n  if (req.method === 'GET' && path === '/hello') {\n    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });\n    res.end(JSON.stringify({ message: 'Hello' }));\n  } else {\n    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });\n    res.end('Not found');\n  }\n}).listen(9090, '127.0.0.1');",
+        "explanation": "GET http://127.0.0.1:9090/hello 返回 200 与 {\"message\":\"Hello\"}；GET /missing 返回 404。这里为简化演示，所有其他请求也返回 404。loopback 地址只允许本机访问。"
+      },
+      "question": {
+        "prompt": "createServer 已创建但没有调用 listen，浏览器能连到指定端口吗？",
+        "answer": "不能仅靠创建对象开始接收连接；listen 才让服务器监听地址与端口。"
+      },
+      "anchor": 16
+    },
+    {
+      "title": "包与框架：哪些能力由谁提供",
+      "pages": [
+        18,
+        19,
+        20,
+        22,
+        23,
+        24
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "npm 等工具管理依赖与 scripts。package.json 描述依赖范围和命令，lockfile 记录具体解析结果。Node 内置的 fs/http 不需要 npm install；Express 等第三方包需要安装。",
+        "框架在 HTTP 上补上路由、中间件、解析、验证等能力。Fastify 强调插件、schema 和 hooks；Hono 用 Context 组织请求响应，`await next()` 前后可包裹后续处理；Elysia 常把类型和验证 schema 放在路由定义附近。",
+        "课件对框架的速度、流行程度或异步支持有简化。Express 5 能将返回 Promise 的路由错误交给错误处理；不能背成“Express 不支持 async/await”。选择题重点是概念分工，而不是某个框架永远最快。"
+      ],
+      "takeaways": [
+        "框架包装重复工作，不改变 HTTP 请求响应本质。",
+        "schema 验证必须在使用不可信输入前执行。"
+      ],
+      "table": {
+        "headers": [
+          "工具/概念",
+          "作用",
+          "例子"
+        ],
+        "rows": [
+          [
+            "npm",
+            "管理依赖与脚本",
+            "npm install express"
+          ],
+          [
+            "路由",
+            "方法 + 路径 → 处理函数",
+            "GET /users/:id"
+          ],
+          [
+            "解析",
+            "字节转换成数据对象",
+            "JSON body → req.body"
+          ],
+          [
+            "验证",
+            "检查数据满足约束",
+            "name 必须是非空字符串"
+          ],
+          [
+            "中间件 / hook",
+            "在请求流程中插入处理",
+            "记录日志、认证、统一错误处理"
+          ]
+        ]
+      },
+      "example": {
+        "lang": "js",
+        "code": "// Hono 中间件片段（需已创建 app）\napp.use('*', async (c, next) => {\n  console.log('before');\n  await next();\n  console.log('after');\n});\napp.get('/hello', c => {\n  console.log('handler');\n  return c.text('Hello');\n});",
+        "explanation": "正常 GET /hello 的日志顺序是 before → handler → after。await next() 把后续处理包在中间；这与只从上到下读静态代码不同。片段需要 Hono 项目和对应运行适配器，不能当成无依赖 Node 文件直接执行。"
+      },
+      "question": {
+        "prompt": "JSON parser 与 schema validator 是同一件事吗？",
+        "answer": "不是。parser 把合法 JSON 文本变成 JS 值；validator 再检查该值是否符合字段、类型、长度等业务要求。"
+      },
+      "links": [
+        {
+          "label": "Express 5：异步错误处理",
+          "url": "https://expressjs.com/en/guide/error-handling/"
+        }
+      ],
+      "anchor": 23
+    },
+    {
+      "title": "Express：沿着请求走一遍",
+      "pages": [
+        21
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "中间件按注册顺序运行。`next()` 让处理继续；发送响应后通常 return，防止继续执行到另一次发送。`express.json()` 必须放在读取 JSON body 的路由前。",
+        "路径参数、查询参数、请求体来自不同位置：`/users/7?sort=name` 中 id 来自 params、sort 来自 query；POST 的 JSON 字段来自 body。参数最初通常是字符串或解析结果，还需要验证。",
+        "课件的静态文件中间件可能直接结束请求；放在它后面的日志中间件不一定会执行。请求流程要看“谁调用 next、谁结束响应”，不能假设所有 app.use 都会跑完。"
+      ],
+      "takeaways": [
+        "先解析，再验证，再处理业务，再响应。",
+        "params、query、body 三者不能互换。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// app.mjs；先 npm install express，再 node app.mjs\nimport express from 'express';\nconst app = express();\napp.use(express.json());\napp.use((req, res, next) => {\n  console.log(req.method, req.path);\n  next();\n});\napp.get('/users/:id', (req, res) => {\n  res.json({ id: req.params.id, sort: req.query.sort ?? 'name' });\n});\napp.post('/users', (req, res) => {\n  if (typeof req.body?.name !== 'string' || !req.body.name.trim()) {\n    return res.status(400).json({ error: 'name is required' });\n  }\n  res.status(201).json({ name: req.body.name.trim() });\n});\napp.listen(3000, '127.0.0.1');",
+        "explanation": "GET /users/7?sort=date → 200，{\"id\":\"7\",\"sort\":\"date\"}。POST /users，Content-Type:application/json，body {\"name\":\" Ada \"} → 201，{\"name\":\"Ada\"}。空对象或缺少正确解析出的 name → 400。本例只演示校验与响应，并未把用户保存到数据库。"
+      },
+      "question": {
+        "prompt": "为什么把 express.json() 放在 POST 路由后面可能导致 req.body 不可用？",
+        "answer": "前面的路由执行时还没经过解析；如果已经结束响应，后面的 parser 也不会补救。应先注册 parser，再读取 body 并验证。"
+      }
+    },
+    {
+      "title": "常用包：按问题分类，不背清单",
+      "pages": [
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "CORS 是服务器用响应头告诉浏览器哪些来源可读取响应，不是身份认证；express.json 提供内置 JSON body 解析。Socket.IO 用于事件通信；MongoDB driver 访问数据库，Mongoose 提供对象建模；Passport 提供认证策略组织能力。",
+        "fetch / axios 是 HTTP 客户端。fetch 收到 404 仍通常得到正常 Response，需要检查 response.ok；网络层失败才会走拒绝。库名称只是工具，先判断是解析、通信、存储还是认证问题。",
+        "xml2js 把 XML 解析为 JS 数据；回调先检查 error，再使用 result。转换数据格式不会自动验证业务规则，也不会自动存数据库。"
+      ],
+      "takeaways": [
+        "CORS、认证、解析、数据库是不同层的问题。",
+        "HTTP 错误状态不等于网络调用一定抛异常。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// xml.cjs；先 npm install xml2js\nconst { parseString } = require('xml2js');\nparseString('<root>Hello xml2js!</root>', (err, result) => {\n  if (err) return console.error(err.message);\n  console.log(result.root); // Hello xml2js!\n});",
+        "explanation": "这个简单根节点解析后 root 对应字符串。更复杂的 XML，尤其重复元素，会有不同对象/数组结构；不要把一个简单例子推成所有 XML 都得到同样形状。"
+      },
+      "question": {
+        "prompt": "fetch 得到 HTTP 404，是否一定进入 catch？",
+        "answer": "不一定。通常会 resolve 一个 status=404、ok=false 的 Response；代码需要检查 ok 或 status。网络失败等才会 reject。"
+      },
+      "anchor": 29
+    },
+    {
+      "title": "云 SDK 与部署监听地址",
+      "pages": [
+        32,
+        33
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "云 SDK 让 Node 程序调用云服务；部署平台负责运行你的程序。能在本地调用 AWS SDK，不等于应用已经部署在 AWS。",
+        "把本地 HTTP 程序放到托管容器时，常见要求是监听平台给出的 PORT，并绑定 0.0.0.0 接收容器外部流量。只监听 127.0.0.1 可能导致平台健康检查无法连接。具体平台配置按部署文档确认。"
+      ],
+      "takeaways": [
+        "调用云 API 与托管应用是两件事。",
+        "端口、监听地址、环境变量共同影响可访问性。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "// 部署时替换本地 Express 示例最后一行\nconst port = Number(process.env.PORT || 8080);\napp.listen(port, '0.0.0.0');",
+        "explanation": "本地没有 PORT 时用 8080；平台传入 PORT 时使用平台端口。此片段需放在已经创建 app 的 Express 程序内，不是独立完整服务器。"
+      },
+      "question": {
+        "prompt": "程序在容器内只绑定 127.0.0.1，为什么外部入口可能连不上？",
+        "answer": "它只接收容器自身 loopback 的连接；平台入口通常需要程序在可对外接收连接的接口如 0.0.0.0 上监听。"
+      }
+    }
+  ],
+  "connections": [
+    "JS 基础提供函数、对象、回调；HTTP 课件提供状态码和报文结构。",
+    "React 在客户端呈现 JSON 数据，Node 在服务器验证输入、访问服务并返回响应。"
+  ],
+  "examChecklist": [
+    "追踪异步结果与错误处理的位置。",
+    "解释同一文件为何在 .cjs 与 .mjs 下可能不同。",
+    "按方法、路径、query、body 推导响应。",
+    "区分 CORS、认证、解析、验证与数据库。"
+  ]
+}

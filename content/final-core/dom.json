@@ -1,0 +1,52 @@
+{
+  "id": "dom",
+  "title": "DOM · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "节点、集合与修改结果"
+  ],
+  "sections": [
+    {
+      "title": "节点、集合与修改结果",
+      "pages": [
+        5,
+        6,
+        7,
+        11,
+        12,
+        19,
+        20,
+        25,
+        27,
+        28,
+        29,
+        30
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "DOM 把文档表示成树，元素节点与文本节点都在其中。children 只看元素，childNodes 还包含文本/注释；源码中的空白可能成为文本节点。",
+        "querySelectorAll 返回静态 NodeList；getElementsByTagName 等常见集合是 live，会随文档变化。appendChild 已有节点会移动它；cloneNode 才创建副本。textContent 写文本，innerHTML 会解析标记并替换内容。"
+      ],
+      "takeaways": [
+        "数节点前先确定是否算空白文本。",
+        "遍历 live 集合并删除成员可能跳过元素。"
+      ],
+      "example": {
+        "lang": "html",
+        "code": "<ul id=\"a\"><li id=\"item\">One</li></ul>\n<ul id=\"b\"></ul>\n<script>\n  const item = document.getElementById('item');\n  document.getElementById('b').appendChild(item);\n  console.log(document.querySelectorAll('#a li').length); // 0\n</script>",
+        "explanation": "One 被从 a 移到 b，没有复制出第二个 li。若需要复制，可 appendChild(item.cloneNode(true))，同时避免重复 id。"
+      },
+      "question": {
+        "prompt": "把已有 li appendChild 到另一个 ul 后，原 ul 中还会留一份吗？",
+        "answer": "不会，已有节点被移动；只有显式克隆才会得到另一个节点。"
+      }
+    }
+  ],
+  "connections": [
+    "React 管理 DOM 更新时，不要随意用其他脚本移动同一批节点。"
+  ],
+  "examChecklist": [
+    "把已有 li appendChild 到另一个 ul 后，原 ul 中还会留一份吗？"
+  ],
+  "compact": true
+}

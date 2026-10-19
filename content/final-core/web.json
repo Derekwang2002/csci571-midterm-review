@@ -1,0 +1,47 @@
+{
+  "id": "web",
+  "title": "Internet 与 Web · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "网络、Web 与 URL"
+  ],
+  "sections": [
+    {
+      "title": "网络、Web 与 URL",
+      "pages": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "Internet 是网络互联基础设施；Web 是运行其上的应用体系，常用 URL 定位资源、HTTP 交换请求响应、HTML 组织文档链接。两者不是同义词。",
+        "URL 分清 scheme、host、port、path、query、fragment。fragment 留给客户端，不包含在通常的 HTTP 请求目标中；拼接查询值时编码该值，避免 & 等字符被当成分隔符。"
+      ],
+      "takeaways": [
+        "URL 的路径不一定是服务器磁盘上的真实文件路径。",
+        "同源看 scheme、host、有效 port，不看 path。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "const u = new URL('https://example.com:8443/items?q=web#details');\nconsole.log(u.pathname); // /items\nconsole.log(u.search);   // ?q=web\nconsole.log(u.hash);     // #details",
+        "explanation": "请求目标是 /items?q=web；#details 由浏览器端解释。端口 8443 与默认 HTTPS 443 不同。"
+      },
+      "question": {
+        "prompt": "https://example.com/a 与 https://example.com/b#top 是否同源？fragment 会发给服务器吗？",
+        "answer": "同源：scheme、host、默认端口相同。路径和 fragment 不影响同源判断；fragment 不随通常的 HTTP 请求目标发送。"
+      }
+    }
+  ],
+  "connections": [
+    "Node 路由解析 path/query；React 可以处理页面状态或客户端路由。"
+  ],
+  "examChecklist": [
+    "https://example.com/a 与 https://example.com/b#top 是否同源？fragment 会发给服务器吗？"
+  ],
+  "compact": true
+}

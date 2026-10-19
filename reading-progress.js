@@ -17,7 +17,14 @@ export function createReadingTracker(store,main){
     stop(){flush();active=null;restoring=false;generation++},
     async start(route,title){
       if(!store.validRoute(route))return;
-      const token=++generation,saved=store.getReading(route);
+      const token=++generation;
+      let saved=store.getReading(route);
+      // A condensed chapter has a different outline. Keep the previous location
+      // with its full archive, rather than scrolling the new recap to a stale offset.
+      if(saved && main.querySelector('[data-reading-edition="final-core"]') && saved.title!==title){
+        store.saveReading({...saved,route:route+'/full'});
+        saved=null;
+      }
       active={route,title};restoring=true;
       if(saved){const details=main.querySelectorAll('details');for(const index of saved.open)if(details[index])details[index].open=true}
       // Wait for typeface layout, but do not block reading if a font request stalls.

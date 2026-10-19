@@ -1,0 +1,49 @@
+{
+  "id": "json",
+  "title": "JSON · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "文本格式与 JS 值分开"
+  ],
+  "sections": [
+    {
+      "title": "文本格式与 JS 值分开",
+      "pages": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        15,
+        19,
+        22,
+        32
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "JSON 是数据文本格式，不是任意 JS 代码。键和字符串用双引号；允许对象、数组、字符串、数字、true/false/null，不允许 undefined、函数、注释和尾随逗号。根值不必是对象。",
+        "JSON.parse 把文本变成 JS 值；stringify 反向序列化，但不保证保存所有 JS 特性。例如对象中的 undefined 属性通常被省略，数组中的 undefined 位置变为 null。同源限制与 CORS 属浏览器访问控制，不是 JSON 语法。"
+      ],
+      "takeaways": [
+        "合法 JSON 与字段满足业务要求是两回事。",
+        "不要用 eval 代替 JSON.parse。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "const text = JSON.stringify({ a: undefined, b: [undefined, 2] });\nconsole.log(text); // {\"b\":[null,2]}\nconsole.log(JSON.parse(text).b[1]); // 2",
+        "explanation": "对象属性 a 被省略；数组位置保留为 null。序列化后再解析不一定等于原始对象。"
+      },
+      "question": {
+        "prompt": "{\"ok\":true,} 是合法 JSON 吗？JSON.parse 与 stringify 分别向哪个方向转换？",
+        "answer": "不是，末尾多了逗号。parse：JSON 文本 → JS 值；stringify：JS 值 → JSON 文本，部分值可能丢失或被替换。"
+      }
+    }
+  ],
+  "connections": [
+    "React 与 Node 常通过 JSON 交换数据；Node 的 JSON parser 不代替输入验证。"
+  ],
+  "examChecklist": [
+    "{\"ok\":true,} 是合法 JSON 吗？JSON.parse 与 stringify 分别向哪个方向转换？"
+  ],
+  "compact": true
+}

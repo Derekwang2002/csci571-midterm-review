@@ -1,0 +1,14 @@
+/* Final edition: preserve the original reading layout and progress controls. */
+.final-scope{border-left:3px solid var(--red,#922636);background:#f4eee9;padding:20px 24px;margin:24px 0 38px;line-height:1.8}
+.final-scope>strong{font-size:16px}.final-scope p{font-size:13px;margin:10px 0;color:#57514e}.final-scope a{font-size:13px;color:#922636}
+.study-group{margin:40px 0}.study-group .section-top p{max-width:680px;line-height:1.7}
+.new-lectures>a{border-left:3px solid #922636}.interpretation-index .course-index{font-size:11px;letter-spacing:.03em;min-width:40px}
+.study-table-wrap{overflow:auto;margin:24px 0;border:1px solid #dfd9d3;border-radius:4px}
+.study-table{border-collapse:collapse;min-width:540px;width:100%;font-size:13px;line-height:1.7;text-align:left}
+.study-table th{background:#f3eee9;font-weight:600}.study-table th,.study-table td{padding:12px 14px;border-bottom:1px solid #e5dfd9;vertical-align:top}
+.study-table tr:last-child td{border-bottom:0}.study-links{display:flex;flex-wrap:wrap;gap:10px 20px;margin:18px 0;font-size:12px}.study-links a{color:#922636;text-underline-offset:3px}
+.interpretation .quiz-block{margin:22px 0;background:#f6f3ed;padding:20px;border:1px solid #e3ddd6;border-radius:4px}.interpretation .quiz-block p{margin:10px 0}.interpretation .quiz-block summary{cursor:pointer;color:#922636}.interpretation .quiz-block .answer{margin-top:14px}
+.reader-archive-note{margin:0 0 20px;padding:12px 16px;background:#f4eee9;font-size:13px;line-height:1.8;color:#65534c}.reader-archive-note a{color:#922636}
+.course-reading-links a{white-space:normal}.interpretation-actions{flex-wrap:wrap}.study-group .interpretation-index small{line-height:1.6}
+@media(max-width:600px){.final-scope{padding:16px;margin:22px 0 28px}.study-group{margin:32px 0}.interpretation-index .course-index{min-width:32px;font-size:10px}.study-table th,.study-table td{padding:10px}.interpretation .quiz-block{padding:16px}.overview-strip strong span{line-height:1.5}}
+@media print{.final-scope{break-inside:avoid}.study-table-wrap{overflow:visible}.study-table{min-width:0}.study-links{display:none}}

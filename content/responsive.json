@@ -1,0 +1,1062 @@
+[
+  {
+    "page": 1,
+    "title": "响应式网页的目标",
+    "section": "先知道这一讲在解决什么",
+    "priority": "core",
+    "summary": "本讲研究同一页面如何适应不同可用宽度，重点是布局规则而不是不同设备的型号。",
+    "explanation": [
+      "本讲研究同一页面如何适应不同可用宽度，重点是布局规则而不是不同设备的型号。",
+      "同一份网页要在窄手机、平板、宽桌面上可读、可操作。复习主线是：先设置 viewport，再让尺寸可伸缩，最后用 media query 在必要的位置改变布局。",
+      "响应式不是把桌面截图整体缩小。文字、列数、导航和图片要随可用空间重排；Bootstrap 把常用布局规则包装成类名。"
+    ],
+    "takeaways": [
+      "三个支柱：fluid grid、flexible images、media queries。",
+      "先掌握 CSS 原理，再读 Bootstrap 类名。"
+    ]
+  },
+  {
+    "page": 2,
+    "title": "三条技术主线",
+    "section": "先知道这一讲在解决什么",
+    "priority": "core",
+    "summary": "流式网格决定区域宽度，弹性图片避免溢出，媒体查询决定何时改变布局。",
+    "explanation": [
+      "流式网格决定区域宽度，弹性图片避免溢出，媒体查询决定何时改变布局。",
+      "同一份网页要在窄手机、平板、宽桌面上可读、可操作。复习主线是：先设置 viewport，再让尺寸可伸缩，最后用 media query 在必要的位置改变布局。",
+      "响应式不是把桌面截图整体缩小。文字、列数、导航和图片要随可用空间重排；Bootstrap 把常用布局规则包装成类名。"
+    ],
+    "takeaways": [
+      "三个支柱：fluid grid、flexible images、media queries。",
+      "先掌握 CSS 原理，再读 Bootstrap 类名。"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "本讲内容地图",
+    "section": "先知道这一讲在解决什么",
+    "priority": "core",
+    "summary": "先学移动优先和视口，再读 CSS 断点，最后用 Bootstrap 的类名表达相同规则。",
+    "explanation": [
+      "先学移动优先和视口，再读 CSS 断点，最后用 Bootstrap 的类名表达相同规则。",
+      "同一份网页要在窄手机、平板、宽桌面上可读、可操作。复习主线是：先设置 viewport，再让尺寸可伸缩，最后用 media query 在必要的位置改变布局。",
+      "响应式不是把桌面截图整体缩小。文字、列数、导航和图片要随可用空间重排；Bootstrap 把常用布局规则包装成类名。"
+    ],
+    "takeaways": [
+      "三个支柱：fluid grid、flexible images、media queries。",
+      "先掌握 CSS 原理，再读 Bootstrap 类名。"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "移动市场背景",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "市场份额用来说明移动访问的重要性，图中的年份和百分比无需记忆。",
+    "explanation": [
+      "市场份额用来说明移动访问的重要性，图中的年份和百分比无需记忆。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "嵌入媒体占位",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "本页的 PDF 只有媒体占位区域，不能从静态页还原视频内容；复习不依赖该视频。",
+    "explanation": [
+      "本页的 PDF 只有媒体占位区域，不能从静态页还原视频内容；复习不依赖该视频。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "移动与桌面访问统计",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "图表证明访问环境多样，但具体访问占比不是响应式布局算法的输入。",
+    "explanation": [
+      "图表证明访问环境多样，但具体访问占比不是响应式布局算法的输入。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "Mobile first",
+    "section": "Mobile first 与同一 URL",
+    "priority": "core",
+    "summary": "先在窄屏完成主要操作，再在较宽屏幕增加列数和辅助信息，是渐进增强的思路。",
+    "explanation": [
+      "先在窄屏完成主要操作，再在较宽屏幕增加列数和辅助信息，是渐进增强的思路。",
+      "Mobile first 是先保证小屏下的主要任务能完成，再在宽屏增加列数和辅助内容。例如商品页先显示名称、价格和购买按钮，宽屏再并排展示推荐栏。",
+      "单独的移动子域或站点会增加重定向、链接分享和维护成本；响应式页面通常让同一 URL 服务不同宽度。地理位置、触摸、横竖屏属于设备能力，不能仅根据“看起来像手机”就假设全部可用。"
+    ],
+    "takeaways": [
+      "优先保证核心功能可用，不是删光内容。",
+      "屏幕宽度与设备能力是两回事。"
+    ],
+    "question": {
+      "prompt": "为什么手机布局通常从一列开始？同一 URL 有什么好处？",
+      "answer": "一列减少窄屏横向滚动，让主要操作先可用；同一 URL 减少重定向和多套页面维护，也方便分享。"
+    }
+  },
+  {
+    "page": 8,
+    "title": "屏幕分辨率统计",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "设备宽度很多，设计应适应连续空间，不能为榜单上的每种设备硬编码一套网页。",
+    "explanation": [
+      "设备宽度很多，设计应适应连续空间，不能为榜单上的每种设备硬编码一套网页。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 9,
+    "title": "移动设备的能力",
+    "section": "Mobile first 与同一 URL",
+    "priority": "core",
+    "summary": "定位、触摸、旋转会影响交互；可用能力与视口宽度不是同一个判断条件。",
+    "explanation": [
+      "定位、触摸、旋转会影响交互；可用能力与视口宽度不是同一个判断条件。",
+      "Mobile first 是先保证小屏下的主要任务能完成，再在宽屏增加列数和辅助内容。例如商品页先显示名称、价格和购买按钮，宽屏再并排展示推荐栏。",
+      "单独的移动子域或站点会增加重定向、链接分享和维护成本；响应式页面通常让同一 URL 服务不同宽度。地理位置、触摸、横竖屏属于设备能力，不能仅根据“看起来像手机”就假设全部可用。"
+    ],
+    "takeaways": [
+      "优先保证核心功能可用，不是删光内容。",
+      "屏幕宽度与设备能力是两回事。"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "三种移动站点方案",
+    "section": "Mobile first 与同一 URL",
+    "priority": "core",
+    "summary": "独立域名、移动子域和响应式单站点的区别在于 URL、维护与内容组织方式。",
+    "explanation": [
+      "独立域名、移动子域和响应式单站点的区别在于 URL、维护与内容组织方式。",
+      "Mobile first 是先保证小屏下的主要任务能完成，再在宽屏增加列数和辅助内容。例如商品页先显示名称、价格和购买按钮，宽屏再并排展示推荐栏。",
+      "单独的移动子域或站点会增加重定向、链接分享和维护成本；响应式页面通常让同一 URL 服务不同宽度。地理位置、触摸、横竖屏属于设备能力，不能仅根据“看起来像手机”就假设全部可用。"
+    ],
+    "takeaways": [
+      "优先保证核心功能可用，不是删光内容。",
+      "屏幕宽度与设备能力是两回事。"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "为什么保留同一 URL",
+    "section": "Mobile first 与同一 URL",
+    "priority": "core",
+    "summary": "同一地址可以让 CSS 适配布局，减少重定向、链接分享错误和多套页面维护。",
+    "explanation": [
+      "同一地址可以让 CSS 适配布局，减少重定向、链接分享错误和多套页面维护。",
+      "Mobile first 是先保证小屏下的主要任务能完成，再在宽屏增加列数和辅助内容。例如商品页先显示名称、价格和购买按钮，宽屏再并排展示推荐栏。",
+      "单独的移动子域或站点会增加重定向、链接分享和维护成本；响应式页面通常让同一 URL 服务不同宽度。地理位置、触摸、横竖屏属于设备能力，不能仅根据“看起来像手机”就假设全部可用。"
+    ],
+    "takeaways": [
+      "优先保证核心功能可用，不是删光内容。",
+      "屏幕宽度与设备能力是两回事。"
+    ]
+  },
+  {
+    "page": 12,
+    "title": "Viewport 元信息",
+    "section": "Viewport：CSS 像素不等于物理像素",
+    "priority": "core",
+    "summary": "固定 width=590 不等于适应每台手机；常用 device-width 让布局视口随设备的 CSS 宽度设置。",
+    "explanation": [
+      "固定 width=590 不等于适应每台手机；常用 device-width 让布局视口随设备的 CSS 宽度设置。",
+      "移动浏览器如果用很宽的默认布局视口，网页可能先按桌面宽度排版，再缩得很小。viewport 元信息让布局宽度跟随设备的 CSS 像素宽度。",
+      "课件第 12 页的 `width=590` 固定了布局宽度；常用写法是下面的 `width=device-width`。第 14 页部分数值是屏幕物理分辨率，不能直接代入 CSS 断点。例如 1170 个物理像素、DPR 为 3 的屏幕，在常见初始缩放条件下对应约 390 个 CSS 像素。"
+    ],
+    "takeaways": [
+      "媒体查询的 width 看视口的 CSS 像素宽度。",
+      "`initial-scale=1` 设置初始缩放，不禁止用户放大。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+      "explanation": "放在 HTML 的 head 中。随后 390 CSS px 的视口会匹配 max-width: 500px；不要用 1170 个物理像素作判断。"
+    },
+    "question": {
+      "prompt": "设备物理宽度为 1170 px，布局视口为 390 CSS px，是否满足 max-width:500px？",
+      "answer": "满足。查询的是视口宽度 390 CSS px，不是物理分辨率。"
+    }
+  },
+  {
+    "page": 13,
+    "title": "响应式网站截图",
+    "section": "Viewport：CSS 像素不等于物理像素",
+    "priority": "core",
+    "summary": "对比截图时观察导航和内容如何重排，而不是只比较整页缩小了多少。",
+    "explanation": [
+      "对比截图时观察导航和内容如何重排，而不是只比较整页缩小了多少。",
+      "移动浏览器如果用很宽的默认布局视口，网页可能先按桌面宽度排版，再缩得很小。viewport 元信息让布局宽度跟随设备的 CSS 像素宽度。",
+      "课件第 12 页的 `width=590` 固定了布局宽度；常用写法是下面的 `width=device-width`。第 14 页部分数值是屏幕物理分辨率，不能直接代入 CSS 断点。例如 1170 个物理像素、DPR 为 3 的屏幕，在常见初始缩放条件下对应约 390 个 CSS 像素。"
+    ],
+    "takeaways": [
+      "媒体查询的 width 看视口的 CSS 像素宽度。",
+      "`initial-scale=1` 设置初始缩放，不禁止用户放大。"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "设备像素与 CSS 像素",
+    "section": "Viewport：CSS 像素不等于物理像素",
+    "priority": "core",
+    "summary": "高分辨率屏幕的物理像素数不能直接当作媒体查询中的 width；两者受到像素密度和缩放影响。",
+    "explanation": [
+      "高分辨率屏幕的物理像素数不能直接当作媒体查询中的 width；两者受到像素密度和缩放影响。",
+      "移动浏览器如果用很宽的默认布局视口，网页可能先按桌面宽度排版，再缩得很小。viewport 元信息让布局宽度跟随设备的 CSS 像素宽度。",
+      "课件第 12 页的 `width=590` 固定了布局宽度；常用写法是下面的 `width=device-width`。第 14 页部分数值是屏幕物理分辨率，不能直接代入 CSS 断点。例如 1170 个物理像素、DPR 为 3 的屏幕，在常见初始缩放条件下对应约 390 个 CSS 像素。"
+    ],
+    "takeaways": [
+      "媒体查询的 width 看视口的 CSS 像素宽度。",
+      "`initial-scale=1` 设置初始缩放，不禁止用户放大。"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "响应式定义与三支柱",
+    "section": "弹性网格与图片：跟随父容器",
+    "priority": "core",
+    "summary": "流式布局、弹性媒体、媒体查询共同实现响应式；提出时间和人物不需要背。",
+    "explanation": [
+      "流式布局、弹性媒体、媒体查询共同实现响应式；提出时间和人物不需要背。",
+      "Fluid layout 用相对尺寸随空间连续伸缩；adaptive layout 更强调在几个断点采用固定布局。实际页面经常组合两者：断点改列数，断点之间让列宽伸缩。",
+      "百分比换算是 target ÷ context × 100%。课件把 700px 放进 988px 的容器：700/988≈70.85%。context 是当前包含块，不一定是整个屏幕。",
+      "图片设置 `max-width:100%; height:auto`：最大不超过父容器，同时保持纵横比。与 `width:100%` 不同，max-width 本身不会强制把小图拉大。"
+    ],
+    "takeaways": [
+      "百分比先找父容器。",
+      "图片只限制宽度时也要保留正确的高度比例。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>\n.layout { width: 90%; max-width: 988px; margin: auto; }\n.story { width: 70.85%; background: #eee; }\n.story img { max-width: 100%; height: auto; }\n</style>\n<div class=\"layout\"><div class=\"story\">随父容器伸缩的内容区</div></div>",
+      "explanation": "父容器宽 988px 时 story 约 700px；父容器宽 500px 时约 354.25px。百分比不会一直保留原来的 700px。"
+    },
+    "question": {
+      "prompt": "600px 的父容器中，一个 width:50% 的区域内放 max-width:100% 的 800px 图片，最大显示多宽？",
+      "answer": "约 300px（假设没有额外 padding/border 影响）。图片的百分比参照 300px 的区域，不是 600px 或整个视口。"
+    }
+  },
+  {
+    "page": 16,
+    "title": "媒体类型与查询条件",
+    "section": "Media queries：先判断条件，再参与层叠",
+    "priority": "core",
+    "summary": "screen 限定屏幕，min-width:500px 表示视口宽度至少 500 CSS px；省略类型默认为 all。",
+    "explanation": [
+      "screen 限定屏幕，min-width:500px 表示视口宽度至少 500 CSS px；省略类型默认为 all。",
+      "`@media` 只是决定一组 CSS 是否参与计算。条件成立后，仍要按选择器优先级、来源顺序等规则决定最终样式。`min-width` 与 `max-width` 都包含边界；`and` 要求两边同时成立。",
+      "不写媒体类型时默认 all；screen 是屏幕。课件旧例中的 `max-device-width` 查询设备宽度，现已弃用；当前布局优先使用查询视口的 `max-width`。",
+      "`display:none` 不生成布局盒，后面的元素会补位，但节点仍在 DOM 中。`visibility:hidden` 看不见却通常保留布局空间。不要把关键提交按钮只因屏幕窄而隐藏。"
+    ],
+    "takeaways": [
+      "先判断每条规则是否匹配，再判断哪条声明获胜。",
+      "隐藏布局盒不等于删除 DOM 节点。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<style>\n.cards { display: grid; grid-template-columns: 1fr; gap: 12px; }\n@media (min-width: 600px) {\n  .cards { grid-template-columns: repeat(2, 1fr); }\n}\n@media (min-width: 1000px) {\n  .cards { grid-template-columns: repeat(3, 1fr); }\n}\n</style>\n<div class=\"cards\"><div>A</div><div>B</div><div>C</div></div>",
+      "explanation": "599px：一列；600px：两列；1000px：两个条件都成立，但后一条同优先级规则获胜，显示三列。这里的宽度指整个预览视口。"
+    },
+    "question": {
+      "prompt": "上面的 CSS 在 1000px 时为什么是三列，而不是两列？",
+      "answer": "min-width:600px 和 min-width:1000px 均成立；选择器相同，后一条 grid-template-columns 声明覆盖前一条。"
+    },
+    "links": [
+      {
+        "label": "MDN：媒体查询的 width",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/width"
+      }
+    ]
+  },
+  {
+    "page": 17,
+    "title": "旧版设备宽度查询",
+    "section": "Media queries：先判断条件，再参与层叠",
+    "priority": "core",
+    "summary": "课件的 max-device-width 是旧写法。布局适配应优先看 viewport 的 max-width，而非设备物理尺寸。",
+    "explanation": [
+      "课件的 max-device-width 是旧写法。布局适配应优先看 viewport 的 max-width，而非设备物理尺寸。",
+      "`@media` 只是决定一组 CSS 是否参与计算。条件成立后，仍要按选择器优先级、来源顺序等规则决定最终样式。`min-width` 与 `max-width` 都包含边界；`and` 要求两边同时成立。",
+      "不写媒体类型时默认 all；screen 是屏幕。课件旧例中的 `max-device-width` 查询设备宽度，现已弃用；当前布局优先使用查询视口的 `max-width`。",
+      "`display:none` 不生成布局盒，后面的元素会补位，但节点仍在 DOM 中。`visibility:hidden` 看不见却通常保留布局空间。不要把关键提交按钮只因屏幕窄而隐藏。"
+    ],
+    "takeaways": [
+      "先判断每条规则是否匹配，再判断哪条声明获胜。",
+      "隐藏布局盒不等于删除 DOM 节点。"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "组合查询与边界",
+    "section": "Media queries：先判断条件，再参与层叠",
+    "priority": "core",
+    "summary": "and 表示同时满足；min-width 与 max-width 都包含边界，先列条件再推最终 CSS。",
+    "explanation": [
+      "and 表示同时满足；min-width 与 max-width 都包含边界，先列条件再推最终 CSS。",
+      "`@media` 只是决定一组 CSS 是否参与计算。条件成立后，仍要按选择器优先级、来源顺序等规则决定最终样式。`min-width` 与 `max-width` 都包含边界；`and` 要求两边同时成立。",
+      "不写媒体类型时默认 all；screen 是屏幕。课件旧例中的 `max-device-width` 查询设备宽度，现已弃用；当前布局优先使用查询视口的 `max-width`。",
+      "`display:none` 不生成布局盒，后面的元素会补位，但节点仍在 DOM 中。`visibility:hidden` 看不见却通常保留布局空间。不要把关键提交按钮只因屏幕窄而隐藏。"
+    ],
+    "takeaways": [
+      "先判断每条规则是否匹配，再判断哪条声明获胜。",
+      "隐藏布局盒不等于删除 DOM 节点。"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "浏览器支持表",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "兼容性表是当时环境的快照；考试复习应掌握媒体查询含义，不背支持率。",
+    "explanation": [
+      "兼容性表是当时环境的快照；考试复习应掌握媒体查询含义，不背支持率。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "隐藏内容的两种方式",
+    "section": "Media queries：先判断条件，再参与层叠",
+    "priority": "core",
+    "summary": "display:none 不占布局空间，visibility:hidden 通常留空位；二者都不等于从 DOM 删除节点。",
+    "explanation": [
+      "display:none 不占布局空间，visibility:hidden 通常留空位；二者都不等于从 DOM 删除节点。",
+      "`@media` 只是决定一组 CSS 是否参与计算。条件成立后，仍要按选择器优先级、来源顺序等规则决定最终样式。`min-width` 与 `max-width` 都包含边界；`and` 要求两边同时成立。",
+      "不写媒体类型时默认 all；screen 是屏幕。课件旧例中的 `max-device-width` 查询设备宽度，现已弃用；当前布局优先使用查询视口的 `max-width`。",
+      "`display:none` 不生成布局盒，后面的元素会补位，但节点仍在 DOM 中。`visibility:hidden` 看不见却通常保留布局空间。不要把关键提交按钮只因屏幕窄而隐藏。"
+    ],
+    "takeaways": [
+      "先判断每条规则是否匹配，再判断哪条声明获胜。",
+      "隐藏布局盒不等于删除 DOM 节点。"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "Firefox 响应式工具",
+    "section": "用开发者工具检验断点",
+    "priority": "core",
+    "summary": "拖动视口宽度并跨过断点，检查排列和溢出，是本页工具演示的核心。",
+    "explanation": [
+      "拖动视口宽度并跨过断点，检查排列和溢出，是本页工具演示的核心。",
+      "Firefox 与 Chrome 的响应式工具可改变视口大小、模拟触摸与部分设备条件。对着断点测试“前一点、正好、后一点”，比只看一个手机预设更能发现问题。",
+      "例如 min-width:600px 要看 599、600、601px；再检查横向滚动、图片溢出、按钮是否仍可操作。模拟器不能完全代替真实设备的浏览器与输入行为。"
+    ],
+    "takeaways": [
+      "断点两侧都要验证。",
+      "先看实际视口宽度，不只看设备名称。"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "Chrome 设备模拟",
+    "section": "用开发者工具检验断点",
+    "priority": "core",
+    "summary": "设备预设只是起点；还要手动检查临界宽度，模拟结果也不能保证真实设备完全一致。",
+    "explanation": [
+      "设备预设只是起点；还要手动检查临界宽度，模拟结果也不能保证真实设备完全一致。",
+      "Firefox 与 Chrome 的响应式工具可改变视口大小、模拟触摸与部分设备条件。对着断点测试“前一点、正好、后一点”，比只看一个手机预设更能发现问题。",
+      "例如 min-width:600px 要看 599、600、601px；再检查横向滚动、图片溢出、按钮是否仍可操作。模拟器不能完全代替真实设备的浏览器与输入行为。"
+    ],
+    "takeaways": [
+      "断点两侧都要验证。",
+      "先看实际视口宽度，不只看设备名称。"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "Fluid 与 adaptive 布局",
+    "section": "弹性网格与图片：跟随父容器",
+    "priority": "core",
+    "summary": "流式布局连续伸缩；自适应布局在特定宽度切换。两种思路可以组合使用。",
+    "explanation": [
+      "流式布局连续伸缩；自适应布局在特定宽度切换。两种思路可以组合使用。",
+      "Fluid layout 用相对尺寸随空间连续伸缩；adaptive layout 更强调在几个断点采用固定布局。实际页面经常组合两者：断点改列数，断点之间让列宽伸缩。",
+      "百分比换算是 target ÷ context × 100%。课件把 700px 放进 988px 的容器：700/988≈70.85%。context 是当前包含块，不一定是整个屏幕。",
+      "图片设置 `max-width:100%; height:auto`：最大不超过父容器，同时保持纵横比。与 `width:100%` 不同，max-width 本身不会强制把小图拉大。"
+    ],
+    "takeaways": [
+      "百分比先找父容器。",
+      "图片只限制宽度时也要保留正确的高度比例。"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "把固定像素换成百分比",
+    "section": "弹性网格与图片：跟随父容器",
+    "priority": "core",
+    "summary": "700/988≈70.85%，144/988≈14.575%；分母必须是相应属性的参照容器。",
+    "explanation": [
+      "700/988≈70.85%，144/988≈14.575%；分母必须是相应属性的参照容器。",
+      "Fluid layout 用相对尺寸随空间连续伸缩；adaptive layout 更强调在几个断点采用固定布局。实际页面经常组合两者：断点改列数，断点之间让列宽伸缩。",
+      "百分比换算是 target ÷ context × 100%。课件把 700px 放进 988px 的容器：700/988≈70.85%。context 是当前包含块，不一定是整个屏幕。",
+      "图片设置 `max-width:100%; height:auto`：最大不超过父容器，同时保持纵横比。与 `width:100%` 不同，max-width 本身不会强制把小图拉大。"
+    ],
+    "takeaways": [
+      "百分比先找父容器。",
+      "图片只限制宽度时也要保留正确的高度比例。"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "让图片适应容器",
+    "section": "弹性网格与图片：跟随父容器",
+    "priority": "core",
+    "summary": "max-width:100% 限制最大宽度，height:auto 保留比例；小图片不会仅因 max-width 而被拉大。",
+    "explanation": [
+      "max-width:100% 限制最大宽度，height:auto 保留比例；小图片不会仅因 max-width 而被拉大。",
+      "Fluid layout 用相对尺寸随空间连续伸缩；adaptive layout 更强调在几个断点采用固定布局。实际页面经常组合两者：断点改列数，断点之间让列宽伸缩。",
+      "百分比换算是 target ÷ context × 100%。课件把 700px 放进 988px 的容器：700/988≈70.85%。context 是当前包含块，不一定是整个屏幕。",
+      "图片设置 `max-width:100%; height:auto`：最大不超过父容器，同时保持纵横比。与 `width:100%` 不同，max-width 本身不会强制把小图拉大。"
+    ],
+    "takeaways": [
+      "百分比先找父容器。",
+      "图片只限制宽度时也要保留正确的高度比例。"
+    ]
+  },
+  {
+    "page": 26,
+    "title": "案例网址页",
+    "section": "市场、历史与设备榜单：看过即可",
+    "priority": "skim",
+    "summary": "实例帮助观察重排策略，不需要把网址清单作为记忆内容。",
+    "explanation": [
+      "实例帮助观察重排策略，不需要把网址清单作为记忆内容。",
+      "这些页用市场份额、设备分辨率、兼容性与案例网址说明跨屏需求，不作为本版的背诵清单。第 5 页是嵌入媒体占位，PDF 中没有可读的完整视频内容。",
+      "屏幕比例、浏览器支持率和网站实例会变化。应记住“测试不同宽度”，不用记图表上的年份、排名与百分比。"
+    ],
+    "takeaways": [
+      "发展历史按教授说明跳过；统计数据只提供背景。"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "Bootstrap 的作用",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "框架把常见布局和组件写成可复用类名；仍需理解底层 CSS，品牌与历史只作背景。",
+    "explanation": [
+      "框架把常见布局和组件写成可复用类名；仍需理解底层 CSS，品牌与历史只作背景。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ],
+    "question": {
+      "prompt": "只引入 bootstrap.bundle.min.js，能让 col-6 显示为半宽列吗？",
+      "answer": "不能。栅格宽度来自 Bootstrap CSS；bundle 提供交互脚本及 Popper，不替代样式表。"
+    }
+  },
+  {
+    "page": 28,
+    "title": "开始使用 Bootstrap",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "先引入 CSS，再按交互需要引入 JS；包的版本必须与所用类名和组件 API 对应。",
+    "explanation": [
+      "先引入 CSS，再按交互需要引入 JS；包的版本必须与所用类名和组件 API 对应。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "Bootstrap 4 兼容表",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "这是特定版本的浏览器支持说明，不代表所有 Bootstrap 版本都支持相同旧浏览器。",
+    "explanation": [
+      "这是特定版本的浏览器支持说明，不代表所有 Bootstrap 版本都支持相同旧浏览器。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "Bootstrap 5 兼容表",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "新版兼容范围与旧版不同；判断示例前先确认其版本，不混用旧 IE 配置。",
+    "explanation": [
+      "新版兼容范围与旧版不同；判断示例前先确认其版本，不混用旧 IE 配置。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 31,
+    "title": "旧版文件结构",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "CSS 和 JS 分工不同；页内 Glyphicons 字体描述来自更早的版本，不能套用为 v4 的通用结构。",
+    "explanation": [
+      "CSS 和 JS 分工不同；页内 Glyphicons 字体描述来自更早的版本，不能套用为 v4 的通用结构。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "Bootstrap 5 bundle",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "bundle 包含交互脚本所用的 Popper；CSS 仍需单独加载，min 表示压缩版本。",
+    "explanation": [
+      "bundle 包含交互脚本所用的 Popper；CSS 仍需单独加载，min 表示压缩版本。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "旧版基础模板",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "识别 head 中的 CSS、viewport 及页面末尾的脚本；旧浏览器补丁不作为核心背诵项。",
+    "explanation": [
+      "识别 head 中的 CSS、viewport 及页面末尾的脚本；旧浏览器补丁不作为核心背诵项。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "Bootstrap 5 基础模板",
+    "section": "Bootstrap：CSS、JS 与版本分开读",
+    "priority": "core",
+    "summary": "v5 页面仍遵循元信息、CSS、HTML 内容、按需 JS 的结构，不再依赖 jQuery。",
+    "explanation": [
+      "v5 页面仍遵循元信息、CSS、HTML 内容、按需 JS 的结构，不再依赖 jQuery。",
+      "Bootstrap 提供栅格、样式和交互组件。只用栅格需要 CSS；下拉菜单等交互组件还需要对应 JS。Bootstrap 5 的 bundle 包含 Popper，但不包含 CSS。",
+      "课件同时展示 3、4、5 代代码：不要混用类名和依赖。Bootstrap 5 不依赖 jQuery；第 31 页提到 Glyphicons 属于更早的版本语境，不是 Bootstrap 4/5 的统一目录规则。",
+      "浏览器兼容表、旧 IE 修复脚本和下载文件名是版本背景。读代码时抓住 viewport、引入 CSS、按需引入 JS 这条主线。"
+    ],
+    "takeaways": [
+      "版本先确定，再判断类名与断点。",
+      "CSS 负责样式；JS 负责需要行为的组件。"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "12 列栅格概览",
+    "section": "12 列栅格：版本不同，断点不同",
+    "priority": "core",
+    "summary": "行被分为 12 份，col 的数字表示份额；v3 有四层、v4 五层、v5 六层断点。",
+    "explanation": [
+      "行被分为 12 份，col 的数字表示份额；v3 有四层、v4 五层、v5 六层断点。",
+      "容器里面放 row，row 里面放列。数字表示占 12 份中的几份：`col-6` 是一半；三个 `col-4` 刚好占满一行。断点类一般是 min-width，从该宽度向上生效，直到更大的断点规则覆盖。",
+      "第 39 页标题与文字有混用：Bootstrap 4 的 sm 从 576px 开始，不是 768px；768px 是 v4 的 md，也是 v3 的 sm。考试读给定版本与代码，不能只背一个 md 数字。"
+    ],
+    "takeaways": [
+      "v3 的 md 从 992px 开始；v4/v5 的 md 从 768px 开始。",
+      "Bootstrap 5 最小层无 xs 后缀，写 `.col-6`。"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "Bootstrap 4 与 5 对照",
+    "section": "12 列栅格：版本不同，断点不同",
+    "priority": "core",
+    "summary": "v5 增加 xxl 并移除 jQuery 依赖；考代码时更重要的是识别断点与类名所属版本。",
+    "explanation": [
+      "v5 增加 xxl 并移除 jQuery 依赖；考代码时更重要的是识别断点与类名所属版本。",
+      "容器里面放 row，row 里面放列。数字表示占 12 份中的几份：`col-6` 是一半；三个 `col-4` 刚好占满一行。断点类一般是 min-width，从该宽度向上生效，直到更大的断点规则覆盖。",
+      "第 39 页标题与文字有混用：Bootstrap 4 的 sm 从 576px 开始，不是 768px；768px 是 v4 的 md，也是 v3 的 sm。考试读给定版本与代码，不能只背一个 md 数字。"
+    ],
+    "takeaways": [
+      "v3 的 md 从 992px 开始；v4/v5 的 md 从 768px 开始。",
+      "Bootstrap 5 最小层无 xs 后缀，写 `.col-6`。"
+    ]
+  },
+  {
+    "page": 37,
+    "title": "十二个方块的重排",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "同样 12 个元素，每行列数改变就会改变总行数；元素数量并没有因响应式而减少。",
+    "explanation": [
+      "同样 12 个元素，每行列数改变就会改变总行数；元素数量并没有因响应式而减少。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<!-- Bootstrap 5；视口达到 md 断点时 -->\n<div class=\"row\">\n  <div class=\"col-md-8\">\n    <div class=\"row\">\n      <div class=\"col-6\">内层 A</div>\n      <div class=\"col-6\">内层 B</div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">外层 C</div>\n</div>",
+      "explanation": "达到 md 后 A、B 各占父列一半；在外层比例上 A、B、C 都约为 1/3。窄屏下外层 md 列会改为堆叠。",
+      "preview": false
+    },
+    "question": {
+      "prompt": "外层 col-md-9 中，内层 col-4 占外层整行的多少？",
+      "answer": "9/12 × 4/12 = 1/4；不要答 4/12。这里忽略 gutter 对内容盒实际像素宽度的影响。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "旧版 md 区间示意",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "在课件 v3 的 992–1199px 区间，12 个方块每行 3 个，共 4 行；不要套用新版本 md 下限。",
+    "explanation": [
+      "在课件 v3 的 992–1199px 区间，12 个方块每行 3 个，共 4 行；不要套用新版本 md 下限。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "标题与断点文字混用",
+    "section": "12 列栅格：版本不同，断点不同",
+    "priority": "core",
+    "summary": "此页部分文字沿用 v3；v4 表格中的 sm=576、md=768、lg=992、xl=1200 才对应 v4。",
+    "explanation": [
+      "此页部分文字沿用 v3；v4 表格中的 sm=576、md=768、lg=992、xl=1200 才对应 v4。",
+      "容器里面放 row，row 里面放列。数字表示占 12 份中的几份：`col-6` 是一半；三个 `col-4` 刚好占满一行。断点类一般是 min-width，从该宽度向上生效，直到更大的断点规则覆盖。",
+      "第 39 页标题与文字有混用：Bootstrap 4 的 sm 从 576px 开始，不是 768px；768px 是 v4 的 md，也是 v3 的 sm。考试读给定版本与代码，不能只背一个 md 数字。"
+    ],
+    "takeaways": [
+      "v3 的 md 从 992px 开始；v4/v5 的 md 从 768px 开始。",
+      "Bootstrap 5 最小层无 xs 后缀，写 `.col-6`。"
+    ]
+  },
+  {
+    "page": 40,
+    "title": "栅格示例总览",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "先从截图数每行有几列，再回到 class 推宽度和断点，这样能检查自己的预测。",
+    "explanation": [
+      "先从截图数每行有几列，再回到 class 推宽度和断点，这样能检查自己的预测。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "示例 head 结构",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "viewport 影响移动端布局，CSS 定义栅格；IE 条件注释是旧环境兼容代码。",
+    "explanation": [
+      "viewport 影响移动端布局，CSS 定义栅格；IE 条件注释是旧环境兼容代码。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "等宽与不等宽截图",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "4+4+4 为三等份，3+6+3 则中间两倍宽；它们都占满 12 份。",
+    "explanation": [
+      "4+4+4 为三等份，3+6+3 则中间两倍宽；它们都占满 12 份。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 43,
+    "title": "等宽与不等宽源码",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "同一 row 内 col-md-4 重复三次，与 col-md-3、6、3 的布局不同，需结合该示例版本的 md。",
+    "explanation": [
+      "同一 row 内 col-md-4 重复三次，与 col-md-3、6、3 的布局不同，需结合该示例版本的 md。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 44,
+    "title": "两列与嵌套示意",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "外层 8+4 分成宽窄两块；宽块还能包含新的 row，形成独立的内层栅格。",
+    "explanation": [
+      "外层 8+4 分成宽窄两块；宽块还能包含新的 row，形成独立的内层栅格。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 45,
+    "title": "嵌套栅格源码",
+    "section": "等宽、不等宽与嵌套：算清参照物",
+    "priority": "core",
+    "summary": "父列 8/12 内的两个 col-6 各占父列一半，相当于外层的 4/12，而非外层的 6/12。",
+    "explanation": [
+      "父列 8/12 内的两个 col-6 各占父列一半，相当于外层的 4/12，而非外层的 6/12。",
+      "课件用 12 个方块展示一行放 1、2、3、4 个时的变化。注意第 38 页是旧版 md 语境：992–1199px 时每行 3 个，因此 12 个方块共 4 行。",
+      "4+4+4 与 3+6+3 都等于 12；后一种中间列是旁边列的两倍。嵌套时，在父列里面再放 row，新的一行又有自己的 12 份。",
+      "父列占外层 8/12，里面两个 col-6 各占父列的一半，所以各相当于外层 4/12。这里说的是比例，实际内容宽度还受 gutter、padding 等影响。"
+    ],
+    "takeaways": [
+      "每个 row 都重新划分 12 份。",
+      "内层比例 × 外层比例，不能把内层数字当成外层数字。"
+    ]
+  },
+  {
+    "page": 46,
+    "title": "混合断点效果",
+    "section": "混合断点、换行与 offset",
+    "priority": "core",
+    "summary": "同一组卡片在小屏可堆叠，到较宽断点改为多列；多个类是多套条件规则。",
+    "explanation": [
+      "同一组卡片在小屏可堆叠，到较宽断点改为多列；多个类是多套条件规则。",
+      "给同一个元素多个断点类，就是给不同宽度写不同规则。课件 v3 的 `col-xs-12 col-md-8` 表示小屏占整行，到 992px 才变为 8/12；不能套用 v5 的 md=768。",
+      "同一行累计超过 12 会换行。offset 是给列前面留空位，计算时也占份额；例如 5 + offset 2 + 5 = 12。若在更大断点不再需要留白，就显式重置 offset 为 0。",
+      "v3 的 clearfix / visible-xs 用来处理 float 布局的清除；v5 使用 Flexbox 栅格，不要机械复制旧清除类。v5 偏移写 `offset-sm-2`，不是旧的 `col-sm-offset-2`。"
+    ],
+    "takeaways": [
+      "数字相加时把 offset 算进去。",
+      "旧版清除浮动不等于现代栅格必需步骤。"
+    ],
+    "question": {
+      "prompt": "Bootstrap 3 中 col-xs-12 col-md-8 在 900px 占多少？",
+      "answer": "12/12。v3 的 md 是 ≥992px，900px 还没有启用 md-8。"
+    }
+  },
+  {
+    "page": 47,
+    "title": "混合断点源码",
+    "section": "混合断点、换行与 offset",
+    "priority": "core",
+    "summary": "旧例 col-xs-12 col-md-8 在 v3 的 992px 前为整行，达到后为三分之二行。",
+    "explanation": [
+      "旧例 col-xs-12 col-md-8 在 v3 的 992px 前为整行，达到后为三分之二行。",
+      "给同一个元素多个断点类，就是给不同宽度写不同规则。课件 v3 的 `col-xs-12 col-md-8` 表示小屏占整行，到 992px 才变为 8/12；不能套用 v5 的 md=768。",
+      "同一行累计超过 12 会换行。offset 是给列前面留空位，计算时也占份额；例如 5 + offset 2 + 5 = 12。若在更大断点不再需要留白，就显式重置 offset 为 0。",
+      "v3 的 clearfix / visible-xs 用来处理 float 布局的清除；v5 使用 Flexbox 栅格，不要机械复制旧清除类。v5 偏移写 `offset-sm-2`，不是旧的 `col-sm-offset-2`。"
+    ],
+    "takeaways": [
+      "数字相加时把 offset 算进去。",
+      "旧版清除浮动不等于现代栅格必需步骤。"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "清除与偏移截图",
+    "section": "混合断点、换行与 offset",
+    "priority": "core",
+    "summary": "offset 留出网格空位，clearfix 则处理旧 float 换行；二者不是同一个功能。",
+    "explanation": [
+      "offset 留出网格空位，clearfix 则处理旧 float 换行；二者不是同一个功能。",
+      "给同一个元素多个断点类，就是给不同宽度写不同规则。课件 v3 的 `col-xs-12 col-md-8` 表示小屏占整行，到 992px 才变为 8/12；不能套用 v5 的 md=768。",
+      "同一行累计超过 12 会换行。offset 是给列前面留空位，计算时也占份额；例如 5 + offset 2 + 5 = 12。若在更大断点不再需要留白，就显式重置 offset 为 0。",
+      "v3 的 clearfix / visible-xs 用来处理 float 布局的清除；v5 使用 Flexbox 栅格，不要机械复制旧清除类。v5 偏移写 `offset-sm-2`，不是旧的 `col-sm-offset-2`。"
+    ],
+    "takeaways": [
+      "数字相加时把 offset 算进去。",
+      "旧版清除浮动不等于现代栅格必需步骤。"
+    ]
+  },
+  {
+    "page": 49,
+    "title": "清除与偏移源码",
+    "section": "混合断点、换行与 offset",
+    "priority": "core",
+    "summary": "5 列加 2 列偏移再加 5 列等于 12；较宽布局不需偏移时要显式归零。",
+    "explanation": [
+      "5 列加 2 列偏移再加 5 列等于 12；较宽布局不需偏移时要显式归零。",
+      "给同一个元素多个断点类，就是给不同宽度写不同规则。课件 v3 的 `col-xs-12 col-md-8` 表示小屏占整行，到 992px 才变为 8/12；不能套用 v5 的 md=768。",
+      "同一行累计超过 12 会换行。offset 是给列前面留空位，计算时也占份额；例如 5 + offset 2 + 5 = 12。若在更大断点不再需要留白，就显式重置 offset 为 0。",
+      "v3 的 clearfix / visible-xs 用来处理 float 布局的清除；v5 使用 Flexbox 栅格，不要机械复制旧清除类。v5 偏移写 `offset-sm-2`，不是旧的 `col-sm-offset-2`。"
+    ],
+    "takeaways": [
+      "数字相加时把 offset 算进去。",
+      "旧版清除浮动不等于现代栅格必需步骤。"
+    ]
+  },
+  {
+    "page": 50,
+    "title": "Bootstrap 5 六个断点",
+    "section": "12 列栅格：版本不同，断点不同",
+    "priority": "core",
+    "summary": "最低层无后缀，sm 576、md 768、lg 992、xl 1200、xxl 1400；断点按最小宽度生效。",
+    "explanation": [
+      "最低层无后缀，sm 576、md 768、lg 992、xl 1200、xxl 1400；断点按最小宽度生效。",
+      "容器里面放 row，row 里面放列。数字表示占 12 份中的几份：`col-6` 是一半；三个 `col-4` 刚好占满一行。断点类一般是 min-width，从该宽度向上生效，直到更大的断点规则覆盖。",
+      "第 39 页标题与文字有混用：Bootstrap 4 的 sm 从 576px 开始，不是 768px；768px 是 v4 的 md，也是 v3 的 sm。考试读给定版本与代码，不能只背一个 md 数字。"
+    ],
+    "takeaways": [
+      "v3 的 md 从 992px 开始；v4/v5 的 md 从 768px 开始。",
+      "Bootstrap 5 最小层无 xs 后缀，写 `.col-6`。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<!-- 已引入 Bootstrap 5 CSS；每个卡片都使用这一组类 -->\n<div class=\"row\">\n  <div class=\"col-12 col-sm-6 col-lg-4 col-xxl-3\">A</div>\n  <div class=\"col-12 col-sm-6 col-lg-4 col-xxl-3\">B</div>\n  <div class=\"col-12 col-sm-6 col-lg-4 col-xxl-3\">C</div>\n  <div class=\"col-12 col-sm-6 col-lg-4 col-xxl-3\">D</div>\n</div>",
+      "explanation": "Bootstrap 5 下：360px 每行 1 个；600px 每行 2 个；1000px 每行 3 个；1440px 每行 4 个。不要把 class 出现的先后顺序误当成断点大小。",
+      "preview": false
+    },
+    "question": {
+      "prompt": "Bootstrap 5 的 col-12 col-sm-6 col-lg-4 在 800px 和 1000px 分别占几份？",
+      "answer": "800px 匹配 sm 但未到 lg，所以占 6/12；1000px 匹配 lg，占 4/12。"
+    },
+    "links": [
+      {
+        "label": "Bootstrap 5：栅格与六个断点",
+        "url": "https://getbootstrap.com/docs/5.3/layout/grid/"
+      },
+      {
+        "label": "Bootstrap 3：旧课件的断点",
+        "url": "https://getbootstrap.com/docs/3.4/css/"
+      }
+    ]
+  },
+  {
+    "page": 51,
+    "title": "ng-bootstrap 是什么",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "它面向 Angular，提供 Bootstrap 风格组件，不能当作 React Bootstrap 直接导入 React。",
+    "explanation": [
+      "它面向 Angular，提供 Bootstrap 风格组件，不能当作 React Bootstrap 直接导入 React。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "组件依赖与兼容性",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "Angular、Bootstrap CSS 和组件相关依赖需要匹配；版本表用来选兼容组合，不用死记。",
+    "explanation": [
+      "Angular、Bootstrap CSS 和组件相关依赖需要匹配；版本表用来选兼容组合，不用死记。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 53,
+    "title": "Angular 版本表",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "版本兼容矩阵属于环境说明，变化频繁；抓住安装组件需要匹配框架版本即可。",
+    "explanation": [
+      "版本兼容矩阵属于环境说明，变化频繁；抓住安装组件需要匹配框架版本即可。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 54,
+    "title": "组件目录",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "导航、进度条、表格和提示框是现成 UI 组件；学习重点是传入状态与响应事件。",
+    "explanation": [
+      "导航、进度条、表格和提示框是现成 UI 组件；学习重点是传入状态与响应事件。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 55,
+    "title": "Nav 组件",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "activeId 表示当前活动页签，切换页签会改变状态，再让对应内容出现。",
+    "explanation": [
+      "activeId 表示当前活动页签，切换页签会改变状态，再让对应内容出现。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 56,
+    "title": "Progressbar 组件",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "value 属性驱动进度数值；striped、showValue 改变呈现，不改变所表达的进度本身。",
+    "explanation": [
+      "value 属性驱动进度数值；striped、showValue 改变呈现，不改变所表达的进度本身。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<!-- Angular 模板片段；已导入对应 ng-bootstrap 组件 -->\n<ngb-progressbar [value]=\"progress\" [showValue]=\"true\" />\n<ngb-alert type=\"success\" (closed)=\"message = ''\">\n  {{ message }}\n</ngb-alert>",
+      "explanation": "progress=25 时显示 25% 的进度。点击 alert 的关闭按钮触发 closed，赋值 message=\"\"；实际隐藏整块提示还需用条件渲染判断 message 是否为空，而不是以为清空文本就自动移除组件。",
+      "preview": false
+    },
+    "question": {
+      "prompt": "[value]=\"25\" 和 (closed)=\"closeAlert(alert)\" 各是什么方向？",
+      "answer": "前者把数据传入组件属性；后者监听组件事件，由处理函数修改应用状态。"
+    }
+  },
+  {
+    "page": 57,
+    "title": "Table 组件示例",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "数组中的每条记录生成表格的一行；格式化数字属于显示处理，不等于修改原始数据。",
+    "explanation": [
+      "数组中的每条记录生成表格的一行；格式化数字属于显示处理，不等于修改原始数据。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 58,
+    "title": "可关闭 Alert",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "closed 事件触发处理函数；从 alerts 数据中移除相应项后，界面才同步去掉那条提示。",
+    "explanation": [
+      "closed 事件触发处理函数；从 alerts 数据中移除相应项后，界面才同步去掉那条提示。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  },
+  {
+    "page": 59,
+    "title": "自动关闭 Alert",
+    "section": "ng-bootstrap：数据驱动现成组件",
+    "priority": "core",
+    "summary": "延迟后清空消息状态可以自动隐藏提示；使用 debounceTime 时新消息会重置等待窗口。",
+    "explanation": [
+      "延迟后清空消息状态可以自动隐藏提示；使用 debounceTime 时新消息会重置等待窗口。",
+      "ng-bootstrap 是 Angular 的 Bootstrap 风格组件，不是 React Bootstrap。组件模板接收数据和状态，让框架负责同步界面；安装时需要匹配 Angular、Bootstrap CSS 以及组件所需依赖，不能只背课件中的版本号。",
+      "读例子时抓住两种方向：`[value]=\"progress\"` 把组件数据传给进度条；`(closed)=\"closeAlert(alert)\"` 处理关闭事件，再改变数据。Nav 的 activeId 决定当前页签；表格把数组逐项渲染为行。",
+      "第 59 页展示延迟自动关闭的消息。理解“消息出现 → 等待 → 清空状态 → 界面消失”，不需要记整个组件源码。若使用 debounceTime，新的消息会重新计算等待窗口。"
+    ],
+    "takeaways": [
+      "方括号是属性绑定，圆括号是事件绑定。",
+      "状态改变后更新显示，与 React 的数据驱动思路可以对照。"
+    ]
+  }
+]

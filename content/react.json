@@ -1,0 +1,841 @@
+[
+  {
+    "page": 1,
+    "title": "React 主题",
+    "section": "React：用状态描述界面",
+    "priority": "core",
+    "summary": "本讲把 UI 拆成组件，以 props 与 state 驱动显示，再扩展到组件库和原生移动界面。",
+    "explanation": [
+      "本讲把 UI 拆成组件，以 props 与 state 驱动显示，再扩展到组件库和原生移动界面。",
+      "React 的核心工作是把组件的输入映射为 UI。你写“当前数据应显示什么”，React 在重新渲染后把必要变化提交给页面；不用在每次点击后手动寻找和修改每个 DOM 节点。",
+      "单向数据流指数据通常从父组件传给子组件。Virtual DOM 是描述 UI 的内存表示，协调过程比较前后结果；它不保证任何场景都比手写 DOM 更快。",
+      "React 核心聚焦 UI，完整应用还会组合路由、数据请求和后端。课件“不能构建完整应用”应理解为核心库不包办所有功能；SSR 也是可支持的方案，不是所有 React 页面自动在服务器渲染。"
+    ],
+    "takeaways": [
+      "state / props → render → 更新界面。",
+      "React 是 UI 库；浏览器、服务器与 Native 的运行环境要区分。"
+    ],
+    "question": {
+      "prompt": "计数器改变后，React 要把整个网页全部重建吗？",
+      "answer": "不需要。组件会产生新的 UI 描述，React 协调并把必要变化提交到宿主界面；重新 render 不等于把所有真实 DOM 节点删除重建。"
+    }
+  },
+  {
+    "page": 2,
+    "title": "React 内容地图",
+    "section": "React：用状态描述界面",
+    "priority": "core",
+    "summary": "JSX、组件、状态与生命周期是主线；Hooks、路由等属于构建应用时继续组合的能力。",
+    "explanation": [
+      "JSX、组件、状态与生命周期是主线；Hooks、路由等属于构建应用时继续组合的能力。",
+      "React 的核心工作是把组件的输入映射为 UI。你写“当前数据应显示什么”，React 在重新渲染后把必要变化提交给页面；不用在每次点击后手动寻找和修改每个 DOM 节点。",
+      "单向数据流指数据通常从父组件传给子组件。Virtual DOM 是描述 UI 的内存表示，协调过程比较前后结果；它不保证任何场景都比手写 DOM 更快。",
+      "React 核心聚焦 UI，完整应用还会组合路由、数据请求和后端。课件“不能构建完整应用”应理解为核心库不包办所有功能；SSR 也是可支持的方案，不是所有 React 页面自动在服务器渲染。"
+    ],
+    "takeaways": [
+      "state / props → render → 更新界面。",
+      "React 是 UI 库；浏览器、服务器与 Native 的运行环境要区分。"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "React 的起源",
+    "section": "起源与采用情况：可跳过",
+    "priority": "skim",
+    "summary": "历史动机是管理复杂交互；创建时间和人物按教授说明不需要回忆。",
+    "explanation": [
+      "历史动机是管理复杂交互；创建时间和人物按教授说明不需要回忆。",
+      "本组解释 React 的起源与使用它的公司。按教授说明不需要记发展时间、发明者或公司名单。",
+      "可以保留动机：页面交互变多后，用组件和数据流组织代码有助于管理复杂 UI。"
+    ],
+    "takeaways": [
+      "理解问题背景即可，不背历史。"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "React 的定位",
+    "section": "React：用状态描述界面",
+    "priority": "core",
+    "summary": "核心库专注 UI，不包办全部后端与路由，但可以与生态工具组合构建完整 Web 应用。",
+    "explanation": [
+      "核心库专注 UI，不包办全部后端与路由，但可以与生态工具组合构建完整 Web 应用。",
+      "React 的核心工作是把组件的输入映射为 UI。你写“当前数据应显示什么”，React 在重新渲染后把必要变化提交给页面；不用在每次点击后手动寻找和修改每个 DOM 节点。",
+      "单向数据流指数据通常从父组件传给子组件。Virtual DOM 是描述 UI 的内存表示，协调过程比较前后结果；它不保证任何场景都比手写 DOM 更快。",
+      "React 核心聚焦 UI，完整应用还会组合路由、数据请求和后端。课件“不能构建完整应用”应理解为核心库不包办所有功能；SSR 也是可支持的方案，不是所有 React 页面自动在服务器渲染。"
+    ],
+    "takeaways": [
+      "state / props → render → 更新界面。",
+      "React 是 UI 库；浏览器、服务器与 Native 的运行环境要区分。"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "采用 React 的公司",
+    "section": "起源与采用情况：可跳过",
+    "priority": "skim",
+    "summary": "公司标志说明使用范围，不构成代码分析题需要背诵的清单。",
+    "explanation": [
+      "公司标志说明使用范围，不构成代码分析题需要背诵的清单。",
+      "本组解释 React 的起源与使用它的公司。按教授说明不需要记发展时间、发明者或公司名单。",
+      "可以保留动机：页面交互变多后，用组件和数据流组织代码有助于管理复杂 UI。"
+    ],
+    "takeaways": [
+      "理解问题背景即可，不背历史。"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "React 特性",
+    "section": "React：用状态描述界面",
+    "priority": "core",
+    "summary": "单向数据流、JSX、虚拟 UI 表示和 SSR 支持各有分工；SSR 不是每个 React 页面默认启用。",
+    "explanation": [
+      "单向数据流、JSX、虚拟 UI 表示和 SSR 支持各有分工；SSR 不是每个 React 页面默认启用。",
+      "React 的核心工作是把组件的输入映射为 UI。你写“当前数据应显示什么”，React 在重新渲染后把必要变化提交给页面；不用在每次点击后手动寻找和修改每个 DOM 节点。",
+      "单向数据流指数据通常从父组件传给子组件。Virtual DOM 是描述 UI 的内存表示，协调过程比较前后结果；它不保证任何场景都比手写 DOM 更快。",
+      "React 核心聚焦 UI，完整应用还会组合路由、数据请求和后端。课件“不能构建完整应用”应理解为核心库不包办所有功能；SSR 也是可支持的方案，不是所有 React 页面自动在服务器渲染。"
+    ],
+    "takeaways": [
+      "state / props → render → 更新界面。",
+      "React 是 UI 库；浏览器、服务器与 Native 的运行环境要区分。"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "React 的设计原则",
+    "section": "React：用状态描述界面",
+    "priority": "core",
+    "summary": "把界面拆成组件，用数据描述结果；改变状态后让 React 处理界面同步。",
+    "explanation": [
+      "把界面拆成组件，用数据描述结果；改变状态后让 React 处理界面同步。",
+      "React 的核心工作是把组件的输入映射为 UI。你写“当前数据应显示什么”，React 在重新渲染后把必要变化提交给页面；不用在每次点击后手动寻找和修改每个 DOM 节点。",
+      "单向数据流指数据通常从父组件传给子组件。Virtual DOM 是描述 UI 的内存表示，协调过程比较前后结果；它不保证任何场景都比手写 DOM 更快。",
+      "React 核心聚焦 UI，完整应用还会组合路由、数据请求和后端。课件“不能构建完整应用”应理解为核心库不包办所有功能；SSR 也是可支持的方案，不是所有 React 页面自动在服务器渲染。"
+    ],
+    "takeaways": [
+      "state / props → render → 更新界面。",
+      "React 是 UI 库；浏览器、服务器与 Native 的运行环境要区分。"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "JSX 的写法",
+    "section": "JSX：JavaScript 里的 UI 表达式",
+    "priority": "core",
+    "summary": "className 是 JSX 属性，花括号里写 JavaScript 表达式；字符串属性与表达式值要区分。",
+    "explanation": [
+      "className 是 JSX 属性，花括号里写 JavaScript 表达式；字符串属性与表达式值要区分。",
+      "JSX 看起来像 HTML，但它是 JavaScript 的语法扩展，需要工具转换。`className` 对应 CSS 类；花括号中放表达式，例如变量、计算结果或函数调用。组件名首字母大写，用来区别内置标签。",
+      "课件把 JSX 转成 `React.createElement` 来解释原理；现代 JSX transform 也可能使用 jsx/jsxs。要掌握“创建元素描述”这层含义，不要认为所有编译结果必须长得一样。"
+    ],
+    "takeaways": [
+      "JSX 不是字符串，也不是浏览器原生 HTML 解析。",
+      "条件表达式可用三元运算；不能直接把 if 语句塞进 JSX 花括号。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "function Greeting({ name, unread }) {\n  return (\n    <p className=\"greeting\">\n      Hi {name}，{unread > 0 ? `${unread} 条未读` : '没有新消息'}\n    </p>\n  );\n}\n// <Greeting name=\"Derek\" unread={2} />",
+      "explanation": "渲染出的文字是“Hi Derek，2 条未读”。unread={2} 传数字；unread=\"2\" 传字符串。JSX 花括号切换回 JS 表达式。"
+    },
+    "question": {
+      "prompt": "title=\"count\" 与 title={count} 有什么不同？",
+      "answer": "前者传入固定字符串 count；后者计算变量 count 的当前值作为属性。"
+    }
+  },
+  {
+    "page": 9,
+    "title": "JSX 转换原理",
+    "section": "JSX：JavaScript 里的 UI 表达式",
+    "priority": "core",
+    "summary": "createElement 示例说明 JSX 会转成创建元素描述的 JS；现代转换工具也可能生成 jsx/jsxs。",
+    "explanation": [
+      "createElement 示例说明 JSX 会转成创建元素描述的 JS；现代转换工具也可能生成 jsx/jsxs。",
+      "JSX 看起来像 HTML，但它是 JavaScript 的语法扩展，需要工具转换。`className` 对应 CSS 类；花括号中放表达式，例如变量、计算结果或函数调用。组件名首字母大写，用来区别内置标签。",
+      "课件把 JSX 转成 `React.createElement` 来解释原理；现代 JSX transform 也可能使用 jsx/jsxs。要掌握“创建元素描述”这层含义，不要认为所有编译结果必须长得一样。"
+    ],
+    "takeaways": [
+      "JSX 不是字符串，也不是浏览器原生 HTML 解析。",
+      "条件表达式可用三元运算；不能直接把 if 语句塞进 JSX 花括号。"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "从页面识别组件",
+    "section": "组件与 props：谁拥有数据，谁负责修改",
+    "priority": "core",
+    "summary": "导航、列表、搜索框等可以划分为组件边界；边界应围绕可复用结构和状态职责。",
+    "explanation": [
+      "导航、列表、搜索框等可以划分为组件边界；边界应围绕可复用结构和状态职责。",
+      "组件是可以重复使用的 UI 单元；同一个 Welcome 组件接收不同 name，就显示不同名字。props 是父组件给的输入，子组件不应直接改它；需要修改时，通过回调请拥有数据的父组件更新 state。",
+      "函数组件现在可以通过 Hooks 使用 state。课件“函数组件无状态、类组件有状态”是旧分类，不能作为现代 React 的规则。共享状态应放在共同父组件，让多个子组件得到同一份数据。"
+    ],
+    "takeaways": [
+      "props 向下传；事件回调把修改请求传回数据拥有者。",
+      "state 传给孩子后，在孩子眼中就是 props。"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "函数与类组件",
+    "section": "组件与 props：谁拥有数据，谁负责修改",
+    "priority": "core",
+    "summary": "组件接受输入并返回界面描述。类组件通过 render，函数组件通过函数返回值描述 UI。",
+    "explanation": [
+      "组件接受输入并返回界面描述。类组件通过 render，函数组件通过函数返回值描述 UI。",
+      "组件是可以重复使用的 UI 单元；同一个 Welcome 组件接收不同 name，就显示不同名字。props 是父组件给的输入，子组件不应直接改它；需要修改时，通过回调请拥有数据的父组件更新 state。",
+      "函数组件现在可以通过 Hooks 使用 state。课件“函数组件无状态、类组件有状态”是旧分类，不能作为现代 React 的规则。共享状态应放在共同父组件，让多个子组件得到同一份数据。"
+    ],
+    "takeaways": [
+      "props 向下传；事件回调把修改请求传回数据拥有者。",
+      "state 传给孩子后，在孩子眼中就是 props。"
+    ]
+  },
+  {
+    "page": 12,
+    "title": "旧分类的限制",
+    "section": "组件与 props：谁拥有数据，谁负责修改",
+    "priority": "core",
+    "summary": "“函数组件无状态”是早期教材说法；现代函数组件可以用 useState 等 Hooks 管理状态。",
+    "explanation": [
+      "“函数组件无状态”是早期教材说法；现代函数组件可以用 useState 等 Hooks 管理状态。",
+      "组件是可以重复使用的 UI 单元；同一个 Welcome 组件接收不同 name，就显示不同名字。props 是父组件给的输入，子组件不应直接改它；需要修改时，通过回调请拥有数据的父组件更新 state。",
+      "函数组件现在可以通过 Hooks 使用 state。课件“函数组件无状态、类组件有状态”是旧分类，不能作为现代 React 的规则。共享状态应放在共同父组件，让多个子组件得到同一份数据。"
+    ],
+    "takeaways": [
+      "props 向下传；事件回调把修改请求传回数据拥有者。",
+      "state 传给孩子后，在孩子眼中就是 props。"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "Welcome 的 props",
+    "section": "组件与 props：谁拥有数据，谁负责修改",
+    "priority": "core",
+    "summary": "同一组件分别收到 Sara、Cahal、Edite 等 name 时，各自显示相应输入；组件代码无需复制。",
+    "explanation": [
+      "同一组件分别收到 Sara、Cahal、Edite 等 name 时，各自显示相应输入；组件代码无需复制。",
+      "组件是可以重复使用的 UI 单元；同一个 Welcome 组件接收不同 name，就显示不同名字。props 是父组件给的输入，子组件不应直接改它；需要修改时，通过回调请拥有数据的父组件更新 state。",
+      "函数组件现在可以通过 Hooks 使用 state。课件“函数组件无状态、类组件有状态”是旧分类，不能作为现代 React 的规则。共享状态应放在共同父组件，让多个子组件得到同一份数据。"
+    ],
+    "takeaways": [
+      "props 向下传；事件回调把修改请求传回数据拥有者。",
+      "state 传给孩子后，在孩子眼中就是 props。"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "Clock 类的初始化",
+    "section": "State：每次渲染看到一份快照",
+    "priority": "core",
+    "summary": "constructor 调用 super(props)，this.state 保存初始 date；render 用当前状态构造时间显示。",
+    "explanation": [
+      "constructor 调用 super(props)，this.state 保存初始 date；render 用当前状态构造时间显示。",
+      "类组件通过 constructor / this.state 初始化，通过 setState 请求更新；函数组件通过 useState 获得当前值与 setter。直接给 state 对象赋值，不会按正常方式通知 React 重新渲染。",
+      "更新请求不会立即改掉当前事件处理函数读到的 state。依赖前一次结果时，传 updater 函数，让 React 按队列计算。两次 `setCount(count+1)` 都使用同一个快照值；两次 `setCount(n=>n+1)` 则连续加两次。",
+      "类的 setState 对对象作浅合并；Hook 的 setter 替换该状态值。所以更新 Hook 对象的一个字段时，通常用 `{...prev, field:newValue}` 保留其他字段。数组和对象也应创建新值，不直接原地修改。"
+    ],
+    "takeaways": [
+      "读代码先标出此次 render 的 state 值，再处理更新队列。",
+      "类 setState 浅合并；useState setter 替换值。"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "setState 与状态更新",
+    "section": "State：每次渲染看到一份快照",
+    "priority": "core",
+    "summary": "setState 请求更新而非立即改当前快照；类组件浅合并对象，Hook setter 则替换对应状态值。",
+    "explanation": [
+      "setState 请求更新而非立即改当前快照；类组件浅合并对象，Hook setter 则替换对应状态值。",
+      "类组件通过 constructor / this.state 初始化，通过 setState 请求更新；函数组件通过 useState 获得当前值与 setter。直接给 state 对象赋值，不会按正常方式通知 React 重新渲染。",
+      "更新请求不会立即改掉当前事件处理函数读到的 state。依赖前一次结果时，传 updater 函数，让 React 按队列计算。两次 `setCount(count+1)` 都使用同一个快照值；两次 `setCount(n=>n+1)` 则连续加两次。",
+      "类的 setState 对对象作浅合并；Hook 的 setter 替换该状态值。所以更新 Hook 对象的一个字段时，通常用 `{...prev, field:newValue}` 保留其他字段。数组和对象也应创建新值，不直接原地修改。"
+    ],
+    "takeaways": [
+      "读代码先标出此次 render 的 state 值，再处理更新队列。",
+      "类 setState 浅合并；useState setter 替换值。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "import { useState } from 'react';\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n  function addTwo() {\n    setCount(n => n + 1);\n    setCount(n => n + 1);\n    console.log(count);\n  }\n  return <button onClick={addTwo}>{count}</button>;\n}",
+      "explanation": "初始 0，第一次点击日志仍是 0；随后界面显示 2。若两行都改成 setCount(count+1)，第一次点击后界面是 1，因为两次都请求设置为 0+1。"
+    },
+    "question": {
+      "prompt": "初始 n=5，同一事件中调用两次 setN(n+1)，与两次 setN(v=>v+1) 各得到多少？",
+      "answer": "前者得到 6；后者得到 7。前者两次都读取本次渲染快照 5，后者依次处理更新队列。"
+    },
+    "links": [
+      {
+        "label": "React：State 是快照",
+        "url": "https://react.dev/learn/state-as-a-snapshot"
+      },
+      {
+        "label": "React：类组件 setState",
+        "url": "https://react.dev/reference/react/Component"
+      }
+    ]
+  },
+  {
+    "page": 16,
+    "title": "State 与 props 的关系",
+    "section": "组件与 props：谁拥有数据，谁负责修改",
+    "priority": "core",
+    "summary": "父组件保存 state 并传给孩子，孩子把它看作 props；改变共享数据要回到拥有者处理。",
+    "explanation": [
+      "父组件保存 state 并传给孩子，孩子把它看作 props；改变共享数据要回到拥有者处理。",
+      "组件是可以重复使用的 UI 单元；同一个 Welcome 组件接收不同 name，就显示不同名字。props 是父组件给的输入，子组件不应直接改它；需要修改时，通过回调请拥有数据的父组件更新 state。",
+      "函数组件现在可以通过 Hooks 使用 state。课件“函数组件无状态、类组件有状态”是旧分类，不能作为现代 React 的规则。共享状态应放在共同父组件，让多个子组件得到同一份数据。"
+    ],
+    "takeaways": [
+      "props 向下传；事件回调把修改请求传回数据拥有者。",
+      "state 传给孩子后，在孩子眼中就是 props。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "import { useState } from 'react';\nfunction CounterButton({ count, onAdd }) {\n  return <button onClick={onAdd}>数量：{count}</button>;\n}\nexport default function Cart() {\n  const [count, setCount] = useState(0);\n  return <CounterButton count={count}\n    onAdd={() => setCount(n => n + 1)} />;\n}",
+      "explanation": "Cart 拥有 count；CounterButton 只显示 props 并报告点击。每次点击最终加 1。onClick={onAdd} 传函数，onClick={onAdd()} 会在渲染时立即调用，含义不同。"
+    },
+    "question": {
+      "prompt": "两个兄弟组件要同步显示同一个数量，应各自保存一份 state 吗？",
+      "answer": "通常把 state 提升到共同父组件，再把值与回调传给两个孩子，避免两份状态不同步。"
+    },
+    "links": [
+      {
+        "label": "React：组件、事件与共享状态",
+        "url": "https://react.dev/learn"
+      }
+    ]
+  },
+  {
+    "page": 17,
+    "title": "生命周期图",
+    "section": "生命周期与 Effect：建立连接，也负责清理",
+    "priority": "core",
+    "summary": "区分挂载、更新、卸载；图中部分 Will 系列方法已过时，新代码要重视建立外部连接后的清理。",
+    "explanation": [
+      "区分挂载、更新、卸载；图中部分 Will 系列方法已过时，新代码要重视建立外部连接后的清理。",
+      "类组件通常按 mount → update → unmount 理解：componentDidMount 可建立订阅，componentDidUpdate 响应变化，componentWillUnmount 清理。课件图中的 componentWillMount / WillReceiveProps / WillUpdate 是旧生命周期，不建议新代码照写。",
+      "函数组件用 Effect 与外部系统同步。依赖改变时先清理上一次 Effect，再运行新的；组件移除时也清理。Effect 并不是把类生命周期方法逐个改名，render 本身应保持纯粹。",
+      "空依赖数组表示 Effect 不依赖会变化的组件值；开发环境 Strict Mode 可能额外执行一轮 setup → cleanup 检查，因此“绝对只运行一次”不是可靠表述。"
+    ],
+    "takeaways": [
+      "定时器、事件监听、订阅要成对清理。",
+      "依赖数组决定 Effect 何时重新同步。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "import { useEffect, useState } from 'react';\nexport default function Clock() {\n  const [now, setNow] = useState(() => new Date());\n  useEffect(() => {\n    const id = setInterval(() => setNow(new Date()), 1000);\n    return () => clearInterval(id);\n  }, []);\n  return <time>{now.toLocaleTimeString()}</time>;\n}",
+      "explanation": "挂载后创建计时器，每秒请求更新 now；卸载时 clearInterval，避免组件消失后还继续工作。JSX 显示的是 state，不是定时器直接改 DOM。"
+    },
+    "question": {
+      "prompt": "为什么不能只 setInterval 而不在 Effect 中返回清理函数？",
+      "answer": "组件卸载或 Effect 重建后，旧计时器仍可能继续运行，导致重复工作和资源泄漏。清理函数负责撤销之前建立的外部连接。"
+    },
+    "links": [
+      {
+        "label": "React：useEffect 与清理",
+        "url": "https://react.dev/reference/react/useEffect"
+      }
+    ]
+  },
+  {
+    "page": 18,
+    "title": "快速入门主题",
+    "section": "State：每次渲染看到一份快照",
+    "priority": "core",
+    "summary": "条件渲染、列表、事件和共享状态贯穿组件代码；列表 key 用稳定身份帮助匹配，不能靠索引掩盖重排。",
+    "explanation": [
+      "条件渲染、列表、事件和共享状态贯穿组件代码；列表 key 用稳定身份帮助匹配，不能靠索引掩盖重排。",
+      "类组件通过 constructor / this.state 初始化，通过 setState 请求更新；函数组件通过 useState 获得当前值与 setter。直接给 state 对象赋值，不会按正常方式通知 React 重新渲染。",
+      "更新请求不会立即改掉当前事件处理函数读到的 state。依赖前一次结果时，传 updater 函数，让 React 按队列计算。两次 `setCount(count+1)` 都使用同一个快照值；两次 `setCount(n=>n+1)` 则连续加两次。",
+      "类的 setState 对对象作浅合并；Hook 的 setter 替换该状态值。所以更新 Hook 对象的一个字段时，通常用 `{...prev, field:newValue}` 保留其他字段。数组和对象也应创建新值，不直接原地修改。"
+    ],
+    "takeaways": [
+      "读代码先标出此次 render 的 state 值，再处理更新队列。",
+      "类 setState 浅合并；useState setter 替换值。"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "React Bootstrap 概览",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "React 组件封装 Bootstrap 风格的界面；库版本与 Bootstrap CSS 版本要匹配。",
+    "explanation": [
+      "React 组件封装 Bootstrap 风格的界面；库版本与 Bootstrap CSS 版本要匹配。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "为什么重写 Bootstrap JS",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "React Bootstrap 用组件状态管理交互，避免另一个脚本直接修改 React 正在管理的 DOM。",
+    "explanation": [
+      "React Bootstrap 用组件状态管理交互，避免另一个脚本直接修改 React 正在管理的 DOM。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "npm 安装组件库",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "安装 react-bootstrap 与 bootstrap 提供包文件，应用仍需导入组件并加载 Bootstrap CSS。",
+    "explanation": [
+      "安装 react-bootstrap 与 bootstrap 提供包文件，应用仍需导入组件并加载 Bootstrap CSS。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "通过 CDN 加载 CSS",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "样式可以由外链加载；CSS 只改变外观，不会自动实现 React 状态和事件处理。",
+    "explanation": [
+      "样式可以由外链加载；CSS 只改变外观，不会自动实现 React 状态和事件处理。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "按组件导入",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "单独导入 Button 能明确依赖；把 Button 写成 JSX 后，行为由其 props 与事件回调决定。",
+    "explanation": [
+      "单独导入 Button 能明确依赖；把 Button 写成 JSX 后，行为由其 props 与事件回调决定。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "原始 Bootstrap Alert",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "旧 HTML 使用 class 和 data-dismiss 配合脚本实现关闭；这与 React 的状态驱动组件不同。",
+    "explanation": [
+      "旧 HTML 使用 class 和 data-dismiss 配合脚本实现关闭；这与 React 的状态驱动组件不同。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "React Alert",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "variant 决定提示风格，dismissible 给出关闭控件，onClose 更新应用状态以控制显示。",
+    "explanation": [
+      "variant 决定提示风格，dismissible 给出关闭控件，onClose 更新应用状态以控制显示。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "// React 项目中先安装 react-bootstrap 和 bootstrap\nimport { useState } from 'react';\nimport Alert from 'react-bootstrap/Alert';\nimport Button from 'react-bootstrap/Button';\nimport 'bootstrap/dist/css/bootstrap.min.css';\nexport default function Notice() {\n  const [show, setShow] = useState(true);\n  return show ? (\n    <Alert variant=\"success\" dismissible onClose={() => setShow(false)}>\n      保存成功\n    </Alert>\n  ) : <Button onClick={() => setShow(true)}>再显示</Button>;\n}",
+      "explanation": "开始显示绿色提示；点击关闭，把 show 设为 false，改为显示按钮。按钮把 show 设回 true。不是手动删除 DOM 后希望 React 猜到变化。"
+    },
+    "question": {
+      "prompt": "Alert 的 dismissible 和 onClose={() => setShow(false)} 分别做什么？",
+      "answer": "dismissible 提供关闭按钮；onClose 处理关闭动作并修改应用状态。条件渲染根据 show 决定是否继续显示 Alert。"
+    },
+    "links": [
+      {
+        "label": "React Bootstrap：安装与 CSS",
+        "url": "https://react-bootstrap.github.io/docs/getting-started/introduction/"
+      }
+    ]
+  },
+  {
+    "page": 26,
+    "title": "组件文档目录",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "按钮、表单、导航等都可复用；学会读 props 与事件比背组件名称更有用。",
+    "explanation": [
+      "按钮、表单、导航等都可复用；学会读 props 与事件比背组件名称更有用。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "组件与状态控制",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "状态拥有者把值传给 UI 组件，交互事件再请求改变状态，这是整套组件库的共同用法。",
+    "explanation": [
+      "状态拥有者把值传给 UI 组件，交互事件再请求改变状态，这是整套组件库的共同用法。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "组合组件示例",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "Container、Button、Toast 等可以组合；课件 Jumbotron 属旧 API，不能直接假定当前版本仍提供。",
+    "explanation": [
+      "Container、Button、Toast 等可以组合；课件 Jumbotron 属旧 API，不能直接假定当前版本仍提供。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "React Bootstrap 参考",
+    "section": "React Bootstrap：状态控制组件行为",
+    "priority": "core",
+    "summary": "遇到导入路径、props 或版本差异时查对应官方文档；不必记住本页网址列表。",
+    "explanation": [
+      "遇到导入路径、props 或版本差异时查对应官方文档；不必记住本页网址列表。",
+      "React Bootstrap 用 React 组件重写 Bootstrap 的交互行为，避免一边用 React 管理 UI、一边又用 Bootstrap JS 手动改同一块 DOM。样式仍需要 Bootstrap CSS。",
+      "课件先展示原始 alert 的 class / data-dismiss，再展示 `<Alert variant=\"danger\" dismissible>`。variant 是外观，dismissible 提供关闭控件；应用通常还需要在 onClose 中更新状态，决定是否继续渲染。",
+      "导入 Button、Alert 等组件即可按 props 使用。课件中的 Jumbotron 等 API 属于旧版本示例，不保证在当前版本存在；重点理解组件组合和受控状态，不背完整组件清单。"
+    ],
+    "takeaways": [
+      "安装组件库不等于已经加载 CSS。",
+      "把 UI 是否出现写成状态条件。"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "React Native 主题",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "从浏览器转到移动平台后，React 的组件思想仍可用，但宿主 UI 元素不同。",
+    "explanation": [
+      "从浏览器转到移动平台后，React 的组件思想仍可用，但宿主 UI 元素不同。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 31,
+    "title": "DOM 与 Native 渲染",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "React DOM 面向浏览器节点，React Native 面向平台组件；渲染目标决定可使用的标签和能力。",
+    "explanation": [
+      "React DOM 面向浏览器节点，React Native 面向平台组件；渲染目标决定可使用的标签和能力。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "Native 架构示意",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "课件引擎与桥接图是特定架构示意；不要把 JavaScriptCore 和旧 bridge 当成所有版本的固定配置。",
+    "explanation": [
+      "课件引擎与桥接图是特定架构示意；不要把 JavaScriptCore 和旧 bridge 当成所有版本的固定配置。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "React 与 React Native",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "前者提供 UI 组件模型，后者面向原生平台；Node 常用于开发工具，并不是手机 UI 的 DOM 渲染器。",
+    "explanation": [
+      "前者提供 UI 组件模型，后者面向原生平台；Node 常用于开发工具，并不是手机 UI 的 DOM 渲染器。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "Native 核心组件",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "View 是容器，Text 显示文字，Image 显示图像，TextInput 收集输入，ScrollView 提供可滚动区域。",
+    "explanation": [
+      "View 是容器，Text 显示文字，Image 显示图像，TextInput 收集输入，ScrollView 提供可滚动区域。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "Native 样式",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "样式用 JS 对象与 camelCase 属性；fontSize:18 不等于浏览器 CSS 规则字符串。",
+    "explanation": [
+      "样式用 JS 对象与 camelCase 属性；fontSize:18 不等于浏览器 CSS 规则字符串。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "安装环境的旧要求",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "课件列出的环境版本是当时要求，不应继续照抄旧 Node 版本安装；配置细节按当前项目查阅。",
+    "explanation": [
+      "课件列出的环境版本是当时要求，不应继续照抄旧 Node 版本安装；配置细节按当前项目查阅。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 37,
+    "title": "Expo Go 预览流程",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "开发服务器与设备建立连接后可用二维码打开项目；同一网络与正确连接地址会影响预览是否成功。",
+    "explanation": [
+      "开发服务器与设备建立连接后可用二维码打开项目；同一网络与正确连接地址会影响预览是否成功。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 38,
+    "title": "Expo 开发环境",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "Expo 帮助组织工具链和预览流程，但组件逻辑仍由 React 的 props、state 与事件驱动。",
+    "explanation": [
+      "Expo 帮助组织工具链和预览流程，但组件逻辑仍由 React 的 props、state 与事件驱动。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "Hello World Native 源码",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "View 包住 Text，构成原生界面的容器和文字；不是 HTML 的 div 与 p。",
+    "explanation": [
+      "View 包住 Text，构成原生界面的容器和文字；不是 HTML 的 div 与 p。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ],
+    "example": {
+      "lang": "jsx",
+      "code": "import { View, Text, StyleSheet } from 'react-native';\nexport default function Hello() {\n  return <View style={styles.page}>\n    <Text style={styles.title}>Hello Native</Text>\n  </View>;\n}\nconst styles = StyleSheet.create({\n  page: { flex: 1, alignItems: 'center', justifyContent: 'center' },\n  title: { fontSize: 18, fontWeight: 'bold', color: '#922636' }\n});",
+      "explanation": "在 React Native 项目中，View 占满可用区域并让 Text 居中。默认 flexDirection 为 column，因此 justifyContent 控制纵向主轴，alignItems 控制横向交叉轴。"
+    },
+    "question": {
+      "prompt": "React Native 的 View、Text 可以直接用 div、p 替换吗？",
+      "answer": "不可以。Native 不使用浏览器 DOM 标签；View 和 Text 对应平台组件。共享的是 React 组件与状态思路，不是所有 HTML/CSS。"
+    },
+    "links": [
+      {
+        "label": "React Native：核心组件与原生组件",
+        "url": "https://reactnative.dev/docs/intro-react-native-components"
+      }
+    ]
+  },
+  {
+    "page": 40,
+    "title": "Hello World 样式",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "flex:1 占用空间，alignItems 与 justifyContent 分别控制交叉轴和主轴对齐。",
+    "explanation": [
+      "flex:1 占用空间，alignItems 与 justifyContent 分别控制交叉轴和主轴对齐。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "iOS 与 Android 输出",
+    "section": "React Native：同一组件思想，不同宿主界面",
+    "priority": "core",
+    "summary": "同一 React Native 组件可以在两种平台显示对应原生 UI，具体细节仍可能受平台行为影响。",
+    "explanation": [
+      "同一 React Native 组件可以在两种平台显示对应原生 UI，具体细节仍可能受平台行为影响。",
+      "React DOM 把 React 组件渲染到浏览器 DOM；React Native 把它们映射到原生平台组件。不是把 HTML 网页塞进手机浏览器。逻辑可以复用，但 div、p、CSS 选择器不能原样搬过去。",
+      "常用组件有 View、Text、Image、TextInput、ScrollView。文字放在 Text 里面；样式是 JavaScript 对象，使用 camelCase，例如 backgroundColor。数字尺寸通常表达逻辑像素，不写成 \"18px\"。",
+      "课件的 JavaScriptCore / bridge 图描述特定旧架构，不代表所有现代 React Native 环境都使用同一个引擎和桥接方式。考试理解 JS 逻辑与平台渲染分工即可。"
+    ],
+    "takeaways": [
+      "React 是组件模型；DOM 与 Native 是不同渲染目标。",
+      "Native 样式类似 CSS，但不是完整浏览器 CSS。"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "Native 参考资料",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "文档用于查核心组件与平台差异，不需要背链接或工具安装步骤。",
+    "explanation": [
+      "文档用于查核心组件与平台差异，不需要背链接或工具安装步骤。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 43,
+    "title": "其他跨平台方案",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "Flutter、Xamarin 展示其他技术路线；先区分语言、运行方式与 UI 渲染目标，不背发展年份。",
+    "explanation": [
+      "Flutter、Xamarin 展示其他技术路线；先区分语言、运行方式与 UI 渲染目标，不背发展年份。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 44,
+    "title": "Ionic 与 Cordova",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "这些示例帮助理解基于 Web 技术和容器的移动方案，与 React Native 的原生组件渲染有所不同。",
+    "explanation": [
+      "这些示例帮助理解基于 Web 技术和容器的移动方案，与 React Native 的原生组件渲染有所不同。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  },
+  {
+    "page": 45,
+    "title": "生态热度图",
+    "section": "Expo、环境配置与其他工具：按需查阅",
+    "priority": "skim",
+    "summary": "热度与采用率会随时间变化，不用于推导程序输出，也不列入本版核心记忆。",
+    "explanation": [
+      "热度与采用率会随时间变化，不用于推导程序输出，也不列入本版核心记忆。",
+      "Expo 提供开发工具链；课件的 QR 码、同一局域网与刷新演示用于快速在设备上预览项目。环境版本要求会变，旧的 Node v6 等数字不应当作今天的安装要求。",
+      "Flutter、Xamarin、Ionic/Cordova 与热度图是生态对照。粗略区分：原生组件渲染与 WebView 承载网页是不同路线；不用记品牌发布时间、热度百分比或全部安装命令。"
+    ],
+    "takeaways": [
+      "工具用于运行和预览，不能替代对组件与状态的理解。",
+      "背景页可跳过，遇到实际配置问题再查对应版本文档。"
+    ]
+  }
+]

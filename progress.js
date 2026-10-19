@@ -29,7 +29,7 @@ export function createProgressStore({decks, labIds=[], storage, onError=()=>{}})
     const parts=route.split('/');
     if(parts[0]!=='#')return false;
     if(parts[1]==='deck')return parts.length===4&&validPage(`${parts[2]}:${parts[3]}`);
-    if(parts[1]==='interpretations')return parts.length===3&&counts.has(parts[2]);
+    if(parts[1]==='interpretations')return counts.has(parts[2])&&(parts.length===3||parts.length===4&&parts[3]==='full');
     return parts[1]==='lab'&&parts.length===3&&labIds.includes(parts[2]);
   };
   const validReading=value=>value&&validRoute(value.route)&&Number.isFinite(value.y)&&value.y>=0&&typeof value.title==='string'&&value.title.length<=300&&(!value.anchor||/^interpretation-(section-\d+|checklist)$/.test(value.anchor))&&Number.isFinite(value.offset)&&Array.isArray(value.open)&&value.open.length<=300&&value.open.every(n=>Number.isInteger(n)&&n>=0&&n<300);

@@ -1,0 +1,51 @@
+{
+  "id": "jsbasics",
+  "title": "JavaScript 基础 · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "作用域、类型与引用"
+  ],
+  "sections": [
+    {
+      "title": "作用域、类型与引用",
+      "pages": [
+        23,
+        24,
+        31,
+        32,
+        33,
+        34,
+        37,
+        38,
+        41,
+        42,
+        43
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "let/const 是块作用域，var 是函数作用域。const 限制绑定重新赋值，不会冻结对象。对象与数组赋给另一个变量后，两者可能指向同一对象。",
+        "函数是值：传 f 是传函数，写 f() 是立即调用。输入框的 value 是字符串，需要按题意转换成数值；空字符串、0、null、undefined 等是假值，但 []、{} 都是真值。"
+      ],
+      "takeaways": [
+        "先标注类型和引用关系，再推输出。",
+        "修改共享对象与把变量指向新对象是两种操作。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "const a = [1];\nconst b = a;\nb.push(2);\nconsole.log(a.length); // 2\nconst c = [...a];\nc.push(3);\nconsole.log(a.length, c.length); // 2 3",
+        "explanation": "a 和 b 共享同一个数组；c 是浅拷贝后的新数组。浅拷贝不会递归复制嵌套对象。"
+      },
+      "question": {
+        "prompt": "const obj={n:1}; obj.n=2 合法吗？obj={n:3} 呢？",
+        "answer": "前者合法：修改对象属性没有重绑变量。后者不合法：const 绑定不能被重新赋值。"
+      }
+    }
+  ],
+  "connections": [
+    "React state 更新需要创建新对象；Node 回调和中间件都依赖函数值。"
+  ],
+  "examChecklist": [
+    "const obj={n:1}; obj.n=2 合法吗？obj={n:3} 呢？"
+  ],
+  "compact": true
+}

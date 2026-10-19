@@ -1,0 +1,52 @@
+{
+  "id": "forms",
+  "title": "Forms 与 CGI · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "哪些值提交，提交到哪里"
+  ],
+  "sections": [
+    {
+      "title": "哪些值提交，提交到哪里",
+      "pages": [
+        4,
+        5,
+        6,
+        7,
+        18,
+        19,
+        20,
+        28,
+        37,
+        38,
+        42,
+        47
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "表单提交主要使用有 name、未 disabled 且满足提交条件的控件。未选中的 checkbox/radio 不提交；readonly 与 disabled 不同，readonly 的可提交字段通常仍会提交。id 不是提交字段名。",
+        "GET 通常把编码后字段放 URL query；POST 通常放请求体，Content-Type 说明编码格式。POST 本身不等于加密，传输保护依赖 HTTPS。CGI 是 Web 服务器与外部程序的接口：读取请求输入，输出响应头、空行和内容。"
+      ],
+      "takeaways": [
+        "字段是否出现与字段值是否为空要分开判断。",
+        "方法、输入位置、编码格式分别判断。"
+      ],
+      "example": {
+        "lang": "html",
+        "code": "<form method=\"get\" action=\"/search\">\n  <input name=\"q\" value=\"web tech\" readonly>\n  <input name=\"debug\" value=\"1\" disabled>\n  <input type=\"checkbox\" name=\"new\" value=\"yes\">\n  <button>搜索</button>\n</form>",
+        "explanation": "不勾复选框时，典型请求目标为 /search?q=web+tech。q 提交；debug 因 disabled 不提交；new 因未选中不提交。"
+      },
+      "question": {
+        "prompt": "例子中 readonly、disabled 和未勾选 checkbox 哪些值会提交？",
+        "answer": "q 会提交；debug 和 new 不提交。readonly 只限制编辑，disabled 排除提交，未选中的 checkbox 不产生该字段。"
+      }
+    }
+  ],
+  "connections": [
+    "Node 中 params、query、body 的区别来自这些请求输入位置。"
+  ],
+  "examChecklist": [
+    "例子中 readonly、disabled 和未勾选 checkbox 哪些值会提交？"
+  ],
+  "compact": true
+}

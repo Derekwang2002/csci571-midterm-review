@@ -1,100 +1,386 @@
 [
   {
+    "id": "responsive",
+    "file": "responsive.pdf",
+    "title": "Responsive Web Design",
+    "description": "视口、媒体查询、弹性布局与 Bootstrap 栅格",
+    "count": 59,
+    "phase": "new"
+  },
+  {
+    "id": "react",
+    "file": "React.pdf",
+    "title": "React",
+    "description": "组件、props/state、生命周期与 React Native",
+    "count": 45,
+    "phase": "new"
+  },
+  {
+    "id": "node",
+    "file": "Node.pdf",
+    "title": "Node.js",
+    "description": "异步 I/O、模块、HTTP 与后端路由",
+    "count": 35,
+    "phase": "new"
+  },
+  {
     "id": "intro",
     "file": "CourseIntro.pdf",
     "title": "课程导览",
     "description": "网站、浏览器与云计算",
-    "count": 36
+    "count": 36,
+    "phase": "foundation",
+    "corePages": [
+      7,
+      8,
+      9,
+      10,
+      17,
+      18,
+      23,
+      24,
+      25,
+      26
+    ],
+    "coreQuestion": {
+      "page": 8,
+      "prompt": "搜索页拿到 JSON 后由谁生成可见列表？云托管是否改变这一步？",
+      "answer": "在这种客户端渲染设计中由浏览器生成列表；云托管改变服务器运行位置或管理方式，不自动改变前后端分工。"
+    }
   },
   {
     "id": "web",
     "file": "internetwebbasics.pdf",
     "title": "Internet 与 Web",
-    "description": "基础架构、URL 与 Web 历史",
-    "count": 68
+    "description": "基础架构、URL 与请求响应",
+    "count": 68,
+    "phase": "foundation",
+    "corePages": [
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58
+    ],
+    "coreQuestion": {
+      "page": 56,
+      "prompt": "https://example.com/a 与 https://example.com/b#top 是否同源？fragment 会发给服务器吗？",
+      "answer": "同源：scheme、host、默认端口相同。路径和 fragment 不影响同源判断；fragment 不随通常的 HTTP 请求目标发送。"
+    }
   },
   {
     "id": "html",
     "file": "HTML.pdf",
     "title": "HTML",
     "description": "结构、链接、表格与媒体",
-    "count": 73
+    "count": 73,
+    "phase": "foundation",
+    "corePages": [
+      14,
+      15,
+      20,
+      21,
+      23,
+      24,
+      35,
+      36,
+      37,
+      42,
+      45,
+      58
+    ],
+    "coreQuestion": {
+      "page": 36,
+      "prompt": "例子第二行只有一个 td，为什么整张表仍是两列？",
+      "answer": "第一行 A 的 rowspan=2 已占用第二行第一列；第二行的 C 填在第二列。"
+    }
   },
   {
     "id": "css",
     "file": "HTMLStyleSheets.pdf",
     "title": "CSS",
     "description": "选择器、层叠与盒模型",
-    "count": 75
+    "count": 75,
+    "phase": "foundation",
+    "corePages": [
+      18,
+      19,
+      20,
+      26,
+      27,
+      28,
+      39,
+      40,
+      41,
+      53,
+      54
+    ],
+    "coreQuestion": {
+      "page": 39,
+      "prompt": "默认 content-box，width:200px、左右 padding 各10px、左右 border 各2px，边框盒多宽？改为 border-box 呢？",
+      "answer": "前者 224px；后者 200px。margin 不包含在这两个边框盒数值中。"
+    }
   },
   {
     "id": "jsbasics",
     "file": "jsbasics.pdf",
     "title": "JavaScript 基础",
     "description": "类型、作用域、数组与函数",
-    "count": 53
+    "count": 53,
+    "phase": "foundation",
+    "corePages": [
+      23,
+      24,
+      31,
+      32,
+      33,
+      34,
+      37,
+      38,
+      41,
+      42,
+      43
+    ],
+    "coreQuestion": {
+      "page": 32,
+      "prompt": "const obj={n:1}; obj.n=2 合法吗？obj={n:3} 呢？",
+      "answer": "前者合法：修改对象属性没有重绑变量。后者不合法：const 绑定不能被重新赋值。"
+    }
   },
   {
     "id": "json",
     "file": "json.pdf",
     "title": "JSON",
     "description": "数据交换、解析与同源策略",
-    "count": 55
+    "count": 55,
+    "phase": "foundation",
+    "corePages": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      15,
+      19,
+      22,
+      32
+    ],
+    "coreQuestion": {
+      "page": 22,
+      "prompt": "{\"ok\":true,} 是合法 JSON 吗？JSON.parse 与 stringify 分别向哪个方向转换？",
+      "answer": "不是，末尾多了逗号。parse：JSON 文本 → JS 值；stringify：JS 值 → JSON 文本，部分值可能丢失或被替换。"
+    }
   },
   {
     "id": "python",
     "file": "python.pdf",
     "title": "Python 与后端",
     "description": "语言基础、Flask 与 Web 框架",
-    "count": 82
+    "count": 82,
+    "phase": "foundation",
+    "corePages": [
+      9,
+      10,
+      23,
+      26,
+      39,
+      40,
+      46,
+      47,
+      58,
+      59,
+      65
+    ],
+    "coreQuestion": {
+      "page": 40,
+      "prompt": "为什么 def add(x, items=[]) 可能让两次调用的结果串在一起？",
+      "answer": "默认列表在函数定义时创建，后续省略该参数的调用复用同一对象。用 None 作为默认值，在每次调用内部创建新列表可避免此共享。"
+    }
   },
   {
     "id": "dom",
     "file": "dom.pdf",
     "title": "DOM",
     "description": "节点树、查询、遍历与修改",
-    "count": 50
+    "count": 50,
+    "phase": "foundation",
+    "corePages": [
+      5,
+      6,
+      7,
+      11,
+      12,
+      19,
+      20,
+      25,
+      27,
+      28,
+      29,
+      30
+    ],
+    "coreQuestion": {
+      "page": 7,
+      "prompt": "把已有 li appendChild 到另一个 ul 后，原 ul 中还会留一份吗？",
+      "answer": "不会，已有节点被移动；只有显式克隆才会得到另一个节点。"
+    }
   },
   {
     "id": "forms",
     "file": "FormsAndCGIMechanism.pdf",
     "title": "Forms 与 CGI",
     "description": "表单提交与服务器交互",
-    "count": 55
+    "count": 55,
+    "phase": "foundation",
+    "corePages": [
+      4,
+      5,
+      6,
+      7,
+      18,
+      19,
+      20,
+      28,
+      37,
+      38,
+      42,
+      47
+    ],
+    "coreQuestion": {
+      "page": 6,
+      "prompt": "例子中 readonly、disabled 和未勾选 checkbox 哪些值会提交？",
+      "answer": "q 会提交；debug 和 new 不提交。readonly 只限制编辑，disabled 排除提交，未选中的 checkbox 不产生该字段。"
+    }
   },
   {
     "id": "vibe",
     "file": "CSCI571_Vibe_Coding.pdf",
     "title": "Vibe Coding",
     "description": "提示、测试、调试与迭代",
-    "count": 43
+    "count": 43,
+    "phase": "foundation",
+    "corePages": [
+      2,
+      5,
+      21,
+      24,
+      25,
+      28,
+      29,
+      38,
+      39,
+      41,
+      43
+    ],
+    "coreQuestion": {
+      "page": 5,
+      "prompt": "AI 生成的温度转换器在 0℃ 时显示 32℉，能说明程序正确了吗？",
+      "answer": "不能。还应测试 100、负数、空值、非数字等，以及交互和错误提示；单个样例通过不足以证明所有行为正确。"
+    }
   },
   {
     "id": "ai",
     "file": "AIbasics.pdf",
     "title": "AI Basics",
     "description": "AI 概念、协作与编码原则",
-    "count": 64
+    "count": 64,
+    "phase": "foundation",
+    "corePages": [
+      6,
+      32,
+      33,
+      34,
+      35,
+      38,
+      39,
+      40,
+      41,
+      57,
+      58,
+      59,
+      60
+    ],
+    "coreQuestion": {
+      "page": 38,
+      "prompt": "模型说“我已经保存文件”与文件真的保存成功之间，缺少什么证据？",
+      "answer": "需要实际写入动作及成功结果，必要时读取文件确认内容。语言输出本身不是外部状态已改变的证明。"
+    }
   },
   {
     "id": "jsadvanced",
     "file": "jsadvanced.pdf",
     "title": "JavaScript 进阶",
     "description": "浏览器对象、转换与正则",
-    "count": 63
+    "count": 63,
+    "phase": "foundation",
+    "corePages": [
+      26,
+      27,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      63
+    ],
+    "coreQuestion": {
+      "page": 50,
+      "prompt": "为什么同一个 /a/g 连续两次 test(\"a\") 得到 true、false？",
+      "answer": "全局正则维护 lastIndex。第一次成功后位置为 1，第二次从那里继续找不到 a；不能把它当成每次都从头的无状态判断。"
+    }
   },
   {
     "id": "http",
     "file": "HTTPProtocol.pdf",
     "title": "HTTP 与网络",
     "description": "报文、缓存、寻址与子网",
-    "count": 89
+    "count": 89,
+    "phase": "foundation",
+    "corePages": [
+      23,
+      24,
+      25,
+      26,
+      31,
+      32,
+      33,
+      38,
+      40,
+      42,
+      43,
+      49,
+      50,
+      51,
+      54,
+      63,
+      64,
+      65,
+      66,
+      71,
+      72,
+      73,
+      74
+    ],
+    "coreQuestion": {
+      "page": 71,
+      "prompt": "192.168.1.70/26 的网络地址、广播地址和普通可用主机数分别是多少？",
+      "answer": "网络地址 192.168.1.64，广播地址 192.168.1.127；普通可用主机数 2^6−2=62。"
+    }
   },
   {
     "id": "syllabus",
     "file": "CSCI571_syllabus_Fall_2026_v3.pdf",
     "title": "考试与课程安排",
     "description": "范围依据、评分与考试要求",
-    "count": 10
+    "count": 10,
+    "phase": "admin"
   }
 ]

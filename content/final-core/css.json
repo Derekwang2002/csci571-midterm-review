@@ -1,0 +1,51 @@
+{
+  "id": "css",
+  "title": "CSS · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "先匹配，再层叠；再计算盒子"
+  ],
+  "sections": [
+    {
+      "title": "先匹配，再层叠；再计算盒子",
+      "pages": [
+        18,
+        19,
+        20,
+        26,
+        27,
+        28,
+        39,
+        40,
+        41,
+        53,
+        54
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "先判断选择器是否匹配，再在适用声明中比较层叠。相同来源、重要性和层的普通规则下，通常按 ID、class/attribute/pseudo-class、元素三档比较 specificity；相同再看后写者。继承只在属性适用时补值，不等于父元素选择器权重与子元素直接规则竞争。",
+        "content-box 的 width 只指内容区；border-box 的 width 包含 padding 与 border，不含 margin。relative 保留原位置；absolute 脱离普通流，并根据包含块定位。"
+      ],
+      "takeaways": [
+        "!important 不是简单给 specificity 加分。",
+        "计算外占宽度时分清 width 的盒子范围。"
+      ],
+      "example": {
+        "lang": "css",
+        "code": "#note { color: red; }\n.note { color: blue; }\n.box { width: 200px; padding: 10px; border: 2px solid; }\n/* <p id=\"note\" class=\"note\">Hi</p> */",
+        "explanation": "同层同来源普通声明下文字是红色。box 默认 content-box，边框盒宽 200+20+4=224px；改成 border-box 则边框盒宽200px，内容区宽176px。"
+      },
+      "question": {
+        "prompt": "默认 content-box，width:200px、左右 padding 各10px、左右 border 各2px，边框盒多宽？改为 border-box 呢？",
+        "answer": "前者 224px；后者 200px。margin 不包含在这两个边框盒数值中。"
+      }
+    }
+  ],
+  "connections": [
+    "新增响应式内容还要在层叠前判断 @media 条件是否成立。"
+  ],
+  "examChecklist": [
+    "默认 content-box，width:200px、左右 padding 各10px、左右 border 各2px，边框盒多宽？改为 border-box 呢？"
+  ],
+  "compact": true
+}

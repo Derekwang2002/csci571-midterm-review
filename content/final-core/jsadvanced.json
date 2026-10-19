@@ -1,0 +1,55 @@
+{
+  "id": "jsadvanced",
+  "title": "JavaScript 进阶 · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "转换、比较与正则返回值"
+  ],
+  "sections": [
+    {
+      "title": "转换、比较与正则返回值",
+      "pages": [
+        26,
+        27,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        63
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "+ 可能做字符串连接，其它数值运算通常触发数值转换；=== 不做类型转换，对象比较看引用身份。传入对象时共享其引用值：修改属性能被外部看到，给参数重新赋值则不会重绑外部变量。",
+        "正则 test 返回布尔值，exec 返回匹配结果或 null；捕获组可用于读取与替换。带 g/y 的正则有 lastIndex 状态，重复 test 不一定得到相同结果。闭包保留对词法环境的访问，不是复制一张永久冻结的变量快照。"
+      ],
+      "takeaways": [
+        "先写类型，再推运算。",
+        "正则题要看 flags、捕获组和调用次数。"
+      ],
+      "example": {
+        "lang": "js",
+        "code": "console.log('5' + 1);     // \"51\"\nconsole.log('5' - 1);     // 4\nconsole.log(5 === '5');   // false\nconsole.log({} === {});   // false\nconst re = /a/g;\nconsole.log(re.test('a'), re.test('a')); // true false",
+        "explanation": "第二次 test 从上次成功后的 lastIndex=1 开始，因此在长度 1 的字符串中失败；失败后 lastIndex 会复位。"
+      },
+      "question": {
+        "prompt": "为什么同一个 /a/g 连续两次 test(\"a\") 得到 true、false？",
+        "answer": "全局正则维护 lastIndex。第一次成功后位置为 1，第二次从那里继续找不到 a；不能把它当成每次都从头的无状态判断。"
+      }
+    }
+  ],
+  "connections": [
+    "Node 的输入验证与 React 的事件处理都会遇到类型和闭包问题。"
+  ],
+  "examChecklist": [
+    "为什么同一个 /a/g 连续两次 test(\"a\") 得到 true、false？"
+  ],
+  "compact": true
+}

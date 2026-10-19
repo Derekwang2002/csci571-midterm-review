@@ -1,0 +1,52 @@
+{
+  "id": "html",
+  "title": "HTML · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "结构与属性：源码最终成为 DOM"
+  ],
+  "sections": [
+    {
+      "title": "结构与属性：源码最终成为 DOM",
+      "pages": [
+        14,
+        15,
+        20,
+        21,
+        23,
+        24,
+        35,
+        36,
+        37,
+        42,
+        45,
+        58
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "HTML 表达语义结构，CSS 决定主要外观，JS 添加行为。id 应在文档内唯一，class 可共享；浏览器可能修复无效嵌套，因此原始源码不一定与最终 DOM 完全一致。",
+        "表格按“网格位置”读：colspan 横跨列，rowspan 纵跨行，被占的位置下一行不要重复补格。实体 &lt; 显示 <，不是开始新标签；img 的 alt 描述内容，src 指向资源。"
+      ],
+      "takeaways": [
+        "标签、属性、文本是不同部分。",
+        "合并单元格后数逻辑列数，不只数 td 标签。"
+      ],
+      "example": {
+        "lang": "html",
+        "code": "<table border=\"1\">\n  <tr><th rowspan=\"2\">A</th><td>B</td></tr>\n  <tr><td>C</td></tr>\n</table>",
+        "explanation": "总计两列：左侧 A 占两行；右侧上面 B、下面 C。第二行不能再给 A 的位置添加一个单元格。"
+      },
+      "question": {
+        "prompt": "例子第二行只有一个 td，为什么整张表仍是两列？",
+        "answer": "第一行 A 的 rowspan=2 已占用第二行第一列；第二行的 C 填在第二列。"
+      }
+    }
+  ],
+  "connections": [
+    "JSX 借用了 HTML 风格写法，但 className、事件与表达式要按 React 规则理解。"
+  ],
+  "examChecklist": [
+    "例子第二行只有一个 td，为什么整张表仍是两列？"
+  ],
+  "compact": true
+}

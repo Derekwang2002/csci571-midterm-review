@@ -1,78 +1,50 @@
-# CSCI 571 · Midterm 复习手册
+# CSCI 571 · Final 复习手册
 
-根据 Fall 2026 本地课件制作的逐页中文复习网站，13 份讲义共 806 页，另含 10 页 syllabus。
+Fall 2026 中文复习网站，部署到 [GitHub Pages](https://derekwang2002.github.io/csci571-midterm-review/#/interpretations)。无构建步骤或后端。
 
-在线阅读：https://derekwang2002.github.io/csci571-midterm-review/
+- 新增 Responsive Web Design（59 页）、React（45 页）、Node（35 页），139 页均有原图、逐页说明与分组串讲，包含 23 个关键示例和 27 道自测。
+- 旧 13 章默认显示核心回顾，每章 1–2 节、一例和一道自测。完整旧讲解仍可按需展开，不再作为期末通读任务。
+- 全部资料共 955 页（16 份讲义 945 页 + syllabus 10 页）。页码均为 PDF 阅读器页序。
+- 默认自测题池：新增 27 题 + 旧章 13 题，每轮随机最多 20 题；比例不代表正式考试分布。旧题库仍可选择。
+- 19 个交互实验、44 道实验挑战、135 个原有课件页面映射保留。
+- 已掌握/待复习、阅读位置、展开状态和自测进度保存于当前浏览器；支持导出和合并导入。继续使用原存储命名空间与页面 ID。
 
-- 每页原图、中文解释、复习要点与课件纠错。
-- 252 个代码、报文或计算示例，104 道对应页面的自测题。
-- 课程/页码导航、全文搜索、核心筛选与本地复习进度。
-- 19 个课件关联实验：HTML、CSS、JavaScript、DOM、JSON、URL 与 IPv4；含可操作示例、结果解释与自查题。
-- 无需构建或后端，可部署到 GitHub Pages。
+## 范围依据
 
-## 本地查看
+当前 `CSCI571_syllabus_Fall_2026_v3.pdf` 第 4–5 页：Exam #2 为 2026-12-03 17:00，60 分钟，占课程总评 40%，以理论和可能的代码分析为主，不要求写代码。**该 syllabus 没有写明 final 中新旧内容的具体比例，40% 不是旧内容题量占比。**
+
+按用户转述的教师说明，midterm 内容只少量抽查、大致每章一题，因此本版压缩旧章；不承诺正式题量。新增三份讲义是目前可用的新材料，不代表最终完整考试范围，后续课件仍应补充。发展历史按教授原话无需重读或记忆，混合页面中的技术规则保留。
+
+课件中的旧版 Bootstrap、React 生命周期、模块扩展名与框架表述均有必要澄清；少量官方链接用于核对这些差异。示例包含完整小程序和明确标注环境的片段，结果解释与代码放在一起。
+
+## 本地查看与校验
 
 ```sh
 python3 -m http.server 5710
+python3 scripts/validate.py
+python3 scripts/validate_interpretations.py
+python3 scripts/validate_final.py
+node scripts/validate_labs.mjs
+node --test scripts/progress.test.mjs
+node --check app.js
+node --check interpretations.js
 ```
 
-打开 `http://127.0.0.1:5710`。需要通过 HTTP 加载，不使用 file://。
+打开 `http://127.0.0.1:5710`，不要直接使用 file://。本地与线上网址的浏览器存储相互独立，可用进度备份迁移。
 
-## 内容结构
+## 内容维护
 
-- `content/decks.json`：课件目录、原文件名和页数。
-- `content/<course>.json`：逐页讲解；页码是 PDF 阅读器页序，不是页脚编号。
-- `content/sources.json`：按页提取的原文；图表仍以原图为准。
-- `assets/slides/<course>/NNN.jpg`：原始课件逐页图片。
-- `assets/diagrams/`：辅助教学示意图。
-- `labs.js` / `labs.css`：实验目录、筛选、独立路由、课件映射及共用样式。
-- `labs-markup.js` / `labs-javascript.js` / `labs-data.js`：实验内容与真实浏览器交互。
-- `scripts/validate.py`：检查页码完整性、字段、资产和基础内容质量。
+- `content/decks.json`：目录、phase、新旧重点页与旧章核心自测；ID 保持稳定。
+- `content/<id>.json` / `assets/slides/<id>/NNN.jpg`：完整逐页讲解与原图。
+- `content/sources.json`：逐页文字提取；代码截图和图表以原图为准。
+- `content/interpretations/<id>.json`：全部页面恰好分组一次的完整串讲。
+- `content/final-core/<id>.json`：旧章核心摘要及 final 范围说明；只精选相关页，不声称全页覆盖。
+- `scripts/prepare_final.py`：提取、渲染三份新 PDF；需要 Poppler、Pillow，输入 PDF 位于站点父目录。
+- `scripts/write_final_content.py`：本次新增讲解和旧章摘要的维护源；运行后生成对应 JSON 与目录字段。
+- `interpretations.js` / `final.css`：分组目录、摘要、表格、自测与官方链接。
+- `progress.js` / `reading-progress.js` / `progress-view.js`：持久化、备份及恢复。
+- `labs*.js` / `labs.css` / `lab-feedback.js`：原有实验与按选项联动的结果反馈。
 
-## 使用说明
+`#/interpretations/<旧章 id>` 默认是核心回顾；`#/interpretations/<旧章 id>/full` 可看原有完整串讲。逐页原始优先级属于旧版，阅读页会提醒以期末核心回顾为准。
 
-学习进度保存在当前浏览器 localStorage 中，不会上传。已掌握/待复习、逐页与整体总结阅读位置、本轮自测题序和答案状态均自动恢复；`#/progress` 提供备份导出与合并导入。旧版进度会自动兼容保留。代码示例用于理解规则，部分是刻意展示错误的分析题。逐页讲解中的 HTML 预览只展示静态 HTML/CSS。实验室另提供受控的 JavaScript、DOM 和表单演示；表单仅展示本地解析出的数据，不实际发送请求。
-
-考试安排依据本地 syllabus：2026-10-06 17:00，60 分钟，占 40%。题型为理论和可能的代码分析，不要求写代码。Web Basics 第 51 页明确标记考试相关内容起点。AI Basics 完整考试范围需以教师通知确认。重点标签用于学习安排，不代表试题分布预测。
-
-原课件发布已获用户确认的教授授权；原图保留来源标记。中文讲解、示例、图示与网站代码为本次学习网站整理制作。外部资料仅作为少量补充，主要使用 MDN、Python、Flask、RFC 等官方文档。
-
-## 整体总结与串讲 · 2026-10-05
-
-新增 `#/interpretations` 总结目录及每份课件的独立串讲页。通过连贯解释、基础补充、代码示例和考前自查连接知识点，并为每张原始幻灯片提供恰好一个分组归属。
-
-教授补充：Development "history" is not something that you have to recall or read again. 发展历史在新总结中单独标记并默认折叠，原始历史页附加范围更新提醒。涉及实际语法、协议行为和原理的混合页继续解释技术内容。
-
-原 `content/*.json` 和全部 `assets/` 文件保持不变，所有新总结保存在 `content/interpretations/`。运行 `python3 scripts/validate_interpretations.py` 检查新总结的页码覆盖与字段结构。
-
-## 交互实验室 · 2026-10-05
-
-`#/lab` 支持按技术筛选和关键词搜索；`#/lab/<id>` 可直接打开一个实验。每个实验包含学习目标、预测问题、可修改控件、真实浏览器结果、通俗解释和折叠答案，可一键重置。展开“对应课件”可访问相关的每一页及整讲总结，相关逐页讲解也增加了反向实验入口。
-
-- HTML：解析修复与字符实体、表格合并、原生表单验证及提交字段。
-- CSS：选择器匹配、层叠与继承、盒模型、定位与浮动、媒体查询。
-- JavaScript：类型转换、作用域与闭包、对象引用、数组方法、正则表达式、事件循环。
-- DOM：节点树与节点操作、事件传播及默认行为。
-- 数据与网络：JSON 解析、相对 URL 与同源判断、IPv4 子网。
-
-发展历史不进入练习范围；超出原页的辅助知识在解释中注明。实验扩充不改动原有课件讲解、图片与整体总结。
-
-19 个实验包含 44 道实验自查题，对应 135 个不同课件页面。运行 `node scripts/validate_labs.mjs` 检查描述字段、页码范围、发展历史排除及课件反向链接。
-
-## 学习进度持久化 · 2026-10-05
-
-- `progress.js` 按课件页保存标记，保留旧版 `571-done` / `571-weak` / `571-last` 数据并兼容读取，避免旧标签页的整份快照覆盖其他页面的新标记。
-- `reading-progress.js` 保存阅读位置、总结章节及展开状态，滚动后自动保存，隐藏或离开页面时立即保存；首页和总结目录提供继续阅读入口。
-- 自测题序、当前题号、已揭晓答案及自评结果会保存；刷新后直接继续本轮。
-- `#/progress` 展示保存状态与汇总，支持 JSON 备份导出和合并导入；无效备份不会更改现有数据。存储不可用时显示明确提示，当前会话仍可导出备份。
-- 本地预览与 GitHub Pages 属于不同网址，浏览器不会自动共享其存储；可通过备份迁移。
-
-验证：`node --test scripts/progress.test.mjs`。
-
-## 整体总结精简 · 2026-10-06
-
-14 篇总结改为考前速读版：每节一段机制解释、一条关键提醒，保留 55 个必要代码/计算示例。正文、标题、目标、自查和示例的字符总量由 117,624 降至 40,049（约减少 66%）；不包含 JSON 字段名、页码数组和页面模板。原有 242 个章节顺序、分类与全部 816 页对应关系保持一致；发展历史仍默认折叠。逐页讲解、图片、实验和进度逻辑不变。
-
-## 实验结果联动 · 2026-10-06
-
-每个实验现在先显示本次结论，再按“当前选项 / 操作、实际结果、为什么”逐项对照。修改需手动执行的实验时会提示“尚未运行”，避免混用旧结果；原始日志与通用规则可展开。共享反馈由 `lab-feedback.js` 与 `labs.js` 渲染，具体实验负责报告真实观察值。
+原课件发布已获用户确认的教授授权，原图保留来源标记。中文解释、示例和页面为学习用途整理。

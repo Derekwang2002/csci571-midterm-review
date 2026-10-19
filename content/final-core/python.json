@@ -1,0 +1,51 @@
+{
+  "id": "python",
+  "title": "Python 与后端 · 旧章核心回顾",
+  "intro": "只回顾这一章最值得保留的规则。能解释下面的例子并回答一道自测后，就可以继续新增课件；这不是正式题量或命题预测。",
+  "goals": [
+    "对象共享与请求处理"
+  ],
+  "sections": [
+    {
+      "title": "对象共享与请求处理",
+      "pages": [
+        9,
+        10,
+        23,
+        26,
+        39,
+        40,
+        46,
+        47,
+        58,
+        59,
+        65
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "赋值通常让名字指向对象；可变列表的别名会一起看到修改，浅拷贝只复制外层。函数默认参数在定义时求值，默认可变列表可能跨调用共享，应常用 None 后在函数内创建。",
+        "后端框架把方法与路径映射到函数，函数读取输入并返回数据。Flask 的路径参数、request.args 与 JSON body 来源不同；返回 JSON 不等于把 Python 对象直接放到浏览器内存。"
+      ],
+      "takeaways": [
+        "== 比内容，is 比身份。",
+        "后端仍要检查字段、类型和边界。"
+      ],
+      "example": {
+        "lang": "python",
+        "code": "def add(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\nprint(add(1))  # [1]\nprint(add(2))  # [2]",
+        "explanation": "若改成 items=[] 默认参数，未显式传列表的两次调用会共享同一个列表，第二次得到 [1, 2]。"
+      },
+      "question": {
+        "prompt": "为什么 def add(x, items=[]) 可能让两次调用的结果串在一起？",
+        "answer": "默认列表在函数定义时创建，后续省略该参数的调用复用同一对象。用 None 作为默认值，在每次调用内部创建新列表可避免此共享。"
+      }
+    }
+  ],
+  "connections": [
+    "Node Express 与 Flask 都在做路由、解析、验证、响应；语言不同，职责相通。"
+  ],
+  "examChecklist": [
+    "为什么 def add(x, items=[]) 可能让两次调用的结果串在一起？"
+  ],
+  "compact": true
+}

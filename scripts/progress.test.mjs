@@ -60,3 +60,21 @@ test('failed writes preserve the current session for export and never claim dura
   const storage=new Storage(),store=create(storage);store.setMark('html:14','done');storage.blocked=true;
   store.setMark('html:14','weak');assert(!store.isAvailable());assert(store.readMarks().weak.has('html:14'));assert(!store.readMarks().done.has('html:14'));assert.deepEqual(store.exportData().weak,['html:14']);
 });
+test('final edition preserves legacy marks and new lecture / full-summary bookmarks',()=>{
+  const storage=new Storage();
+  create(storage).setMark('html:14','done');
+  const finalDecks=[...decks,{id:'react',title:'React',count:45}];
+  const final=create(storage,{decks:finalDecks});
+  final.setMark('react:15','weak');
+  final.saveQuiz({...quiz,pool:['html:14','react:15'],edition:'final'});
+  final.saveReading({...bookmark,route:'#/interpretations/html/full'});
+  final.saveReading({...bookmark,route:'#/interpretations/react'});
+  const restored=create(new Storage(),{decks:finalDecks});
+  restored.importData(final.exportData());
+  assert(restored.readMarks().done.has('html:14'));
+  assert(restored.readMarks().weak.has('react:15'));
+  assert(restored.getReading('#/interpretations/html/full'));
+  assert(restored.getReading('#/interpretations/react'));
+  assert.equal(restored.getQuiz().edition,'final');
+  assert(!restored.validRoute('#/interpretations/html/unexpected'));
+});
