@@ -1,4 +1,27 @@
 /* The laboratory shares the study edition's typography and burgundy accents. */
+.lab-runtime-note {border-left:3px solid var(--accent);padding:5px 0 5px 14px;color:var(--muted);margin:0 0 22px!important;font-size:12px!important}
+.final-viewport {overflow:hidden;width:100%;position:relative;background:#f3f1ed;border:1px solid var(--line)}
+.experiment-workbench .final-viewport iframe {height:420px;max-width:none!important;border:0;transform-origin:top left;border-radius:0}
+.final-lab-metrics {display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin:15px 0}
+.final-lab-metrics>div {background:var(--paper);padding:13px;border:1px solid var(--line);min-width:0}
+.final-lab-metrics small {display:block;font-size:11px;color:var(--muted);margin-bottom:7px}
+.final-lab-metrics strong {font-size:18px;line-height:1.6;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.final-code-editor {min-height:260px;font:12px/1.7 ui-monospace,monospace!important;tab-size:2}
+.react-demo-cards {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.react-demo-card {background:white;border:1px solid var(--line);border-top:3px solid var(--accent);padding:18px;min-width:0;overflow-wrap:anywhere}
+.react-demo-card h3 {margin:0}.react-demo-card strong {font-size:28px;color:var(--accent)}
+.final-trace {margin:16px 0;padding:0;list-style:none;counter-reset:step}
+.final-trace li {counter-increment:step;padding:9px 8px 9px 38px;border-bottom:1px solid var(--line);position:relative;overflow-wrap:anywhere}
+.final-trace li:before {content:counter(step);position:absolute;left:8px;color:var(--accent);font-variant-numeric:tabular-nums}
+.final-trace strong {margin-right:10px}
+.byte-strip {display:flex;flex-wrap:wrap;gap:5px;max-height:220px;overflow:auto}
+.byte-strip span {background:#f6e9ec;color:#6f2132;padding:8px;min-width:38px;font:16px/1.5 ui-monospace,monospace;text-align:center}
+.byte-strip small {display:block;font-size:10px;color:var(--muted)}
+.encoding-output {font:13px/1.7 ui-monospace,monospace}
+.encoding-output dt {color:var(--muted);margin-top:10px;font-size:11px}
+.encoding-output dd {margin:3px 0;padding:8px;background:white;overflow-wrap:anywhere;max-height:140px;overflow:auto}
+.experiment-controls>button {margin-top:10px}
+@media(max-width:480px){.react-demo-cards{grid-template-columns:1fr}.final-lab-metrics strong{font-size:16px}}
 .laboratory-head {display:flex;justify-content:space-between;gap:35px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:28px}
 .laboratory-head h1 {font-size:clamp(27px,3vw,38px);line-height:1.5;margin:12px 0}
 .laboratory-head p,.experiment-head>p {color:var(--muted);font-size:14px;line-height:1.9;max-width:720px;margin:10px 0}
