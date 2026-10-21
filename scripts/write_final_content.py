@@ -1,30 +1,7 @@
-"""Author-maintained final review notes. Page numbers are PDF positions, not footers."""
+"""Author the original final lectures and compact midterm recaps."""
+from review_content import ROOT, write, example, question, section, link, build
 from pathlib import Path
 import json
-ROOT=Path(__file__).resolve().parents[1]
-def write(path,data):
-    (ROOT/path).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
-def example(lang,code,explanation,**extra):return dict(lang=lang,code=code.strip(),explanation=explanation,**extra)
-def question(prompt,answer):return dict(prompt=prompt,answer=answer)
-def section(title,pages,paragraphs,takeaways,**extra):
-    return dict(title=title,pages=sorted(pages),kind='concept',paragraphs=paragraphs,takeaways=takeaways,**extra)
-def link(label,url):return dict(label=label,url=url)
-def build(slug,title,intro,goals,sections,page_notes,connections,checklist):
-    notes=[line.split('|',1) for line in page_notes.strip().splitlines()]
-    rows=[]
-    for n,(heading,note) in enumerate(notes,1):
-        matches=[s for s in sections if n in s['pages']]
-        assert len(matches)==1,(slug,n)
-        s=matches[0];priority='core' if s['kind']=='concept' else 'skim'
-        row=dict(page=n,title=heading,section=s['title'],priority=priority,summary=note,
-                 explanation=[note,*s['paragraphs']],takeaways=s['takeaways'])
-        if n==s.get('anchor',s['pages'][0]):
-            for key in ('example','question','links'):
-                if key in s:row[key]=s[key]
-        rows.append(row)
-    assert sorted(p for s in sections for p in s['pages'])==list(range(1,len(rows)+1))
-    write(Path('content')/(slug+'.json'),rows)
-    write(Path('content/interpretations')/(slug+'.json'),dict(id=slug,title=title,intro=intro,goals=goals,sections=sections,connections=connections,examChecklist=checklist))
 
 # RESPONSIVE WEB DESIGN
 r=[]
@@ -480,6 +457,6 @@ section('分层与子网：只保留计算骨架',[50,51,54,63,64,65,66,71,72,73
 
 write(Path('content/final-core/syllabus.json'),dict(id='syllabus',title='Final · 范围依据与复习顺序',compact=True,intro='以当前 Fall 2026 v3 syllabus 和教师最新通知为准。本页区分已写明的考试安排与口头补充，避免把课程总评分比例误当成考题比例。',goals=['先学新增课件，再回顾旧章核心。','用理论解释与代码结果检验理解。'],sections=[
 section('Syllabus 明确写出的安排',[4,5],['Exam #2：2026 年 12 月 3 日（周四）17:00，60 分钟，占课程总评 40%。考试以理论为主，也可能分析代码，不要求现场写代码。','当前 syllabus 没有写出 final 中 midterm 内容的具体百分比。总评占比 40% 不是旧知识在 final 中的占比。期末项目演示是另一个考核项目，不要把 12 月 10 日演示时间当作这场笔试时间。'],['考试日期与要求来自 syllabus PDF 第 4–5 页。','最终安排以教师最新通知为准。']),
-section('本站的复习取舍',[8],['按你转述的教师说明：旧内容只少量抽查，大致每章一题。因此旧 13 章只保留核心回顾与一道自测；这个安排是复习策略，不是正式题量承诺。','目前新增 Responsive Web Design、React、Node，共 139 页，作为优先学习内容。课表后续还有其他主题，三份新课件不代表 final 的全部最终范围；收到后续材料后应继续补充。','发展历史按教授原话无需重读和记忆；混在历史页中的技术规则另行保留。先读新课串讲并做代码推演，再扫旧章核心；答不出的概念才展开原页。'],['复习顺序：新增串讲 → 对照代码 → 旧章核心 → 薄弱页。','页码采用 PDF 阅读器序号，不采用幻灯片页脚编号。'])],connections=['新旧知识连成一条请求链：响应式界面 → React 状态与组件 → HTTP / JSON → Node 路由与数据处理。'],examChecklist=['能否说明 40% 是课程成绩权重，而不是旧内容题量比例？','是否把当前新增课件与最终完整范围区分开？']))
+section('本站的复习取舍',[8],['按你转述的教师说明：旧内容只少量抽查，大致每章一题。因此旧 13 章只保留核心回顾与一道自测；这个安排是复习策略，不是正式题量承诺。','已收录的期末新增课件作为优先学习内容，具体章节与页数见复习目录。它们不代表 final 的全部最终范围；收到后续材料后继续补充，范围以教师最新通知为准。','发展历史按教授原话无需重读和记忆；混在历史页中的技术规则另行保留。先读新课串讲并做代码推演，再扫旧章核心；答不出的概念才展开原页。'],['复习顺序：新增串讲 → 对照代码 → 旧章核心 → 薄弱页。','页码采用 PDF 阅读器序号，不采用幻灯片页脚编号。'])],connections=['新旧知识连成一条请求链：响应式界面 → React 状态与组件 → HTTP / JSON → Node 路由 → Cookie 与身份 → REST 资源接口。'],examChecklist=['能否说明 40% 是课程成绩权重，而不是旧内容题量比例？','是否把当前新增课件与最终完整范围区分开？']))
 write(Path('content/decks.json'),decks)
 print('Wrote 139 new slide notes, 3 full interpretations, 13 compact recaps and final syllabus guide.')

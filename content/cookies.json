@@ -1,0 +1,978 @@
+[
+  {
+    "page": 1,
+    "title": "Cookie 这一讲学什么",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "主线是浏览器保存状态、服务器识别后续请求，再延伸到跨站场景与身份认证。",
+    "explanation": [
+      "主线是浏览器保存状态、服务器识别后续请求，再延伸到跨站场景与身份认证。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ],
+    "question": {
+      "prompt": "浏览器只发送 sid=abc，服务器怎么知道用户是谁？",
+      "answer": "服务器可用 abc 查会话记录，再找到用户。Cookie 不必包含姓名和密码；身份关联可能在服务器端完成。"
+    }
+  },
+  {
+    "page": 2,
+    "title": "内容路线",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "先看 Cookie 数据与属性，再看 JavaScript 操作，最后理解隐私机制和认证方案。",
+    "explanation": [
+      "先看 Cookie 数据与属性，再看 JavaScript 操作，最后理解隐私机制和认证方案。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "Safari 隐私事件背景",
+    "section": "发展时间线：按教授要求跳过",
+    "priority": "skim",
+    "summary": "本页的历史事件与金额无需背诵；考试复习转向浏览器怎样限制第三方状态。",
+    "explanation": [
+      "本页的历史事件与金额无需背诵；考试复习转向浏览器怎样限制第三方状态。",
+      "这些页讲隐私事件、第三方 Cookie 政策时间线及转向。按教授说明，不要求重读或回忆发展历史；不把罚款、年份或政策发布日期编入自测。",
+      "其中的浏览器计划是课件当时的背景，不作为当前所有浏览器行为的保证。技术判断仍回到属性、站点上下文和实际策略。"
+    ],
+    "takeaways": [
+      "跳过年份与事件，保留技术机制的区别。"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "Cookie 的定义",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "Cookie 是浏览器保存、按条件随请求发送的小段数据，不是能自行执行的程序。",
+    "explanation": [
+      "Cookie 是浏览器保存、按条件随请求发送的小段数据，不是能自行执行的程序。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "一条 Cookie 有哪些字段",
+    "section": "属性分工：范围、期限、发送与读取",
+    "priority": "core",
+    "summary": "name/value 是数据；domain、path、期限等元信息由浏览器用来决定保存与发送。",
+    "explanation": [
+      "name/value 是数据；domain、path、期限等元信息由浏览器用来决定保存与发送。",
+      "把属性分成四问：发给谁（Domain / Path）、存多久（Expires / Max-Age）、什么请求可携带（Secure / SameSite）、脚本能否读（HttpOnly）。这些规则共同生效，不能只满足一个就判定会发送。",
+      "课件第 6 页把 Path 默认值写成 /，这不普遍成立：省略时根据设置 Cookie 的请求路径计算默认目录，例如 /docs/page 的默认 Path 是 /docs。省略 Domain 则是 host-only；显式 Domain=example.com 才能在满足其它条件时包含其子域。",
+      "SameSite 比较的是 site，不只是 origin：同一站点的不同子域可能同站却跨源。Strict 限制跨站携带；显式 Lax 允许部分顶层安全方法导航，但通常不允许跨站 iframe / fetch；None 允许跨站资格且需 Secure，仍可能受浏览器策略阻止。Session Cookie 通常随会话结束失效，但会话恢复功能可能恢复它。"
+    ],
+    "takeaways": [
+      "Secure 不等于 HttpOnly；HttpOnly 也不阻止浏览器发送 Cookie。",
+      "Max-Age 和 Expires 同时出现时，以 Max-Age 为准。"
+    ],
+    "question": {
+      "prompt": "HTTPS 页面上 sid 带 Secure; HttpOnly。document.cookie 能读它吗？同站请求还能带它吗？",
+      "answer": "脚本不能读这个 HttpOnly Cookie；符合 Domain、Path、期限及其它规则的同站请求仍可携带。Secure 与 HttpOnly 分别控制传输和脚本访问。"
+    },
+    "links": [
+      {
+        "label": "RFC 6265：Cookie 的范围、默认路径与替换规则",
+        "url": "https://www.rfc-editor.org/rfc/rfc6265.html#section-5.1.4"
+      },
+      {
+        "label": "MDN：Set-Cookie 属性",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie"
+      }
+    ]
+  },
+  {
+    "page": 6,
+    "title": "属性与默认范围",
+    "section": "属性分工：范围、期限、发送与读取",
+    "priority": "core",
+    "summary": "Domain、Path、Expires、Secure、HttpOnly 分工不同；尤其不要把默认 Path 一律记成根路径。",
+    "explanation": [
+      "Domain、Path、Expires、Secure、HttpOnly 分工不同；尤其不要把默认 Path 一律记成根路径。",
+      "把属性分成四问：发给谁（Domain / Path）、存多久（Expires / Max-Age）、什么请求可携带（Secure / SameSite）、脚本能否读（HttpOnly）。这些规则共同生效，不能只满足一个就判定会发送。",
+      "课件第 6 页把 Path 默认值写成 /，这不普遍成立：省略时根据设置 Cookie 的请求路径计算默认目录，例如 /docs/page 的默认 Path 是 /docs。省略 Domain 则是 host-only；显式 Domain=example.com 才能在满足其它条件时包含其子域。",
+      "SameSite 比较的是 site，不只是 origin：同一站点的不同子域可能同站却跨源。Strict 限制跨站携带；显式 Lax 允许部分顶层安全方法导航，但通常不允许跨站 iframe / fetch；None 允许跨站资格且需 Secure，仍可能受浏览器策略阻止。Session Cookie 通常随会话结束失效，但会话恢复功能可能恢复它。"
+    ],
+    "takeaways": [
+      "Secure 不等于 HttpOnly；HttpOnly 也不阻止浏览器发送 Cookie。",
+      "Max-Age 和 Expires 同时出现时，以 Max-Age 为准。"
+    ]
+  },
+  {
+    "page": 7,
+    "title": "为什么网站需要 Cookie",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "登录会话、偏好和购物车可借助标识关联后续请求，但具体业务状态也可能放在服务器。",
+    "explanation": [
+      "登录会话、偏好和购物车可借助标识关联后续请求，但具体业务状态也可能放在服务器。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "网站怎样积累信息",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "用户输入与访问请求可被关联记录；Cookie 并不会凭空获得姓名、地址或任意磁盘内容。",
+    "explanation": [
+      "用户输入与访问请求可被关联记录；Cookie 并不会凭空获得姓名、地址或任意磁盘内容。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ]
+  },
+  {
+    "page": 9,
+    "title": "Cookie 做不到什么",
+    "section": "Cookie 是随请求出示的小纸条",
+    "priority": "core",
+    "summary": "它没有自主执行能力，也不能越过浏览器域规则随意读取别的网站 Cookie。",
+    "explanation": [
+      "它没有自主执行能力，也不能越过浏览器域规则随意读取别的网站 Cookie。",
+      "HTTP 不会因为你上一次登录成功，就自动知道下一次请求是谁。服务器可以给浏览器一张小纸条，例如 sid=abc；浏览器保存后，在符合规则的请求中把它带回来。服务器再用 abc 查登录状态、购物车或偏好。",
+      "Cookie 保存的是数据，不是会运行的程序。它不能自行读取你的任意文件；服务端也不是直接翻阅浏览器的全部 Cookie，而是看到请求实际携带的值。个人信息通常来自用户提交、访问记录或后台关联。"
+    ],
+    "takeaways": [
+      "Cookie 是状态的载体，不等于完整的用户资料。",
+      "持久 Cookie 也可以只保存语言偏好，不一定用于追踪。"
+    ]
+  },
+  {
+    "page": 10,
+    "title": "Chrome 设置截图",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "界面只用来理解浏览器可查看和控制 Cookie；菜单名称与位置不用记忆。",
+    "explanation": [
+      "界面只用来理解浏览器可查看和控制 Cookie；菜单名称与位置不用记忆。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "Firefox 设置截图",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "识别隐私与站点数据控制的用途即可，不把旧版设置路径当成核心知识。",
+    "explanation": [
+      "识别隐私与站点数据控制的用途即可，不把旧版设置路径当成核心知识。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 12,
+    "title": "Firefox 存储列表",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "列表里的名称、域、路径和到期信息可以辅助判断作用域；看到记录不等于所有请求都会带上。",
+    "explanation": [
+      "列表里的名称、域、路径和到期信息可以辅助判断作用域；看到记录不等于所有请求都会带上。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "Safari 设置截图",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "不同浏览器有不同的隐私控制界面，技术判断仍应回到具体请求与策略。",
+    "explanation": [
+      "不同浏览器有不同的隐私控制界面，技术判断仍应回到具体请求与策略。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 14,
+    "title": "第三方 Cookie 的实例",
+    "section": "第三方追踪：同一个服务出现在多个站点",
+    "priority": "core",
+    "summary": "以嵌入服务的请求为参照判断第一方或第三方，不按公司名字简单分类。",
+    "explanation": [
+      "以嵌入服务的请求为参照判断第一方或第三方，不按公司名字简单分类。",
+      "“第三方”描述访问上下文。你在 shop.example 页面里加载 tracker.example 的资源，对该上下文来说 tracker 是第三方。页面不能直接为任意无关域设置 Cookie；通常是浏览器请求 tracker 时，由 tracker 的响应设置自己的 Cookie。",
+      "若同一第三方又嵌入 news.example，浏览器策略允许未分区的跨站 Cookie 时，tracker 可能再次收到同一个 ID，于是把两个站点的访问关联起来。第 36 页还画了发布者与广告服务器之间的消息转交：服务端转发数据不等于浏览器允许一个网站任意读取另一个网站的 Cookie。"
+    ],
+    "takeaways": [
+      "区分当前顶层站点、实际请求目标与 Cookie 所属域。",
+      "广告画像可存在服务器数据库中；Cookie 只保存关联 ID。"
+    ],
+    "question": {
+      "prompt": "shop.example 能直接执行 document.cookie=\"id=7; Domain=tracker.example\"，给无关域放 Cookie 吗？",
+      "answer": "不能。域设置要满足浏览器的域匹配规则；常见跨站追踪依靠嵌入资源向 tracker 发请求，由 tracker 设置和接收自己的 Cookie。"
+    }
+  },
+  {
+    "page": 15,
+    "title": "Cookie 的几种分类",
+    "section": "属性分工：范围、期限、发送与读取",
+    "priority": "core",
+    "summary": "生命周期、HttpOnly、Secure、SameSite 是不同维度；Session Cookie 不保证浏览器恢复会话后一定消失。",
+    "explanation": [
+      "生命周期、HttpOnly、Secure、SameSite 是不同维度；Session Cookie 不保证浏览器恢复会话后一定消失。",
+      "把属性分成四问：发给谁（Domain / Path）、存多久（Expires / Max-Age）、什么请求可携带（Secure / SameSite）、脚本能否读（HttpOnly）。这些规则共同生效，不能只满足一个就判定会发送。",
+      "课件第 6 页把 Path 默认值写成 /，这不普遍成立：省略时根据设置 Cookie 的请求路径计算默认目录，例如 /docs/page 的默认 Path 是 /docs。省略 Domain 则是 host-only；显式 Domain=example.com 才能在满足其它条件时包含其子域。",
+      "SameSite 比较的是 site，不只是 origin：同一站点的不同子域可能同站却跨源。Strict 限制跨站携带；显式 Lax 允许部分顶层安全方法导航，但通常不允许跨站 iframe / fetch；None 允许跨站资格且需 Secure，仍可能受浏览器策略阻止。Session Cookie 通常随会话结束失效，但会话恢复功能可能恢复它。"
+    ],
+    "takeaways": [
+      "Secure 不等于 HttpOnly；HttpOnly 也不阻止浏览器发送 Cookie。",
+      "Max-Age 和 Expires 同时出现时，以 Max-Age 为准。"
+    ]
+  },
+  {
+    "page": 16,
+    "title": "跨站追踪的请求链",
+    "section": "第三方追踪：同一个服务出现在多个站点",
+    "priority": "core",
+    "summary": "两个网站嵌入同一第三方时，第三方可能利用它自己域下的标识关联访问。",
+    "explanation": [
+      "两个网站嵌入同一第三方时，第三方可能利用它自己域下的标识关联访问。",
+      "“第三方”描述访问上下文。你在 shop.example 页面里加载 tracker.example 的资源，对该上下文来说 tracker 是第三方。页面不能直接为任意无关域设置 Cookie；通常是浏览器请求 tracker 时，由 tracker 的响应设置自己的 Cookie。",
+      "若同一第三方又嵌入 news.example，浏览器策略允许未分区的跨站 Cookie 时，tracker 可能再次收到同一个 ID，于是把两个站点的访问关联起来。第 36 页还画了发布者与广告服务器之间的消息转交：服务端转发数据不等于浏览器允许一个网站任意读取另一个网站的 Cookie。"
+    ],
+    "takeaways": [
+      "区分当前顶层站点、实际请求目标与 Cookie 所属域。",
+      "广告画像可存在服务器数据库中；Cookie 只保存关联 ID。"
+    ]
+  },
+  {
+    "page": 17,
+    "title": "第三方 Cookie 政策历史",
+    "section": "发展时间线：按教授要求跳过",
+    "priority": "skim",
+    "summary": "浏览器阶段性计划属于发展历史，不把路线图中的年份与进度作为记忆任务。",
+    "explanation": [
+      "浏览器阶段性计划属于发展历史，不把路线图中的年份与进度作为记忆任务。",
+      "这些页讲隐私事件、第三方 Cookie 政策时间线及转向。按教授说明，不要求重读或回忆发展历史；不把罚款、年份或政策发布日期编入自测。",
+      "其中的浏览器计划是课件当时的背景，不作为当前所有浏览器行为的保证。技术判断仍回到属性、站点上下文和实际策略。"
+    ],
+    "takeaways": [
+      "跳过年份与事件，保留技术机制的区别。"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "政策转向与应用追踪背景",
+    "section": "发展时间线：按教授要求跳过",
+    "priority": "skim",
+    "summary": "这里的政策事件提供动机，不代表某种默认行为永远适用于所有用户和浏览器。",
+    "explanation": [
+      "这里的政策事件提供动机，不代表某种默认行为永远适用于所有用户和浏览器。",
+      "这些页讲隐私事件、第三方 Cookie 政策时间线及转向。按教授说明，不要求重读或回忆发展历史；不把罚款、年份或政策发布日期编入自测。",
+      "其中的浏览器计划是课件当时的背景，不作为当前所有浏览器行为的保证。技术判断仍回到属性、站点上下文和实际策略。"
+    ],
+    "takeaways": [
+      "跳过年份与事件，保留技术机制的区别。"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "浏览器隐私策略对比",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "默认阻止行为受版本与用户设置影响；此页作背景，不能替代当前请求的实际检查。",
+    "explanation": [
+      "默认阻止行为受版本与用户设置影响；此页作背景，不能替代当前请求的实际检查。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "浏览器处理流程",
+    "section": "完整往返：Set-Cookie → Cookie",
+    "priority": "core",
+    "summary": "响应 Set-Cookie 进入存储；新请求时再按范围、到期、传输与跨站规则筛选。",
+    "explanation": [
+      "响应 Set-Cookie 进入存储；新请求时再按范围、到期、传输与跨站规则筛选。",
+      "服务器响应里的 Set-Cookie 指挥浏览器保存；后续请求里的 Cookie 只携带符合条件的 name=value，通常不把 Path、HttpOnly 等属性一起回传。若一次设置两个 Cookie，要发两条 Set-Cookie。课件的图片请求也能携带 Cookie，并非只有整页导航才会携带。",
+      "对普通未分区 Cookie，更新和删除要对准同名、同 Domain、同 Path 的记录。删除通常用 Max-Age=0 或过去的 Expires；只在 / 下删除，可能删不掉原先 Path=/account 的 Cookie。缓存协商的 304 与 Cookie 的发送是两件事。"
+    ],
+    "takeaways": [
+      "响应设置，后续请求携带；不要把两个 header 的方向写反。",
+      "判断发送时依次检查范围、期限、Secure、SameSite 与浏览器策略。"
+    ],
+    "example": {
+      "lang": "http",
+      "code": "HTTP/1.1 200 OK\nSet-Cookie: sid=abc; Path=/account; Secure; HttpOnly; SameSite=Lax\n\nGET /account/profile HTTP/1.1\nHost: shop.example\nCookie: sid=abc\n\nHTTP/1.1 200 OK\nSet-Cookie: sid=; Path=/account; Max-Age=0; Secure; HttpOnly; SameSite=Lax",
+      "explanation": "三段依次是首次响应、稍后的同站 HTTPS 请求、注销响应，省略无关头和正文。请求 /account/profile 匹配 Path；/catalog 和 /accounting 不匹配。删除时继续使用同一主机与 Path=/account。"
+    },
+    "question": {
+      "prompt": "Path=/account 的 Cookie 会发到 /accounting 吗？为什么设置 Path=/ 的同名空值不一定删掉它？",
+      "answer": "不会，路径匹配要求目录边界；/accounting 不是 /account 的子路径。Path 不同可形成两条同名记录，删除必须匹配原来的 Path。"
+    }
+  },
+  {
+    "page": 21,
+    "title": "原始 HTTP 往返",
+    "section": "完整往返：Set-Cookie → Cookie",
+    "priority": "core",
+    "summary": "图片等子资源请求也可携带 Cookie；响应设置头与后续请求携带头的名称和方向不同。",
+    "explanation": [
+      "图片等子资源请求也可携带 Cookie；响应设置头与后续请求携带头的名称和方向不同。",
+      "服务器响应里的 Set-Cookie 指挥浏览器保存；后续请求里的 Cookie 只携带符合条件的 name=value，通常不把 Path、HttpOnly 等属性一起回传。若一次设置两个 Cookie，要发两条 Set-Cookie。课件的图片请求也能携带 Cookie，并非只有整页导航才会携带。",
+      "对普通未分区 Cookie，更新和删除要对准同名、同 Domain、同 Path 的记录。删除通常用 Max-Age=0 或过去的 Expires；只在 / 下删除，可能删不掉原先 Path=/account 的 Cookie。缓存协商的 304 与 Cookie 的发送是两件事。"
+    ],
+    "takeaways": [
+      "响应设置，后续请求携带；不要把两个 header 的方向写反。",
+      "判断发送时依次检查范围、期限、Secure、SameSite 与浏览器策略。"
+    ]
+  },
+  {
+    "page": 22,
+    "title": "范围、覆盖与删除",
+    "section": "完整往返：Set-Cookie → Cookie",
+    "priority": "core",
+    "summary": "同名但不同 Path 的 Cookie 可以同时存在；删除要匹配原记录的域与路径。",
+    "explanation": [
+      "同名但不同 Path 的 Cookie 可以同时存在；删除要匹配原记录的域与路径。",
+      "服务器响应里的 Set-Cookie 指挥浏览器保存；后续请求里的 Cookie 只携带符合条件的 name=value，通常不把 Path、HttpOnly 等属性一起回传。若一次设置两个 Cookie，要发两条 Set-Cookie。课件的图片请求也能携带 Cookie，并非只有整页导航才会携带。",
+      "对普通未分区 Cookie，更新和删除要对准同名、同 Domain、同 Path 的记录。删除通常用 Max-Age=0 或过去的 Expires；只在 / 下删除，可能删不掉原先 Path=/account 的 Cookie。缓存协商的 304 与 Cookie 的发送是两件事。"
+    ],
+    "takeaways": [
+      "响应设置，后续请求携带；不要把两个 header 的方向写反。",
+      "判断发送时依次检查范围、期限、Secure、SameSite 与浏览器策略。"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "document.cookie 的读写模型",
+    "section": "JavaScript：写一个，读可见的一组",
+    "priority": "core",
+    "summary": "getter 返回当前可见 Cookie 字符串，setter 一次设置一条；不是给数组整体赋值。",
+    "explanation": [
+      "getter 返回当前可见 Cookie 字符串，setter 一次设置一条；不是给数组整体赋值。",
+      "读取 document.cookie 得到分号分隔的字符串，不是数组；赋值一次通常设置一个 Cookie，不会把整罐 Cookie 替换掉。只有当前页面可见且非 HttpOnly 的记录能读到，属性本身不出现在这个读取字符串里。",
+      "下面用 days 统一表示天数，以 Max-Age 秒数设置期限。课件第 27 页的 expires 参数是 Date 对象，而第 32 页传入 30；直接拼接两段代码会类型不匹配。第 29 页删除赋值还缺少名字后的等号。这里同时修正这些问题。",
+      "第 28 页正则示例含排版引号，且任意名字直接拼入正则会有特殊字符问题。下面按分号拆分，再只切掉名字前缀，可保留值里的等号；空值与找不到也分开处理。示例约定名字为简单标识符、相同名字只在 Path=/ 保存一份；不尝试读 HttpOnly 或代替服务端认证。"
+    ],
+    "takeaways": [
+      "写入一条 ≠ 清空其它 Cookie。",
+      "删除与写入的路径保持一致，值统一 encode / decode。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "// 在允许 Cookie 的 HTTP(S) 页面中运行；名称使用简单标识符。\nfunction setCookie(name, value, days = 30) {\n  const seconds = Math.floor(days * 86400);\n  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${seconds}; SameSite=Lax`;\n}\nfunction getCookie(name) {\n  const prefix = name + '=';\n  const pair = document.cookie.split(';').map(s => s.trim())\n    .find(s => s.startsWith(prefix));\n  if (pair === undefined) return null;\n  const value = pair.slice(prefix.length);\n  try { return decodeURIComponent(value); } catch { return value; }\n}\nfunction deleteCookie(name) {\n  document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;\n}\nsetCookie('reviewName', 'Ada = A; B');\nconsole.log(getCookie('reviewName')); // Ada = A; B\ndeleteCookie('reviewName');\nconsole.log(getCookie('reviewName')); // null",
+      "explanation": "运行环境需允许写 Cookie，并且没有同名的其它路径记录。30 天转换为 2592000 秒；分号编码成 %3B，避免被当成属性分隔符。这里保存的是普通偏好；HttpOnly 登录 Cookie 应由服务器用 Set-Cookie 设置。"
+    },
+    "question": {
+      "prompt": "已有 a=1，再执行 document.cookie=\"b=2; Path=/\"，是否把 a 删除？",
+      "answer": "不会。setter 设置一条 Cookie；只要 a 仍在当前页面可见且未过期，读取字符串里可以同时包含 a 和 b。"
+    }
+  },
+  {
+    "page": 24,
+    "title": "特殊字符编码",
+    "section": "编码能保存特殊字符，但不是加密",
+    "priority": "core",
+    "summary": "值中的分号等字符应编码，避免被当成 Cookie 语法；编码本身不提供保密性。",
+    "explanation": [
+      "值中的分号等字符应编码，避免被当成 Cookie 语法；编码本身不提供保密性。",
+      "Cookie 的值含空格、中文、分号时，先编码再保存，读取时解码。课件 escape / unescape 属于旧接口；这里用 encodeURIComponent / decodeURIComponent。不要用 encodeURI 替代单个值的编码，它会保留一些 URI 分隔符。",
+      "编码只是在不同语法之间搬运字符。知道 %20 表示空格，任何人都能还原；它不会隐藏密码，也不证明值没有被修改。"
+    ],
+    "takeaways": [
+      "编码、加密、签名分别解决格式、保密、完整性问题。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "const value = 'A; B=1';\nconst encoded = encodeURIComponent(value);\nconsole.log(encoded);                       // A%3B%20B%3D1\nconsole.log(decodeURIComponent(encoded));   // A; B=1\nconsole.log(encodeURI(value));              // A;%20B=1",
+      "explanation": "encodeURI 保留了分号和等号，因此不能直接替代 Cookie 值的 encodeURIComponent。输出仍然是可以还原的普通文本。"
+    },
+    "question": {
+      "prompt": "Cookie 里显示 name=Ada%20Lovelace，是否说明姓名已经加密？",
+      "answer": "没有。这里只是百分号编码，decodeURIComponent 可以直接还原 Ada Lovelace。"
+    }
+  },
+  {
+    "page": 25,
+    "title": "escape 旧示例",
+    "section": "编码能保存特殊字符，但不是加密",
+    "priority": "core",
+    "summary": "旧课件用 escape 处理文本；复习时改用 encodeURIComponent，并区分它与 encodeURI。",
+    "explanation": [
+      "旧课件用 escape 处理文本；复习时改用 encodeURIComponent，并区分它与 encodeURI。",
+      "Cookie 的值含空格、中文、分号时，先编码再保存，读取时解码。课件 escape / unescape 属于旧接口；这里用 encodeURIComponent / decodeURIComponent。不要用 encodeURI 替代单个值的编码，它会保留一些 URI 分隔符。",
+      "编码只是在不同语法之间搬运字符。知道 %20 表示空格，任何人都能还原；它不会隐藏密码，也不证明值没有被修改。"
+    ],
+    "takeaways": [
+      "编码、加密、签名分别解决格式、保密、完整性问题。"
+    ]
+  },
+  {
+    "page": 26,
+    "title": "编码输出截图",
+    "section": "编码能保存特殊字符，但不是加密",
+    "priority": "core",
+    "summary": "空格变成转义序列只是表示形式改变，解码后仍能恢复原文。",
+    "explanation": [
+      "空格变成转义序列只是表示形式改变，解码后仍能恢复原文。",
+      "Cookie 的值含空格、中文、分号时，先编码再保存，读取时解码。课件 escape / unescape 属于旧接口；这里用 encodeURIComponent / decodeURIComponent。不要用 encodeURI 替代单个值的编码，它会保留一些 URI 分隔符。",
+      "编码只是在不同语法之间搬运字符。知道 %20 表示空格，任何人都能还原；它不会隐藏密码，也不证明值没有被修改。"
+    ],
+    "takeaways": [
+      "编码、加密、签名分别解决格式、保密、完整性问题。"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "设置 Cookie 的函数",
+    "section": "JavaScript：写一个，读可见的一组",
+    "priority": "core",
+    "summary": "课件使用 Date 类型的过期参数；若调用传入天数，helper 必须先完成换算。",
+    "explanation": [
+      "课件使用 Date 类型的过期参数；若调用传入天数，helper 必须先完成换算。",
+      "读取 document.cookie 得到分号分隔的字符串，不是数组；赋值一次通常设置一个 Cookie，不会把整罐 Cookie 替换掉。只有当前页面可见且非 HttpOnly 的记录能读到，属性本身不出现在这个读取字符串里。",
+      "下面用 days 统一表示天数，以 Max-Age 秒数设置期限。课件第 27 页的 expires 参数是 Date 对象，而第 32 页传入 30；直接拼接两段代码会类型不匹配。第 29 页删除赋值还缺少名字后的等号。这里同时修正这些问题。",
+      "第 28 页正则示例含排版引号，且任意名字直接拼入正则会有特殊字符问题。下面按分号拆分，再只切掉名字前缀，可保留值里的等号；空值与找不到也分开处理。示例约定名字为简单标识符、相同名字只在 Path=/ 保存一份；不尝试读 HttpOnly 或代替服务端认证。"
+    ],
+    "takeaways": [
+      "写入一条 ≠ 清空其它 Cookie。",
+      "删除与写入的路径保持一致，值统一 encode / decode。"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "读取 Cookie 的函数",
+    "section": "JavaScript：写一个，读可见的一组",
+    "priority": "core",
+    "summary": "读取要按完整名字匹配，并保留空值与值中的等号；不要直接复制排版弯引号或未转义的正则。",
+    "explanation": [
+      "读取要按完整名字匹配，并保留空值与值中的等号；不要直接复制排版弯引号或未转义的正则。",
+      "读取 document.cookie 得到分号分隔的字符串，不是数组；赋值一次通常设置一个 Cookie，不会把整罐 Cookie 替换掉。只有当前页面可见且非 HttpOnly 的记录能读到，属性本身不出现在这个读取字符串里。",
+      "下面用 days 统一表示天数，以 Max-Age 秒数设置期限。课件第 27 页的 expires 参数是 Date 对象，而第 32 页传入 30；直接拼接两段代码会类型不匹配。第 29 页删除赋值还缺少名字后的等号。这里同时修正这些问题。",
+      "第 28 页正则示例含排版引号，且任意名字直接拼入正则会有特殊字符问题。下面按分号拆分，再只切掉名字前缀，可保留值里的等号；空值与找不到也分开处理。示例约定名字为简单标识符、相同名字只在 Path=/ 保存一份；不尝试读 HttpOnly 或代替服务端认证。"
+    ],
+    "takeaways": [
+      "写入一条 ≠ 清空其它 Cookie。",
+      "删除与写入的路径保持一致，值统一 encode / decode。"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "删除 Cookie 的函数",
+    "section": "JavaScript：写一个，读可见的一组",
+    "priority": "core",
+    "summary": "名字后必须有等号，再设置过期；同时匹配原来的 Domain 和 Path。",
+    "explanation": [
+      "名字后必须有等号，再设置过期；同时匹配原来的 Domain 和 Path。",
+      "读取 document.cookie 得到分号分隔的字符串，不是数组；赋值一次通常设置一个 Cookie，不会把整罐 Cookie 替换掉。只有当前页面可见且非 HttpOnly 的记录能读到，属性本身不出现在这个读取字符串里。",
+      "下面用 days 统一表示天数，以 Max-Age 秒数设置期限。课件第 27 页的 expires 参数是 Date 对象，而第 32 页传入 30；直接拼接两段代码会类型不匹配。第 29 页删除赋值还缺少名字后的等号。这里同时修正这些问题。",
+      "第 28 页正则示例含排版引号，且任意名字直接拼入正则会有特殊字符问题。下面按分号拆分，再只切掉名字前缀，可保留值里的等号；空值与找不到也分开处理。示例约定名字为简单标识符、相同名字只在 Path=/ 保存一份；不尝试读 HttpOnly 或代替服务端认证。"
+    ],
+    "takeaways": [
+      "写入一条 ≠ 清空其它 Cookie。",
+      "删除与写入的路径保持一致，值统一 encode / decode。"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "复用 Cookie helpers",
+    "section": "JavaScript：写一个，读可见的一组",
+    "priority": "core",
+    "summary": "把读写删除函数放在独立脚本有利于复用，但引用脚本后仍需实际调用它们。",
+    "explanation": [
+      "把读写删除函数放在独立脚本有利于复用，但引用脚本后仍需实际调用它们。",
+      "读取 document.cookie 得到分号分隔的字符串，不是数组；赋值一次通常设置一个 Cookie，不会把整罐 Cookie 替换掉。只有当前页面可见且非 HttpOnly 的记录能读到，属性本身不出现在这个读取字符串里。",
+      "下面用 days 统一表示天数，以 Max-Age 秒数设置期限。课件第 27 页的 expires 参数是 Date 对象，而第 32 页传入 30；直接拼接两段代码会类型不匹配。第 29 页删除赋值还缺少名字后的等号。这里同时修正这些问题。",
+      "第 28 页正则示例含排版引号，且任意名字直接拼入正则会有特殊字符问题。下面按分号拆分，再只切掉名字前缀，可保留值里的等号；空值与找不到也分开处理。示例约定名字为简单标识符、相同名字只在 Path=/ 保存一份；不尝试读 HttpOnly 或代替服务端认证。"
+    ],
+    "takeaways": [
+      "写入一条 ≠ 清空其它 Cookie。",
+      "删除与写入的路径保持一致，值统一 encode / decode。"
+    ]
+  },
+  {
+    "page": 31,
+    "title": "名字与颜色表单",
+    "section": "表单偏好：保存数据，再用代码恢复界面",
+    "priority": "core",
+    "summary": "先区分 input 的 name、value、checked，再判断保存函数真正取到了什么值。",
+    "explanation": [
+      "先区分 input 的 name、value、checked，再判断保存函数真正取到了什么值。",
+      "课件表单让用户输入名字、选择背景色，保存成 Cookie。页面下次加载时要主动读取，再赋值给输入框或样式；Cookie 不会自动把背景染绿。HTML 的 name 用于提交/分组，checked 表示某个 radio 当前选中。",
+      "更新同一范围的 Cookie 可以直接覆盖，不必先删除。下面复用上一节 helpers，使用白名单颜色，并给没有选择、没有旧值的情况提供默认值。"
+    ],
+    "takeaways": [
+      "表单输入 → Cookie 文本 → 下次读取 → DOM 更新，是四个步骤。",
+      "第 32 页传 30，必须与 helper 的“天数”参数约定一致。"
+    ],
+    "example": {
+      "lang": "html",
+      "code": "<!-- 先加载上一节的 setCookie / getCookie helper -->\n<form id=\"prefs\">\n  <input id=\"review-name\" name=\"name\" aria-label=\"名字\">\n  <label><input type=\"radio\" name=\"color\" value=\"white\" checked>白色</label>\n  <label><input type=\"radio\" name=\"color\" value=\"lightgreen\">浅绿</label>\n  <button>保存偏好</button>\n</form>\n<script>\nconst form = document.querySelector('#prefs');\nconst nameInput = document.querySelector('#review-name');\nconst allowed = ['white', 'lightgreen'];\nconst stored = getCookie('reviewColor');\nconst color = allowed.includes(stored) ? stored : 'white';\nnameInput.value = getCookie('reviewName') ?? '';\nform.querySelector(`[value=\"${color}\"]`).checked = true;\ndocument.body.style.backgroundColor = color;\nform.addEventListener('submit', event => {\n  event.preventDefault();\n  const selected = form.querySelector('[name=\"color\"]:checked')?.value;\n  const next = allowed.includes(selected) ? selected : 'white';\n  setCookie('reviewName', nameInput.value, 30);\n  setCookie('reviewColor', next, 30);\n  document.body.style.backgroundColor = next;\n});\n</script>",
+      "explanation": "选择浅绿并保存后，当前页面变浅绿；刷新时先读 reviewColor，再恢复 radio 与背景。独立片段依赖前一节 helpers 和允许 Cookie 的页面环境。",
+      "preview": false
+    },
+    "question": {
+      "prompt": "只保存 reviewColor=lightgreen，刷新后的页面会自动变绿吗？",
+      "answer": "不会。初始化脚本必须读取 Cookie，并显式设置 DOM 样式；还应恢复 radio 的 checked 状态，避免选项与结果不一致。"
+    }
+  },
+  {
+    "page": 32,
+    "title": "保存偏好的事件代码",
+    "section": "表单偏好：保存数据，再用代码恢复界面",
+    "priority": "core",
+    "summary": "天数和 Date 参数不能混用；同范围写入可以直接覆盖，未选中颜色要有默认处理。",
+    "explanation": [
+      "天数和 Date 参数不能混用；同范围写入可以直接覆盖，未选中颜色要有默认处理。",
+      "课件表单让用户输入名字、选择背景色，保存成 Cookie。页面下次加载时要主动读取，再赋值给输入框或样式；Cookie 不会自动把背景染绿。HTML 的 name 用于提交/分组，checked 表示某个 radio 当前选中。",
+      "更新同一范围的 Cookie 可以直接覆盖，不必先删除。下面复用上一节 helpers，使用白名单颜色，并给没有选择、没有旧值的情况提供默认值。"
+    ],
+    "takeaways": [
+      "表单输入 → Cookie 文本 → 下次读取 → DOM 更新，是四个步骤。",
+      "第 32 页传 30，必须与 helper 的“天数”参数约定一致。"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "恢复偏好的结果",
+    "section": "表单偏好：保存数据，再用代码恢复界面",
+    "priority": "core",
+    "summary": "背景色来自读取 Cookie 后的样式赋值；Cookie 的存在不会自动改变 DOM。",
+    "explanation": [
+      "背景色来自读取 Cookie 后的样式赋值；Cookie 的存在不会自动改变 DOM。",
+      "课件表单让用户输入名字、选择背景色，保存成 Cookie。页面下次加载时要主动读取，再赋值给输入框或样式；Cookie 不会自动把背景染绿。HTML 的 name 用于提交/分组，checked 表示某个 radio 当前选中。",
+      "更新同一范围的 Cookie 可以直接覆盖，不必先删除。下面复用上一节 helpers，使用白名单颜色，并给没有选择、没有旧值的情况提供默认值。"
+    ],
+    "takeaways": [
+      "表单输入 → Cookie 文本 → 下次读取 → DOM 更新，是四个步骤。",
+      "第 32 页传 30，必须与 helper 的“天数”参数约定一致。"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "广告网络的参与者",
+    "section": "第三方追踪：同一个服务出现在多个站点",
+    "priority": "core",
+    "summary": "发布者提供页面，广告主投放，广告网络做匹配，访问者的浏览器发起资源请求。",
+    "explanation": [
+      "发布者提供页面，广告主投放，广告网络做匹配，访问者的浏览器发起资源请求。",
+      "“第三方”描述访问上下文。你在 shop.example 页面里加载 tracker.example 的资源，对该上下文来说 tracker 是第三方。页面不能直接为任意无关域设置 Cookie；通常是浏览器请求 tracker 时，由 tracker 的响应设置自己的 Cookie。",
+      "若同一第三方又嵌入 news.example，浏览器策略允许未分区的跨站 Cookie 时，tracker 可能再次收到同一个 ID，于是把两个站点的访问关联起来。第 36 页还画了发布者与广告服务器之间的消息转交：服务端转发数据不等于浏览器允许一个网站任意读取另一个网站的 Cookie。"
+    ],
+    "takeaways": [
+      "区分当前顶层站点、实际请求目标与 Cookie 所属域。",
+      "广告画像可存在服务器数据库中；Cookie 只保存关联 ID。"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "画像与标识关联",
+    "section": "第三方追踪：同一个服务出现在多个站点",
+    "priority": "core",
+    "summary": "Cookie 可以只放匿名形式的 ID，服务器再用它关联访问与广告选择记录。",
+    "explanation": [
+      "Cookie 可以只放匿名形式的 ID，服务器再用它关联访问与广告选择记录。",
+      "“第三方”描述访问上下文。你在 shop.example 页面里加载 tracker.example 的资源，对该上下文来说 tracker 是第三方。页面不能直接为任意无关域设置 Cookie；通常是浏览器请求 tracker 时，由 tracker 的响应设置自己的 Cookie。",
+      "若同一第三方又嵌入 news.example，浏览器策略允许未分区的跨站 Cookie 时，tracker 可能再次收到同一个 ID，于是把两个站点的访问关联起来。第 36 页还画了发布者与广告服务器之间的消息转交：服务端转发数据不等于浏览器允许一个网站任意读取另一个网站的 Cookie。"
+    ],
+    "takeaways": [
+      "区分当前顶层站点、实际请求目标与 Cookie 所属域。",
+      "广告画像可存在服务器数据库中；Cookie 只保存关联 ID。"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "广告数据流图",
+    "section": "第三方追踪：同一个服务出现在多个站点",
+    "priority": "core",
+    "summary": "区分浏览器到站点的请求和发布者到广告服务的转发；两者不代表跨域脚本可以任意读 Cookie。",
+    "explanation": [
+      "区分浏览器到站点的请求和发布者到广告服务的转发；两者不代表跨域脚本可以任意读 Cookie。",
+      "“第三方”描述访问上下文。你在 shop.example 页面里加载 tracker.example 的资源，对该上下文来说 tracker 是第三方。页面不能直接为任意无关域设置 Cookie；通常是浏览器请求 tracker 时，由 tracker 的响应设置自己的 Cookie。",
+      "若同一第三方又嵌入 news.example，浏览器策略允许未分区的跨站 Cookie 时，tracker 可能再次收到同一个 ID，于是把两个站点的访问关联起来。第 36 页还画了发布者与广告服务器之间的消息转交：服务端转发数据不等于浏览器允许一个网站任意读取另一个网站的 Cookie。"
+    ],
+    "takeaways": [
+      "区分当前顶层站点、实际请求目标与 Cookie 所属域。",
+      "广告画像可存在服务器数据库中；Cookie 只保存关联 ID。"
+    ]
+  },
+  {
+    "page": 37,
+    "title": "Analytics 行为统计",
+    "section": "Analytics 与 conversion：识别访问和结果",
+    "priority": "core",
+    "summary": "访问来源、页面与行为可用于统计；不含姓名的标识仍可能关联同一个人的多次活动。",
+    "explanation": [
+      "访问来源、页面与行为可用于统计；不含姓名的标识仍可能关联同一个人的多次活动。",
+      "Analytics 统计访问、停留、来源等行为；conversion 把某个广告接触与后来的购买等目标行为关联起来。例子：广告点击记下 campaign=A，购买时上报 order=42 与关联标识，用于判断这次活动是否带来转化。",
+      "“只用随机 ID、不存姓名”不自动等于完全匿名：只要能持续关联同一个人的行为，仍有可识别或可关联性。课件中的某个产品期限和实现方式只是案例，不是所有 Cookie 都固定保存 30 天。"
+    ],
+    "takeaways": [
+      "分析关注行为统计；转化关注广告接触与目标行为的关联。"
+    ],
+    "question": {
+      "prompt": "一个随机 Cookie ID 不含姓名，为什么仍能用于画像？",
+      "answer": "服务器可把同一个 ID 的多次访问与行为累积在一起；可关联性不要求 Cookie 里直接写真实姓名。"
+    }
+  },
+  {
+    "page": 38,
+    "title": "Conversion 转化关联",
+    "section": "Analytics 与 conversion：识别访问和结果",
+    "priority": "core",
+    "summary": "把广告接触与后续购买等目标关联起来；课件期限是案例设置，不是 Cookie 的通用固定寿命。",
+    "explanation": [
+      "把广告接触与后续购买等目标关联起来；课件期限是案例设置，不是 Cookie 的通用固定寿命。",
+      "Analytics 统计访问、停留、来源等行为；conversion 把某个广告接触与后来的购买等目标行为关联起来。例子：广告点击记下 campaign=A，购买时上报 order=42 与关联标识，用于判断这次活动是否带来转化。",
+      "“只用随机 ID、不存姓名”不自动等于完全匿名：只要能持续关联同一个人的行为，仍有可识别或可关联性。课件中的某个产品期限和实现方式只是案例，不是所有 Cookie 都固定保存 30 天。"
+    ],
+    "takeaways": [
+      "分析关注行为统计；转化关注广告接触与目标行为的关联。"
+    ]
+  },
+  {
+    "page": 39,
+    "title": "第三方状态的正常用途",
+    "section": "CHIPS：按顶层站点分开保存第三方状态",
+    "priority": "core",
+    "summary": "跨站组件、支付或登录也可能依赖状态，不能把所有第三方 Cookie 都等同于广告。",
+    "explanation": [
+      "跨站组件、支付或登录也可能依赖状态，不能把所有第三方 Cookie 都等同于广告。",
+      "第三方状态也用于嵌入支付、客服、视频和登录，不全是广告。完全禁止共享状态可能影响这些功能，所以课件比较了分区 Cookie、Storage Access、相关网站集合与 FedCM 等不同机制；它们不是同一功能的别名。",
+      "CHIPS 给 Cookie 增加顶层站点这一分区维度。同一 widget.example 嵌在 shop.example 和 news.example 下时，分别使用两个 Cookie 罐；在 shop 里的 ID 不会因为同属 widget 就自动搬到 news。"
+    ],
+    "takeaways": [
+      "Partitioned 必须配 Secure；跨站场景还要考虑 SameSite。",
+      "分区保留每个嵌入场景的状态，不提供跨顶层站点的共享 ID。"
+    ],
+    "example": {
+      "lang": "http",
+      "code": "Set-Cookie: __Host-widget=A; Path=/; Secure; SameSite=None; Partitioned",
+      "explanation": "由 HTTPS 的 widget.example 响应设置。__Host- 要求 Secure、Path=/ 且不写 Domain；Partitioned 按顶层站点分区。能否接受/携带还受浏览器支持和策略影响，None 不是绕过限制的开关。"
+    },
+    "question": {
+      "prompt": "分区 Cookie 在 shop 下保存 sid=A，切到 news 嵌入同一个 widget，会自动拿到 A 吗？",
+      "answer": "不会，两者的顶层站点分区不同；news 下可能是尚未设置，或已有独立的 sid=B。"
+    },
+    "links": [
+      {
+        "label": "MDN：CHIPS 与分区键",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies/Partitioned_cookies"
+      }
+    ]
+  },
+  {
+    "page": 40,
+    "title": "嵌入内容与登录体验",
+    "section": "CHIPS：按顶层站点分开保存第三方状态",
+    "priority": "core",
+    "summary": "视频、文档、评论等嵌入内容需要区分所属来源，以及是否能获得相应登录状态。",
+    "explanation": [
+      "视频、文档、评论等嵌入内容需要区分所属来源，以及是否能获得相应登录状态。",
+      "第三方状态也用于嵌入支付、客服、视频和登录，不全是广告。完全禁止共享状态可能影响这些功能，所以课件比较了分区 Cookie、Storage Access、相关网站集合与 FedCM 等不同机制；它们不是同一功能的别名。",
+      "CHIPS 给 Cookie 增加顶层站点这一分区维度。同一 widget.example 嵌在 shop.example 和 news.example 下时，分别使用两个 Cookie 罐；在 shop 里的 ID 不会因为同属 widget 就自动搬到 news。"
+    ],
+    "takeaways": [
+      "Partitioned 必须配 Secure；跨站场景还要考虑 SameSite。",
+      "分区保留每个嵌入场景的状态，不提供跨顶层站点的共享 ID。"
+    ]
+  },
+  {
+    "page": 41,
+    "title": "替代机制的内容地图",
+    "section": "CHIPS：按顶层站点分开保存第三方状态",
+    "priority": "core",
+    "summary": "CHIPS、Storage Access、存储分区、相关网站集合和 FedCM 面向不同用途，不应互换名称。",
+    "explanation": [
+      "CHIPS、Storage Access、存储分区、相关网站集合和 FedCM 面向不同用途，不应互换名称。",
+      "第三方状态也用于嵌入支付、客服、视频和登录，不全是广告。完全禁止共享状态可能影响这些功能，所以课件比较了分区 Cookie、Storage Access、相关网站集合与 FedCM 等不同机制；它们不是同一功能的别名。",
+      "CHIPS 给 Cookie 增加顶层站点这一分区维度。同一 widget.example 嵌在 shop.example 和 news.example 下时，分别使用两个 Cookie 罐；在 shop 里的 ID 不会因为同属 widget 就自动搬到 news。"
+    ],
+    "takeaways": [
+      "Partitioned 必须配 Secure；跨站场景还要考虑 SameSite。",
+      "分区保留每个嵌入场景的状态，不提供跨顶层站点的共享 ID。"
+    ]
+  },
+  {
+    "page": 42,
+    "title": "CHIPS 分区示意",
+    "section": "CHIPS：按顶层站点分开保存第三方状态",
+    "priority": "core",
+    "summary": "同一第三方在不同顶层站点下各自保存 Cookie；分区键阻止自动共用同一份状态。",
+    "explanation": [
+      "同一第三方在不同顶层站点下各自保存 Cookie；分区键阻止自动共用同一份状态。",
+      "第三方状态也用于嵌入支付、客服、视频和登录，不全是广告。完全禁止共享状态可能影响这些功能，所以课件比较了分区 Cookie、Storage Access、相关网站集合与 FedCM 等不同机制；它们不是同一功能的别名。",
+      "CHIPS 给 Cookie 增加顶层站点这一分区维度。同一 widget.example 嵌在 shop.example 和 news.example 下时，分别使用两个 Cookie 罐；在 shop 里的 ID 不会因为同属 widget 就自动搬到 news。"
+    ],
+    "takeaways": [
+      "Partitioned 必须配 Secure；跨站场景还要考虑 SameSite。",
+      "分区保留每个嵌入场景的状态，不提供跨顶层站点的共享 ID。"
+    ]
+  },
+  {
+    "page": 43,
+    "title": "Storage Access API",
+    "section": "Storage Access 与 FedCM：按用途辨别",
+    "priority": "core",
+    "summary": "嵌入页面可以请求访问未分区状态，但需满足浏览器条件；注意课件选项和返回值写法需修正。",
+    "explanation": [
+      "嵌入页面可以请求访问未分区状态，但需满足浏览器条件；注意课件选项和返回值写法需修正。",
+      "Storage Access API 让嵌入内容在满足条件、获得许可后请求访问未分区的状态。它不是无条件把所有网站的数据打开；初次请求通常应放在用户点击处理函数中，并处理拒绝。FedCM 则聚焦通过身份提供者完成联合登录，不是通用 Cookie 读写接口。",
+      "第 43 页的示意代码不能原样使用：选项名是 cookies（复数）；无参数调用成功后兑现为 undefined，不会返回可调用 handle.cookies.set 的对象。下面使用无参数形式，再读当前文档可见的 Cookie；HttpOnly 仍不可读。"
+    ],
+    "takeaways": [
+      "CHIPS 分开保存；Storage Access 申请访问未分区状态；FedCM 处理联合身份。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "// 放在需要访问状态的 iframe 中；页面已有 #connect 和 #status。\ndocument.querySelector('#connect').addEventListener('click', async () => {\n  const status = document.querySelector('#status');\n  if (!document.requestStorageAccess) {\n    status.textContent = '当前浏览器不支持';\n    return;\n  }\n  try {\n    await document.requestStorageAccess();\n    status.textContent = '已获准访问当前嵌入来源的相应状态';\n    // 此处可按业务读取 document.cookie，或重新加载嵌入内容。\n  } catch {\n    status.textContent = '未获准，继续使用无共享登录的界面';\n  }\n});",
+      "explanation": "这是嵌入页面的代码片段，不会在复习网站里弹出权限请求。成功、拒绝、不支持三种分支都明确反馈；获取许可不等于已完成用户登录。"
+    },
+    "question": {
+      "prompt": "希望同一个嵌入组件在两个站点各保留独立状态，应优先理解 CHIPS 还是 FedCM？",
+      "answer": "CHIPS。它解决分区存储；FedCM 解决联合身份登录，不能代替通用的组件状态存储。"
+    },
+    "links": [
+      {
+        "label": "MDN：requestStorageAccess 参数与返回值",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document/requestStorageAccess"
+      }
+    ]
+  },
+  {
+    "page": 44,
+    "title": "FedCM 联合身份",
+    "section": "Storage Access 与 FedCM：按用途辨别",
+    "priority": "core",
+    "summary": "这套机制围绕身份提供者与依赖方的登录交互，不是通用的跨站数据读写接口。",
+    "explanation": [
+      "这套机制围绕身份提供者与依赖方的登录交互，不是通用的跨站数据读写接口。",
+      "Storage Access API 让嵌入内容在满足条件、获得许可后请求访问未分区的状态。它不是无条件把所有网站的数据打开；初次请求通常应放在用户点击处理函数中，并处理拒绝。FedCM 则聚焦通过身份提供者完成联合登录，不是通用 Cookie 读写接口。",
+      "第 43 页的示意代码不能原样使用：选项名是 cookies（复数）；无参数调用成功后兑现为 undefined，不会返回可调用 handle.cookies.set 的对象。下面使用无参数形式，再读当前文档可见的 Cookie；HttpOnly 仍不可读。"
+    ],
+    "takeaways": [
+      "CHIPS 分开保存；Storage Access 申请访问未分区状态；FedCM 处理联合身份。"
+    ]
+  },
+  {
+    "page": 45,
+    "title": "退出追踪与浏览器控制",
+    "section": "隐私控制：信号、拦截与用途分类",
+    "priority": "core",
+    "summary": "偏好信号、Cookie 策略和真正的资源拦截是不同机制；删除退出 Cookie 可能同时丢掉退出选择。",
+    "explanation": [
+      "偏好信号、Cookie 策略和真正的资源拦截是不同机制；删除退出 Cookie 可能同时丢掉退出选择。",
+      "Do Not Track 是表达偏好的信号，不等于技术上阻止请求；浏览器的 Cookie 设置与内容拦截器则可以限制存储或资源加载。某些“退出追踪”机制用 Cookie 记住退出选择，清空 Cookie 可能同时清掉这个选择。",
+      "第 48 页的 necessary、performance、functional、targeting 是用途分类，和 Secure、HttpOnly 等协议属性不是同一维度。会话 Cookie 也可能用于追踪；一个分类标签本身不能证明它的实际行为。"
+    ],
+    "takeaways": [
+      "看机制实际阻止什么，再看它如何记住选择。",
+      "用途分类不改变 Cookie 的发送规则。"
+    ],
+    "question": {
+      "prompt": "某 Cookie 被标为 functional，就代表它带有 HttpOnly 吗？",
+      "answer": "不代表。functional 是用途标签，HttpOnly 是控制脚本访问的协议属性，两者独立。"
+    }
+  },
+  {
+    "page": 46,
+    "title": "Do Not Track 设置截图",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "旧界面展示如何发送偏好信号；不需要背位置，也不要把信号理解为强制拦截。",
+    "explanation": [
+      "旧界面展示如何发送偏好信号；不需要背位置，也不要把信号理解为强制拦截。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  },
+  {
+    "page": 47,
+    "title": "内容拦截器的作用",
+    "section": "隐私控制：信号、拦截与用途分类",
+    "priority": "core",
+    "summary": "规则可拦截某些资源或请求；是否拦截要看规则和实际请求，不由 Cookie 名称自动决定。",
+    "explanation": [
+      "规则可拦截某些资源或请求；是否拦截要看规则和实际请求，不由 Cookie 名称自动决定。",
+      "Do Not Track 是表达偏好的信号，不等于技术上阻止请求；浏览器的 Cookie 设置与内容拦截器则可以限制存储或资源加载。某些“退出追踪”机制用 Cookie 记住退出选择，清空 Cookie 可能同时清掉这个选择。",
+      "第 48 页的 necessary、performance、functional、targeting 是用途分类，和 Secure、HttpOnly 等协议属性不是同一维度。会话 Cookie 也可能用于追踪；一个分类标签本身不能证明它的实际行为。"
+    ],
+    "takeaways": [
+      "看机制实际阻止什么，再看它如何记住选择。",
+      "用途分类不改变 Cookie 的发送规则。"
+    ]
+  },
+  {
+    "page": 48,
+    "title": "按用途分类 Cookie",
+    "section": "隐私控制：信号、拦截与用途分类",
+    "priority": "core",
+    "summary": "necessary、performance、functional、targeting 描述用途，不能据此推断 HttpOnly 或 Secure 属性。",
+    "explanation": [
+      "necessary、performance、functional、targeting 描述用途，不能据此推断 HttpOnly 或 Secure 属性。",
+      "Do Not Track 是表达偏好的信号，不等于技术上阻止请求；浏览器的 Cookie 设置与内容拦截器则可以限制存储或资源加载。某些“退出追踪”机制用 Cookie 记住退出选择，清空 Cookie 可能同时清掉这个选择。",
+      "第 48 页的 necessary、performance、functional、targeting 是用途分类，和 Secure、HttpOnly 等协议属性不是同一维度。会话 Cookie 也可能用于追踪；一个分类标签本身不能证明它的实际行为。"
+    ],
+    "takeaways": [
+      "看机制实际阻止什么，再看它如何记住选择。",
+      "用途分类不改变 Cookie 的发送规则。"
+    ]
+  },
+  {
+    "page": 49,
+    "title": "认证因素与身份",
+    "section": "认证、Session 与 Token：不要混成一件事",
+    "priority": "core",
+    "summary": "用户名用于标识；密码、持有物、生物特征属于不同证据类别，多个密码类秘密不自动变成多因素。",
+    "explanation": [
+      "用户名用于标识；密码、持有物、生物特征属于不同证据类别，多个密码类秘密不自动变成多因素。",
+      "Authentication 问“你是谁”，authorization 问“你能做什么”。认证证据常分知道的秘密、持有的设备/凭据、生物特征；用户名是标识，密码加 PIN 仍属于同一类因素。OAuth 主要解决授权，不能把“用了 OAuth”直接等同于完整的身份登录协议。",
+      "Session 常见流程是登录后发不透明 ID，服务器用 ID 查会话表；自包含 token 则携带声明，服务器验证后使用。Cookie / Authorization header 描述怎样传凭据，Session / JWT 描述凭据和验证机制：Cookie 里也能装 JWT，header 里也能装不透明 token。",
+      "“无状态”是指请求处理不依赖服务器记住前一次客户端会话上下文，不是不能有用户数据库。采用 JWT 也可能为了撤销、刷新令牌等保留服务端记录；不能只看 token 的格式就断言整个系统无状态。"
+    ],
+    "takeaways": [
+      "先分传输位置，再分服务端怎样验证。",
+      "JWT 不是 Cookie 的替代语法，它们可以组合。"
+    ],
+    "question": {
+      "prompt": "看到 Cookie: token=某个JWT，能否断定它就是“服务器保存会话表”的方案？",
+      "answer": "不能。Cookie 只说明携带方式。需要继续看服务器是查会话表，还是验证 token 中的签名与声明，或结合两者。"
+    }
+  },
+  {
+    "page": 50,
+    "title": "原生认证与凭据存储",
+    "section": "认证、Session 与 Token：不要混成一件事",
+    "priority": "core",
+    "summary": "认证流程、凭据保存位置和随请求携带方式分别判断；Cookie 与内存或 localStorage 并非同一个传输模型。",
+    "explanation": [
+      "认证流程、凭据保存位置和随请求携带方式分别判断；Cookie 与内存或 localStorage 并非同一个传输模型。",
+      "Authentication 问“你是谁”，authorization 问“你能做什么”。认证证据常分知道的秘密、持有的设备/凭据、生物特征；用户名是标识，密码加 PIN 仍属于同一类因素。OAuth 主要解决授权，不能把“用了 OAuth”直接等同于完整的身份登录协议。",
+      "Session 常见流程是登录后发不透明 ID，服务器用 ID 查会话表；自包含 token 则携带声明，服务器验证后使用。Cookie / Authorization header 描述怎样传凭据，Session / JWT 描述凭据和验证机制：Cookie 里也能装 JWT，header 里也能装不透明 token。",
+      "“无状态”是指请求处理不依赖服务器记住前一次客户端会话上下文，不是不能有用户数据库。采用 JWT 也可能为了撤销、刷新令牌等保留服务端记录；不能只看 token 的格式就断言整个系统无状态。"
+    ],
+    "takeaways": [
+      "先分传输位置，再分服务端怎样验证。",
+      "JWT 不是 Cookie 的替代语法，它们可以组合。"
+    ]
+  },
+  {
+    "page": 51,
+    "title": "有状态与无状态认证",
+    "section": "认证、Session 与 Token：不要混成一件事",
+    "priority": "core",
+    "summary": "会话表查询与自包含 token 验证是常见对比，但 Cookie 可以承载任一种凭据。",
+    "explanation": [
+      "会话表查询与自包含 token 验证是常见对比，但 Cookie 可以承载任一种凭据。",
+      "Authentication 问“你是谁”，authorization 问“你能做什么”。认证证据常分知道的秘密、持有的设备/凭据、生物特征；用户名是标识，密码加 PIN 仍属于同一类因素。OAuth 主要解决授权，不能把“用了 OAuth”直接等同于完整的身份登录协议。",
+      "Session 常见流程是登录后发不透明 ID，服务器用 ID 查会话表；自包含 token 则携带声明，服务器验证后使用。Cookie / Authorization header 描述怎样传凭据，Session / JWT 描述凭据和验证机制：Cookie 里也能装 JWT，header 里也能装不透明 token。",
+      "“无状态”是指请求处理不依赖服务器记住前一次客户端会话上下文，不是不能有用户数据库。采用 JWT 也可能为了撤销、刷新令牌等保留服务端记录；不能只看 token 的格式就断言整个系统无状态。"
+    ],
+    "takeaways": [
+      "先分传输位置，再分服务端怎样验证。",
+      "JWT 不是 Cookie 的替代语法，它们可以组合。"
+    ]
+  },
+  {
+    "page": 52,
+    "title": "JWT 的三段结构",
+    "section": "JWT：能读声明，不等于通过认证",
+    "priority": "core",
+    "summary": "常见签名 JWT 包含编码后的 header、payload、signature；第三段不是普通 JSON，解码也不等于验签。",
+    "explanation": [
+      "常见签名 JWT 包含编码后的 header、payload、signature；第三段不是普通 JSON，解码也不等于验签。",
+      "课件展示的是常见 JWS compact 形式：header.payload.signature。前两段是 JSON 的 Base64URL 编码，第三段是签名字节的编码，并不是“三段 JSON”。JWT 也存在加密封装，不能把所有 JWT 都限定为这种三段形式。",
+      "把 payload 解码出来，只说明你读到了声明；验签才检查它是否被篡改，之后仍要检查 exp、nbf、iss、aud 等适用条件。HS256 使用共享密钥做 HMAC；RS256 使用非对称签名，不能把两者的密钥使用方式混为一谈。",
+      "iat 是签发时间，不是到期时间；exp 用 Unix 秒表示。下面只练习“已通过验签后”的过期判断，不是完整认证代码，也不要把 Date.now() 的毫秒直接与 exp 比较。"
+    ],
+    "takeaways": [
+      "解码 ≠ 验签 ≠ 解密；普通签名 JWT 的 payload 不保密。",
+      "到 exp 时已过期：比较 now < exp，而不是 <=。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "// 仅演示已验签声明中的 exp 检查；不是完整 JWT 验证器。\nconst claims = { sub: 'user-7', iat: 1700000000, exp: 1700003600 };\nfunction beforeExpiry(claims, nowSeconds) {\n  return Number.isFinite(claims.exp) && nowSeconds < claims.exp;\n}\nconsole.log(beforeExpiry(claims, 1700003599)); // true\nconsole.log(beforeExpiry(claims, 1700003600)); // false\n// 使用真实时钟时：Math.floor(Date.now() / 1000)",
+      "explanation": "本例给定固定时钟，便于推演边界，不声称 token 当前有效。实际认证应由合适的库固定允许的算法、验证签名，并校验所需 issuer、audience、时间和权限。"
+    },
+    "question": {
+      "prompt": "把 payload 中 sub 改成 admin，再重新 Base64URL 编码，会得到有效的管理员 JWT 吗？",
+      "answer": "不会。改动签名覆盖的内容后，原签名不能通过验证；仅能解码或生成三段字符串，不代表拥有有效身份。"
+    },
+    "links": [
+      {
+        "label": "RFC 7519：JWT 声明与验证",
+        "url": "https://www.rfc-editor.org/rfc/rfc7519.html"
+      }
+    ]
+  },
+  {
+    "page": 53,
+    "title": "JWT 声明与时间",
+    "section": "JWT：能读声明，不等于通过认证",
+    "priority": "core",
+    "summary": "iat 表示签发，exp 表示过期，单位为秒；即使还未过期，也必须验证签名和其它所需声明。",
+    "explanation": [
+      "iat 表示签发，exp 表示过期，单位为秒；即使还未过期，也必须验证签名和其它所需声明。",
+      "课件展示的是常见 JWS compact 形式：header.payload.signature。前两段是 JSON 的 Base64URL 编码，第三段是签名字节的编码，并不是“三段 JSON”。JWT 也存在加密封装，不能把所有 JWT 都限定为这种三段形式。",
+      "把 payload 解码出来，只说明你读到了声明；验签才检查它是否被篡改，之后仍要检查 exp、nbf、iss、aud 等适用条件。HS256 使用共享密钥做 HMAC；RS256 使用非对称签名，不能把两者的密钥使用方式混为一谈。",
+      "iat 是签发时间，不是到期时间；exp 用 Unix 秒表示。下面只练习“已通过验签后”的过期判断，不是完整认证代码，也不要把 Date.now() 的毫秒直接与 exp 比较。"
+    ],
+    "takeaways": [
+      "解码 ≠ 验签 ≠ 解密；普通签名 JWT 的 payload 不保密。",
+      "到 exp 时已过期：比较 now < exp，而不是 <=。"
+    ]
+  },
+  {
+    "page": 54,
+    "title": "课件参考链接",
+    "section": "浏览器界面、产品截图与参考页",
+    "priority": "skim",
+    "summary": "参考页供追查来源，不增加新的背诵任务；关键规则已在相应章节附少量官方文档。",
+    "explanation": [
+      "参考页供追查来源，不增加新的背诵任务；关键规则已在相应章节附少量官方文档。",
+      "这些页展示 Chrome、Firefox、Safari 的设置、Cookie 列表、阻止选项以及参考链接。能辨认名称、值、域、路径、期限即可；菜单位置、默认策略和旧产品界面不用背。",
+      "在浏览器里看见已存 Cookie，不代表当前每个请求都会携带它。实际调试要同时查看存储列表与 Network 请求头，再对照范围、SameSite 等条件。"
+    ],
+    "takeaways": [
+      "设置截图作背景；“存在”和“发送”分别检查。"
+    ]
+  }
+]

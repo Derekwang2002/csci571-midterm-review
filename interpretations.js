@@ -1,4 +1,4 @@
-const VERSION = '20261018-final';
+const VERSION = '20261021-cookies-rest';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rich = value => esc(value).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
 const loaded = new Map();
@@ -15,7 +15,7 @@ function getSummary(folder,id) {
 // Keep the original full mapping for history labels and archived summaries.
 export const getInterpretation = id => getSummary('interpretations',id);
 const historyNotice = () => `<aside class="history-guidance"><strong>教授说明：发展历史无需复习或记忆</strong><p lang="en">Development &quot;history&quot; is not something that you have to recall or read again.</p><span>技术规则仍保留；历史、市场榜单与环境配置默认折叠。</span></aside>`;
-export const finalScopeNotice = () => `<aside class="final-scope"><strong>Exam #2 · 12 月 3 日 17:00 · 60 分钟</strong><p>Syllabus 写明本次考试占课程总评 40%，以理论与代码分析为主，不要求写代码。<b>当前版本没有写明新旧内容的题量比例。</b></p><p>按教师口头补充，旧内容少量抽查：本站将旧章压缩为核心回顾，每章一道自测；这不是正式题量预测。目前新增的三份课件也不等于 final 的完整最终范围。</p><a href="#/interpretations/syllabus">查看范围依据与复习顺序 →</a></aside>`;
+export const finalScopeNotice = () => `<aside class="final-scope"><strong>Exam #2 · 12 月 3 日 17:00 · 60 分钟</strong><p>Syllabus 写明本次考试占课程总评 40%，以理论与代码分析为主，不要求写代码。<b>当前版本没有写明新旧内容的题量比例。</b></p><p>按教师口头补充，旧内容少量抽查：本站将旧章压缩为核心回顾，每章一道自测；这不是正式题量预测。目前收录的新课件也不等于 final 的完整最终范围。</p><a href="#/interpretations/syllabus">查看范围依据与复习顺序 →</a></aside>`;
 function pageRanges(pages){const sorted=[...pages].sort((a,b)=>a-b),parts=[];for(let i=0;i<sorted.length;i++){let start=sorted[i],end=start;while(sorted[i+1]===end+1)end=sorted[++i];parts.push(start===end?String(start):`${start}–${end}`)}return parts.join('、')}
 export function studyGroups(decks) {
  return [
@@ -25,7 +25,7 @@ export function studyGroups(decks) {
  ].map(group=>({...group,decks:decks.filter(d=>d.phase===group.phase)}));
 }
 export function interpretationIndex(decks){
- return `<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>期末复习</div><span class="eyebrow">FINAL STUDY EDITION</span><h1>新增重点，旧章抓核心</h1><p class="interpretation-intro">Responsive Web Design → React → Node：从页面布局，到状态与组件，再到服务器请求处理。先走完这条主线，再回顾旧章。</p>${finalScopeNotice()}${studyGroups(decks).map(group=>`<section class="study-group"><div class="section-top"><div><h2>${group.title}</h2><p>${group.note}</p></div></div><div class="interpretation-index ${group.phase==='new'?'new-lectures':''}">${group.decks.map(d=>`<a href="${interpretationHref(d.id)}"><span class="course-index">${d.phase==='new'?'NEW':d.phase==='foundation'?'CORE':'INFO'}</span><div><h2>${esc(d.title)}</h2><p>${esc(d.description)}</p><small>${d.phase==='new'?`全部 ${d.count} 页对照 · 例子与自测`:d.phase==='foundation'?'核心摘要 · 1 道自测 · 原页按需展开':'来源与范围说明'}</small></div><span class="interpretation-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`).join('')}${historyNotice()}`;
+ return `<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>期末复习</div><span class="eyebrow">FINAL STUDY EDITION</span><h1>新增重点，旧章抓核心</h1><p class="interpretation-intro">Responsive → React → Node → Cookie → REST：从页面布局与状态，到服务器处理、访问身份和资源接口。先走完新课主线，再回顾旧章。</p>${finalScopeNotice()}${studyGroups(decks).map(group=>`<section class="study-group"><div class="section-top"><div><h2>${group.title}</h2><p>${group.note}</p></div></div><div class="interpretation-index ${group.phase==='new'?'new-lectures':''}">${group.decks.map(d=>`<a href="${interpretationHref(d.id)}"><span class="course-index">${d.phase==='new'?'NEW':d.phase==='foundation'?'CORE':'INFO'}</span><div><h2>${esc(d.title)}</h2><p>${esc(d.description)}</p><small>${d.phase==='new'?`全部 ${d.count} 页对照 · 例子与自测`:d.phase==='foundation'?'核心摘要 · 1 道自测 · 原页按需展开':'来源与范围说明'}</small></div><span class="interpretation-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`).join('')}${historyNotice()}`;
 }
 function renderTable(table) {
  if(!table) return '';

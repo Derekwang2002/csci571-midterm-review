@@ -1,0 +1,652 @@
+[
+  {
+    "page": 1,
+    "title": "Web Services 与 REST",
+    "section": "Web Service：让程序通过约定接口取数据",
+    "priority": "core",
+    "summary": "本讲把前面的 HTTP、JSON、Node 串成程序之间的接口设计与调用流程。",
+    "explanation": [
+      "本讲把前面的 HTTP、JSON、Node 串成程序之间的接口设计与调用流程。",
+      "人可以打开网页看书名，程序则希望拿到结构明确的数据。Web Service 把能力通过网络接口提供给程序：输入什么、用什么方法、返回什么结构，双方先有约定，客户端就不必猜页面里哪个 div 是价格。",
+      "课件列出的 SOAP、REST、Cloud Services 不完全处于同一分类层次：SOAP 是消息协议，REST 是架构风格，Cloud Services 描述服务与部署能力。设计接口时把通信方式、传输协议、数据格式、认证和运行平台分开判断；JSON 或 Protobuf 是格式，不是完整架构。"
+    ],
+    "takeaways": [
+      "先读接口的输入输出契约，再看具体 SDK。",
+      "同一个云服务可以同时提供不同风格的 API。"
+    ],
+    "question": {
+      "prompt": "某服务部署在云端、返回 JSON，是否就一定是 REST？",
+      "answer": "不一定。部署位置和数据格式不足以证明 REST；还要看资源、统一接口、无状态通信等设计约束。"
+    }
+  },
+  {
+    "page": 2,
+    "title": "内容地图",
+    "section": "Web Service：让程序通过约定接口取数据",
+    "priority": "core",
+    "summary": "先分清服务类型，再看 REST 方法、格式与认证，最后把云服务当作应用场景。",
+    "explanation": [
+      "先分清服务类型，再看 REST 方法、格式与认证，最后把云服务当作应用场景。",
+      "人可以打开网页看书名，程序则希望拿到结构明确的数据。Web Service 把能力通过网络接口提供给程序：输入什么、用什么方法、返回什么结构，双方先有约定，客户端就不必猜页面里哪个 div 是价格。",
+      "课件列出的 SOAP、REST、Cloud Services 不完全处于同一分类层次：SOAP 是消息协议，REST 是架构风格，Cloud Services 描述服务与部署能力。设计接口时把通信方式、传输协议、数据格式、认证和运行平台分开判断；JSON 或 Protobuf 是格式，不是完整架构。"
+    ],
+    "takeaways": [
+      "先读接口的输入输出契约，再看具体 SDK。",
+      "同一个云服务可以同时提供不同风格的 API。"
+    ]
+  },
+  {
+    "page": 3,
+    "title": "从网页到程序接口",
+    "section": "Web Service：让程序通过约定接口取数据",
+    "priority": "core",
+    "summary": "人阅读网页，程序通过有明确输入输出的 API 获取能力，不必依赖抓取页面结构。",
+    "explanation": [
+      "人阅读网页，程序通过有明确输入输出的 API 获取能力，不必依赖抓取页面结构。",
+      "人可以打开网页看书名，程序则希望拿到结构明确的数据。Web Service 把能力通过网络接口提供给程序：输入什么、用什么方法、返回什么结构，双方先有约定，客户端就不必猜页面里哪个 div 是价格。",
+      "课件列出的 SOAP、REST、Cloud Services 不完全处于同一分类层次：SOAP 是消息协议，REST 是架构风格，Cloud Services 描述服务与部署能力。设计接口时把通信方式、传输协议、数据格式、认证和运行平台分开判断；JSON 或 Protobuf 是格式，不是完整架构。"
+    ],
+    "takeaways": [
+      "先读接口的输入输出契约，再看具体 SDK。",
+      "同一个云服务可以同时提供不同风格的 API。"
+    ]
+  },
+  {
+    "page": 4,
+    "title": "几类 Web Services",
+    "section": "Web Service：让程序通过约定接口取数据",
+    "priority": "core",
+    "summary": "SOAP、REST 与云服务描述不同维度；不能把部署位置和接口风格当成互斥分类。",
+    "explanation": [
+      "SOAP、REST 与云服务描述不同维度；不能把部署位置和接口风格当成互斥分类。",
+      "人可以打开网页看书名，程序则希望拿到结构明确的数据。Web Service 把能力通过网络接口提供给程序：输入什么、用什么方法、返回什么结构，双方先有约定，客户端就不必猜页面里哪个 div 是价格。",
+      "课件列出的 SOAP、REST、Cloud Services 不完全处于同一分类层次：SOAP 是消息协议，REST 是架构风格，Cloud Services 描述服务与部署能力。设计接口时把通信方式、传输协议、数据格式、认证和运行平台分开判断；JSON 或 Protobuf 是格式，不是完整架构。"
+    ],
+    "takeaways": [
+      "先读接口的输入输出契约，再看具体 SDK。",
+      "同一个云服务可以同时提供不同风格的 API。"
+    ]
+  },
+  {
+    "page": 5,
+    "title": "设计 API 的考虑维度",
+    "section": "Web Service：让程序通过约定接口取数据",
+    "priority": "core",
+    "summary": "通信模式、协议、数据格式、认证与平台要分别判断；采用 JSON 不自动定义接口架构。",
+    "explanation": [
+      "通信模式、协议、数据格式、认证与平台要分别判断；采用 JSON 不自动定义接口架构。",
+      "人可以打开网页看书名，程序则希望拿到结构明确的数据。Web Service 把能力通过网络接口提供给程序：输入什么、用什么方法、返回什么结构，双方先有约定，客户端就不必猜页面里哪个 div 是价格。",
+      "课件列出的 SOAP、REST、Cloud Services 不完全处于同一分类层次：SOAP 是消息协议，REST 是架构风格，Cloud Services 描述服务与部署能力。设计接口时把通信方式、传输协议、数据格式、认证和运行平台分开判断；JSON 或 Protobuf 是格式，不是完整架构。"
+    ],
+    "takeaways": [
+      "先读接口的输入输出契约，再看具体 SDK。",
+      "同一个云服务可以同时提供不同风格的 API。"
+    ]
+  },
+  {
+    "page": 6,
+    "title": "调用方式与访问凭据",
+    "section": "客户端调用：原始 HTTP、SDK 与凭据",
+    "priority": "core",
+    "summary": "直接 HTTP 与 SDK 都要遵守接口契约；OAuth、Bearer、错误状态与访问额度属于不同问题。",
+    "explanation": [
+      "直接 HTTP 与 SDK 都要遵守接口契约；OAuth、Bearer、错误状态与访问额度属于不同问题。",
+      "手写 fetch 与使用服务商 SDK 最终都可能发 HTTP 请求。SDK 包装序列化、请求和响应解析，并不免除你理解状态码、配额、身份与错误的责任。OAuth 描述授权机制；Bearer token 表示持有该凭据即可作为访问证明的一种使用方式。",
+      "客户端代码先检查 HTTP 状态再解析数据：fetch 得到 404 通常仍兑现为 Response，不会自动进入 catch。下面展示调用形状，接口与凭据均是占位值；需要对应服务器、权限和浏览器跨源配置才能真实调用。"
+    ],
+    "takeaways": [
+      "CORS、认证、HTTPS、数据解析分别解决不同问题。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "async function loadBook(apiBase, accessToken) {\n  const response = await fetch(new URL('/books/7', apiBase), {\n    headers: {\n      Accept: 'application/json',\n      Authorization: `Bearer ${accessToken}`\n    }\n  });\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  return response.json();\n}\n// 有真实 API 时调用：await loadBook(apiBase, accessToken)\n// 200 + {\"id\":7,\"title\":\"Web\"} → 返回对象\n// 404 → 抛出 Error(\"HTTP 404\")",
+      "explanation": "函数本身不发送请求，调用时才发送。Authorization 不会自动产生有效 token；服务器仍要验证。跨源时还需服务器允许相应请求，不能靠客户端加一个 CORS 响应头解决。"
+    },
+    "question": {
+      "prompt": "fetch 返回 404 时，为什么直接写 response.json() 可能把错误对象当成正常数据？",
+      "answer": "HTTP 404 通常不会让 fetch 自动拒绝；如果错误响应也是 JSON，它仍可被解析。先检查 response.ok，再走成功数据处理。"
+    }
+  },
+  {
+    "page": 7,
+    "title": "云服务范围",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "托管、存储、备份、内容交付等是能力分类，费用与产品例子作背景，不逐项背诵。",
+    "explanation": [
+      "托管、存储、备份、内容交付等是能力分类，费用与产品例子作背景，不逐项背诵。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 8,
+    "title": "REST 的资源视角",
+    "section": "资源、表示与无状态请求",
+    "priority": "core",
+    "summary": "URI 标识资源，表示传递其状态，统一接口组织操作；创始人和年份不进入记忆任务。",
+    "explanation": [
+      "URI 标识资源，表示传递其状态，统一接口组织操作；创始人和年份不进入记忆任务。",
+      "把书看作资源，用 /books/7 标识它；客户端收到的是它的一份表示，例如 JSON。资源本身不是某个必须位于磁盘上的 7.json 文件。REST 强调客户端与服务器分离、无状态、可缓存性、统一接口、分层，code-on-demand 是可选约束。",
+      "无状态要求每次请求足够完整，不依赖服务器记住“这个用户上一页刚选了哪本书”。GET /books/7 明确说明要哪本；只有 GET /selected-book、需要查之前会话才知道书号，就体现了对会话上下文的依赖。服务器保存图书数据库并不违反无状态。",
+      "课件第 10 页用“不使用 Cookie”强调避免服务器会话上下文；实际分析应追问请求是否自包含，不能只看有没有 Cookie。REST 本身也不提供加密或认证；HTTPS 提供传输保护，80/443 是否能通过防火墙取决于策略，并非永远开放。"
+    ],
+    "takeaways": [
+      "资源是被操作的对象；URI 标识它，表示是传输的内容。",
+      "无状态 ≠ 不存数据库，也不等于请求完全没有凭据。"
+    ],
+    "question": {
+      "prompt": "GET /books/7 时服务器查询数据库，是否违反 REST 的无状态约束？",
+      "answer": "不违反，数据库保存的是资源状态。关键是请求已说明资源与所需信息，不依赖服务器记住此前客户端的会话步骤。"
+    },
+    "links": [
+      {
+        "label": "Fielding：REST 的约束与无状态通信",
+        "url": "https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm"
+      }
+    ]
+  },
+  {
+    "page": 9,
+    "title": "接口风格比较",
+    "section": "REST、SOAP、RPC、GraphQL 如何比较",
+    "priority": "core",
+    "summary": "REST、SOAP、RPC、GraphQL 的组织方式不同，不能只根据是否使用 HTTP 或 JSON 判断。",
+    "explanation": [
+      "REST、SOAP、RPC、GraphQL 的组织方式不同，不能只根据是否使用 HTTP 或 JSON 判断。",
+      "用“接口围绕什么组织”来区分：REST 围绕资源与统一接口；RPC 围绕远程调用方法；SOAP 规定 XML 消息封装；GraphQL 用 schema 和查询语言表达所需字段。它们都可能使用 HTTP，但不因此成为同一种接口。",
+      "不要背“某个永远更简单/强大”。例如只要书名时，GraphQL 可表达选择 title；REST 可以提供适合该场景的表示或字段筛选。复杂度还取决于缓存、错误模型、版本与实现需求。"
+    ],
+    "takeaways": [
+      "协议、架构风格、查询语言和数据格式分层比较。"
+    ],
+    "question": {
+      "prompt": "请求 body 使用 JSON-RPC 的 method:getBook，就因为 JSON + HTTP 而变成 REST 吗？",
+      "answer": "不会。这个例子围绕远程方法调用组织接口；数据格式和传输协议不改变它的接口风格。"
+    }
+  },
+  {
+    "page": 10,
+    "title": "无状态与传输保护",
+    "section": "资源、表示与无状态请求",
+    "priority": "core",
+    "summary": "每次请求应自包含；资源数据库不违反无状态，REST 本身也不自动提供加密或认证。",
+    "explanation": [
+      "每次请求应自包含；资源数据库不违反无状态，REST 本身也不自动提供加密或认证。",
+      "把书看作资源，用 /books/7 标识它；客户端收到的是它的一份表示，例如 JSON。资源本身不是某个必须位于磁盘上的 7.json 文件。REST 强调客户端与服务器分离、无状态、可缓存性、统一接口、分层，code-on-demand 是可选约束。",
+      "无状态要求每次请求足够完整，不依赖服务器记住“这个用户上一页刚选了哪本书”。GET /books/7 明确说明要哪本；只有 GET /selected-book、需要查之前会话才知道书号，就体现了对会话上下文的依赖。服务器保存图书数据库并不违反无状态。",
+      "课件第 10 页用“不使用 Cookie”强调避免服务器会话上下文；实际分析应追问请求是否自包含，不能只看有没有 Cookie。REST 本身也不提供加密或认证；HTTPS 提供传输保护，80/443 是否能通过防火墙取决于策略，并非永远开放。"
+    ],
+    "takeaways": [
+      "资源是被操作的对象；URI 标识它，表示是传输的内容。",
+      "无状态 ≠ 不存数据库，也不等于请求完全没有凭据。"
+    ]
+  },
+  {
+    "page": 11,
+    "title": "HTML 图书流程",
+    "section": "同一资源可以返回 HTML、XML 或 JSON",
+    "priority": "core",
+    "summary": "书单链接、详情链接和订购动作展示 HTML 也能承载资源表示与下一步交互。",
+    "explanation": [
+      "书单链接、详情链接和订购动作展示 HTML 也能承载资源表示与下一步交互。",
+      "课件用同一套图书操作对照 HTML、XML、JSON。表示格式会变化，资源“书 7”仍然是同一个概念。Accept 描述客户端希望收到的类型；Content-Type 描述这条消息实际使用的类型。",
+      "第 20 页称 HTML 不适合作为 REST 响应，不能把它记成协议禁令：第 11 页已经展示 HTML 与链接的 REST 交互，REST 也不限定只能 JSON。第 14 页的 text/json 应改为常用的 application/json；JSON 的引号、逗号和数组结构仍须合法。",
+      "表示中的链接给客户端下一步可做的动作，例如书详情里给出订购链接。统一接口不只是把函数名换成 URL；还涉及可识别的资源、自描述消息与通过表示驱动交互。"
+    ],
+    "takeaways": [
+      "先读 Content-Type，再决定怎样解析 body。",
+      "HTML 可以是资源表示；JSON 格式本身也不能证明 REST。"
+    ],
+    "example": {
+      "lang": "http",
+      "code": "GET /books/7 HTTP/1.1\nHost: api.example\nAccept: application/json\n\nHTTP/1.1 200 OK\nContent-Type: application/json\nVary: Accept\n\n{\"id\":7,\"title\":\"Web\",\"links\":{\"self\":\"/books/7\",\"orders\":\"/orders\"}}",
+      "explanation": "这是请求与响应的两段报文。若服务支持 HTML，Accept:text/html 可得到 HTML 表示；不支持的类型可能得到 406。Vary:Accept 告诉缓存区分按此请求头选择的表示。"
+    },
+    "question": {
+      "prompt": "Accept:application/json 与响应 Content-Type:text/html 谁决定 response.json() 能否正确解析？",
+      "answer": "解析器面对的是实际响应 body，Content-Type 描述服务器发来的类型；请求中的 Accept 不会把 HTML 自动变成 JSON。应先检查响应状态与类型。"
+    }
+  },
+  {
+    "page": 12,
+    "title": "XML 图书表示",
+    "section": "同一资源可以返回 HTML、XML 或 JSON",
+    "priority": "core",
+    "summary": "同一书单和详情可用 XML 表达；改变格式不等于改变了被标识的资源。",
+    "explanation": [
+      "同一书单和详情可用 XML 表达；改变格式不等于改变了被标识的资源。",
+      "课件用同一套图书操作对照 HTML、XML、JSON。表示格式会变化，资源“书 7”仍然是同一个概念。Accept 描述客户端希望收到的类型；Content-Type 描述这条消息实际使用的类型。",
+      "第 20 页称 HTML 不适合作为 REST 响应，不能把它记成协议禁令：第 11 页已经展示 HTML 与链接的 REST 交互，REST 也不限定只能 JSON。第 14 页的 text/json 应改为常用的 application/json；JSON 的引号、逗号和数组结构仍须合法。",
+      "表示中的链接给客户端下一步可做的动作，例如书详情里给出订购链接。统一接口不只是把函数名换成 URL；还涉及可识别的资源、自描述消息与通过表示驱动交互。"
+    ],
+    "takeaways": [
+      "先读 Content-Type，再决定怎样解析 body。",
+      "HTML 可以是资源表示；JSON 格式本身也不能证明 REST。"
+    ]
+  },
+  {
+    "page": 13,
+    "title": "XML 创建订单",
+    "section": "创建订单：请求体、201 与 Location",
+    "priority": "core",
+    "summary": "客户端 POST 订单信息，服务器以 201 Created 与 Location 标识新建资源。",
+    "explanation": [
+      "客户端 POST 订单信息，服务器以 201 Created 与 Location 标识新建资源。",
+      "POST /orders 表示向订单集合提交新订单。请求的 Content-Type 让服务器知道怎样读正文；成功创建后，201 Created 表达结果，Location 指向新资源。Location 不是响应格式，也不表示浏览器一定像 302 那样自动跳转。",
+      "XML 与 JSON 的两个课件例子描述同一流程。下面改用有效 JSON，补上明确字段；真正的价格、权限和库存仍由服务端校验，不能因为客户端提交了某个值就信任它。"
+    ],
+    "takeaways": [
+      "请求 Content-Type 管输入格式；201 / Location 管创建结果。"
+    ],
+    "example": {
+      "lang": "http",
+      "code": "POST /orders HTTP/1.1\nHost: api.example\nContent-Type: application/json\n\n{\"bookId\":7,\"quantity\":2}\n\nHTTP/1.1 201 Created\nLocation: /orders/42\nContent-Type: application/json\n\n{\"id\":42,\"bookId\":7,\"quantity\":2}",
+      "explanation": "上半是请求，下半是成功响应，不是一条混合报文。客户端随后可 GET /orders/42；重复发同样 POST 则可能又创建 /orders/43。"
+    },
+    "question": {
+      "prompt": "创建成功后返回 201 和 Location:/orders/42，客户端怎样读取新订单？",
+      "answer": "发 GET /orders/42。201 说明创建成功，Location 标识新资源；它并不自动证明重试 POST 不会产生重复订单。"
+    }
+  },
+  {
+    "page": 14,
+    "title": "JSON 图书表示",
+    "section": "同一资源可以返回 HTML、XML 或 JSON",
+    "priority": "core",
+    "summary": "JSON 对象和链接表达书单与详情；Content-Type 应使用 application/json，而非课件的 text/json。",
+    "explanation": [
+      "JSON 对象和链接表达书单与详情；Content-Type 应使用 application/json，而非课件的 text/json。",
+      "课件用同一套图书操作对照 HTML、XML、JSON。表示格式会变化，资源“书 7”仍然是同一个概念。Accept 描述客户端希望收到的类型；Content-Type 描述这条消息实际使用的类型。",
+      "第 20 页称 HTML 不适合作为 REST 响应，不能把它记成协议禁令：第 11 页已经展示 HTML 与链接的 REST 交互，REST 也不限定只能 JSON。第 14 页的 text/json 应改为常用的 application/json；JSON 的引号、逗号和数组结构仍须合法。",
+      "表示中的链接给客户端下一步可做的动作，例如书详情里给出订购链接。统一接口不只是把函数名换成 URL；还涉及可识别的资源、自描述消息与通过表示驱动交互。"
+    ],
+    "takeaways": [
+      "先读 Content-Type，再决定怎样解析 body。",
+      "HTML 可以是资源表示；JSON 格式本身也不能证明 REST。"
+    ]
+  },
+  {
+    "page": 15,
+    "title": "JSON 创建订单",
+    "section": "创建订单：请求体、201 与 Location",
+    "priority": "core",
+    "summary": "请求体需要有效 JSON；成功响应的 Location 可供下一次 GET 获取新订单。",
+    "explanation": [
+      "请求体需要有效 JSON；成功响应的 Location 可供下一次 GET 获取新订单。",
+      "POST /orders 表示向订单集合提交新订单。请求的 Content-Type 让服务器知道怎样读正文；成功创建后，201 Created 表达结果，Location 指向新资源。Location 不是响应格式，也不表示浏览器一定像 302 那样自动跳转。",
+      "XML 与 JSON 的两个课件例子描述同一流程。下面改用有效 JSON，补上明确字段；真正的价格、权限和库存仍由服务端校验，不能因为客户端提交了某个值就信任它。"
+    ],
+    "takeaways": [
+      "请求 Content-Type 管输入格式；201 / Location 管创建结果。"
+    ]
+  },
+  {
+    "page": 16,
+    "title": "方法与复杂参数",
+    "section": "HTTP 方法：动作、安全性与幂等性",
+    "priority": "core",
+    "summary": "区分 GET、POST、PUT、PATCH、DELETE、HEAD、OPTIONS；safe 与幂等也要分别判断。",
+    "explanation": [
+      "区分 GET、POST、PUT、PATCH、DELETE、HEAD、OPTIONS；safe 与幂等也要分别判断。",
+      "先问要读、创建、整体替换、局部修改还是删除，再选方法。safe 表示请求语义是读取，不要求服务器绝对不记日志；idempotent 表示重复同一请求的预期资源效果与做一次相同，不要求响应文本或状态码每次相同。",
+      "DELETE /books/7 第一次删掉资源、第二次返回不存在，仍可幂等。POST /orders 重试却可能创建两笔订单。PATCH 取决于操作：“价格设为 20”可以幂等，“价格加 1”通常不幂等；不要把 PATCH 与 PUT 都简单记成任意更新。"
+    ],
+    "takeaways": [
+      "safe 方法也应幂等；幂等方法不一定 safe。",
+      "重试是否会重复创建，是判断方法语义的好例子。"
+    ],
+    "example": {
+      "lang": "text",
+      "code": "初始：/books/7 的 price = 10\nPUT 同一完整表示 {\"id\":7,\"title\":\"Web\",\"price\":20} 两次 → 20\nPATCH 操作「price 增加 1」两次 → 12\nDELETE /books/7 两次 → 资源仍不存在（响应可不同）",
+      "explanation": "三个实验各自从初始状态开始。PUT 重复相同替换保持结果；增量 PATCH 每次都有新效果；DELETE 的幂等性看最终资源状态。"
+    },
+    "question": {
+      "prompt": "DELETE 第一次返回 204，第二次返回 404，是否因此不幂等？",
+      "answer": "不是。幂等比较预期资源效果，不要求响应一致；两次之后资源都不存在。"
+    },
+    "links": [
+      {
+        "label": "RFC 9110：safe 与 idempotent",
+        "url": "https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2"
+      },
+      {
+        "label": "RFC 5789：PATCH 方法",
+        "url": "https://www.rfc-editor.org/rfc/rfc5789.html#section-2"
+      }
+    ]
+  },
+  {
+    "page": 17,
+    "title": "Postman 请求检查",
+    "section": "API 调试工具：会配置请求即可",
+    "priority": "skim",
+    "summary": "会设置方法、地址、headers 和正文即可，套餐功能与配额不作为核心考点。",
+    "explanation": [
+      "会设置方法、地址、headers 和正文即可，套餐功能与配额不作为核心考点。",
+      "Postman、Hoppscotch、Apidog 的截图展示同类工作：选方法、填 URL、设置 headers/body，发请求后检查状态、响应头和正文。课程重点是读懂 HTTP，不是记各工具套餐或按钮坐标。",
+      "例如测试 POST /orders 时，确认 Content-Type:application/json、body 是有效 JSON，再核对 201 与 Location；仅看到一个漂亮的 JSON 窗口，不代表响应状态正确。"
+    ],
+    "takeaways": [
+      "工具是观察请求的入口；HTTP 方法与内容仍由你配置。"
+    ]
+  },
+  {
+    "page": 18,
+    "title": "Hoppscotch 请求检查",
+    "section": "API 调试工具：会配置请求即可",
+    "priority": "skim",
+    "summary": "工具换了，仍然要对照同一套 HTTP 请求与响应字段，不靠界面名称推断结果。",
+    "explanation": [
+      "工具换了，仍然要对照同一套 HTTP 请求与响应字段，不靠界面名称推断结果。",
+      "Postman、Hoppscotch、Apidog 的截图展示同类工作：选方法、填 URL、设置 headers/body，发请求后检查状态、响应头和正文。课程重点是读懂 HTTP，不是记各工具套餐或按钮坐标。",
+      "例如测试 POST /orders 时，确认 Content-Type:application/json、body 是有效 JSON，再核对 201 与 Location；仅看到一个漂亮的 JSON 窗口，不代表响应状态正确。"
+    ],
+    "takeaways": [
+      "工具是观察请求的入口；HTTP 方法与内容仍由你配置。"
+    ]
+  },
+  {
+    "page": 19,
+    "title": "Apidog 请求检查",
+    "section": "API 调试工具：会配置请求即可",
+    "priority": "skim",
+    "summary": "调试窗口只是载体；状态码正确、正文类型正确和业务数据正确是三项独立检查。",
+    "explanation": [
+      "调试窗口只是载体；状态码正确、正文类型正确和业务数据正确是三项独立检查。",
+      "Postman、Hoppscotch、Apidog 的截图展示同类工作：选方法、填 URL、设置 headers/body，发请求后检查状态、响应头和正文。课程重点是读懂 HTTP，不是记各工具套餐或按钮坐标。",
+      "例如测试 POST /orders 时，确认 Content-Type:application/json、body 是有效 JSON，再核对 201 与 Location；仅看到一个漂亮的 JSON 窗口，不代表响应状态正确。"
+    ],
+    "takeaways": [
+      "工具是观察请求的入口；HTTP 方法与内容仍由你配置。"
+    ]
+  },
+  {
+    "page": 20,
+    "title": "响应格式的边界",
+    "section": "同一资源可以返回 HTML、XML 或 JSON",
+    "priority": "core",
+    "summary": "JSON、XML、CSV、HTML 都可作为表示；不要把“REST 不能返回 HTML”当成协议规则。",
+    "explanation": [
+      "JSON、XML、CSV、HTML 都可作为表示；不要把“REST 不能返回 HTML”当成协议规则。",
+      "课件用同一套图书操作对照 HTML、XML、JSON。表示格式会变化，资源“书 7”仍然是同一个概念。Accept 描述客户端希望收到的类型；Content-Type 描述这条消息实际使用的类型。",
+      "第 20 页称 HTML 不适合作为 REST 响应，不能把它记成协议禁令：第 11 页已经展示 HTML 与链接的 REST 交互，REST 也不限定只能 JSON。第 14 页的 text/json 应改为常用的 application/json；JSON 的引号、逗号和数组结构仍须合法。",
+      "表示中的链接给客户端下一步可做的动作，例如书详情里给出订购链接。统一接口不只是把函数名换成 URL；还涉及可识别的资源、自描述消息与通过表示驱动交互。"
+    ],
+    "takeaways": [
+      "先读 Content-Type，再决定怎样解析 body。",
+      "HTML 可以是资源表示；JSON 格式本身也不能证明 REST。"
+    ]
+  },
+  {
+    "page": 21,
+    "title": "Flickr 接口案例",
+    "section": "读懂 Flickr 示例：JSONP 不是 JSON",
+    "priority": "core",
+    "summary": "按实际请求和响应理解接口，不使用课件里的示例 key，也不从服务品牌推断完整 REST 约束。",
+    "explanation": [
+      "按实际请求和响应理解接口，不使用课件里的示例 key，也不从服务品牌推断完整 REST 约束。",
+      "课件第 23–24 页虽然标题写 JSON，实际正文带 jsonFlickrApi(...) 包装：这是 JSONP，即一段函数调用形式的 JavaScript。JSON.parse 只接受 JSON 文本，不能直接解析这一整段调用。URL 写 format=json 也不能替代检查实际响应。",
+      "把示例里的数据对象单独看：photos 是分页容器，photo 才是照片数组，page / pages / perpage / total 描述分页。不要对外层对象直接调用 map；更不要为了解析不可信响应而 eval。下面只用本地数据练习结构读取，不访问旧课件里的服务或 key。"
+    ],
+    "takeaways": [
+      "先辨认是否有回调包装，再定位真正的数组。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "const raw = '{\"photos\":{\"page\":1,\"pages\":10,\"photo\":[{\"id\":\"7\",\"title\":\"Sun\"},{\"id\":\"8\",\"title\":\"Moon\"}]}}';\nconst data = JSON.parse(raw);\nconsole.log(data.photos.photo.map(item => item.title)); // [\"Sun\", \"Moon\"]\nconst jsonp = `jsonFlickrApi(${raw})`;\ntry { JSON.parse(jsonp); } catch (error) {\n  console.log(error.name); // SyntaxError\n}",
+      "explanation": "第一段是合法 JSON，所以得到对象和标题数组；加上函数名后就成了 JavaScript 调用语法。该错误与是否跨域无关，是数据语法不匹配。"
+    },
+    "question": {
+      "prompt": "JSON.parse(\"jsonFlickrApi({\"photos\":{}})\") 为什么失败？",
+      "answer": "整段是函数调用语法，不是 JSON。JSONP 的回调包装不能直接交给 JSON.parse；应按接口提供的纯 JSON 方式请求，或使用契约规定的处理方式。"
+    }
+  },
+  {
+    "page": 22,
+    "title": "Flickr 网站截图",
+    "section": "读懂 Flickr 示例：JSONP 不是 JSON",
+    "priority": "core",
+    "summary": "这页提供照片服务的应用背景；复习重点在相邻页面的请求和响应数据结构。",
+    "explanation": [
+      "这页提供照片服务的应用背景；复习重点在相邻页面的请求和响应数据结构。",
+      "课件第 23–24 页虽然标题写 JSON，实际正文带 jsonFlickrApi(...) 包装：这是 JSONP，即一段函数调用形式的 JavaScript。JSON.parse 只接受 JSON 文本，不能直接解析这一整段调用。URL 写 format=json 也不能替代检查实际响应。",
+      "把示例里的数据对象单独看：photos 是分页容器，photo 才是照片数组，page / pages / perpage / total 描述分页。不要对外层对象直接调用 map；更不要为了解析不可信响应而 eval。下面只用本地数据练习结构读取，不访问旧课件里的服务或 key。"
+    ],
+    "takeaways": [
+      "先辨认是否有回调包装，再定位真正的数组。"
+    ]
+  },
+  {
+    "page": 23,
+    "title": "JSONP 响应文本",
+    "section": "读懂 Flickr 示例：JSONP 不是 JSON",
+    "priority": "core",
+    "summary": "jsonFlickrApi(...) 是 JavaScript 回调调用，不能把整段直接交给 JSON.parse。",
+    "explanation": [
+      "jsonFlickrApi(...) 是 JavaScript 回调调用，不能把整段直接交给 JSON.parse。",
+      "课件第 23–24 页虽然标题写 JSON，实际正文带 jsonFlickrApi(...) 包装：这是 JSONP，即一段函数调用形式的 JavaScript。JSON.parse 只接受 JSON 文本，不能直接解析这一整段调用。URL 写 format=json 也不能替代检查实际响应。",
+      "把示例里的数据对象单独看：photos 是分页容器，photo 才是照片数组，page / pages / perpage / total 描述分页。不要对外层对象直接调用 map；更不要为了解析不可信响应而 eval。下面只用本地数据练习结构读取，不访问旧课件里的服务或 key。"
+    ],
+    "takeaways": [
+      "先辨认是否有回调包装，再定位真正的数组。"
+    ]
+  },
+  {
+    "page": 24,
+    "title": "分页对象与照片数组",
+    "section": "读懂 Flickr 示例：JSONP 不是 JSON",
+    "priority": "core",
+    "summary": "photos 包含分页元信息，photos.photo 才是要逐项遍历的数组。",
+    "explanation": [
+      "photos 包含分页元信息，photos.photo 才是要逐项遍历的数组。",
+      "课件第 23–24 页虽然标题写 JSON，实际正文带 jsonFlickrApi(...) 包装：这是 JSONP，即一段函数调用形式的 JavaScript。JSON.parse 只接受 JSON 文本，不能直接解析这一整段调用。URL 写 format=json 也不能替代检查实际响应。",
+      "把示例里的数据对象单独看：photos 是分页容器，photo 才是照片数组，page / pages / perpage / total 描述分页。不要对外层对象直接调用 map；更不要为了解析不可信响应而 eval。下面只用本地数据练习结构读取，不访问旧课件里的服务或 key。"
+    ],
+    "takeaways": [
+      "先辨认是否有回调包装，再定位真正的数组。"
+    ]
+  },
+  {
+    "page": 25,
+    "title": "地图查询的输入",
+    "section": "地图与商品案例：读请求和数据结构",
+    "priority": "core",
+    "summary": "地理编码与反向地理编码输入不同；地址和坐标参数应遵守具体接口约定并正确编码。",
+    "explanation": [
+      "地理编码与反向地理编码输入不同；地址和坐标参数应遵守具体接口约定并正确编码。",
+      "地图例子区分地址查坐标（geocoding）、坐标查地址（reverse geocoding）及其它资源查询。掌握“输入参数 → 服务处理 → 结构化响应”，不用背旧服务 URL、产品 key 或固定参数列表；实际接入时另查当时接口契约。",
+      "第 29 页的数据流把客户端、消息处理层和数据层分开，第 30 页展示商品相关实体关系。XML/HTTP 只是消息格式与传输组合，图上的标签不能证明它满足 REST 全部约束。响应字段要按层级读取，不能把实体 ID 与展示名称混淆。"
+    ],
+    "takeaways": [
+      "接口参数与字段来自契约，不从服务商名称推断。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "const response = {\n  resources: [{ name: 'Campus', point: { coordinates: [34.02, -118.29] } }]\n};\n// 本例明确约定 coordinates 顺序为 [latitude, longitude]。\nconst place = response.resources[0];\nconst [lat, lon] = place.point.coordinates;\nconsole.log(`${place.name}: lat=${lat}, lon=${lon}`);\n// Campus: lat=34.02, lon=-118.29",
+      "explanation": "这是便于练习的本地响应结构，不声称与任何服务的当前字段完全相同。其它接口可能规定 [longitude, latitude]，读取前必须确认顺序。"
+    },
+    "question": {
+      "prompt": "看到 coordinates:[34.02,-118.29]，能否只凭数组名称确定第一项是纬度？",
+      "answer": "不能。要看接口契约；本例特意声明 [latitude, longitude]，另一些格式会用相反顺序。"
+    }
+  },
+  {
+    "page": 26,
+    "title": "地图响应约定",
+    "section": "地图与商品案例：读请求和数据结构",
+    "priority": "core",
+    "summary": "格式参数和回调参数可能改变返回方式；最终应核对真实 Content-Type 与正文结构。",
+    "explanation": [
+      "格式参数和回调参数可能改变返回方式；最终应核对真实 Content-Type 与正文结构。",
+      "地图例子区分地址查坐标（geocoding）、坐标查地址（reverse geocoding）及其它资源查询。掌握“输入参数 → 服务处理 → 结构化响应”，不用背旧服务 URL、产品 key 或固定参数列表；实际接入时另查当时接口契约。",
+      "第 29 页的数据流把客户端、消息处理层和数据层分开，第 30 页展示商品相关实体关系。XML/HTTP 只是消息格式与传输组合，图上的标签不能证明它满足 REST 全部约束。响应字段要按层级读取，不能把实体 ID 与展示名称混淆。"
+    ],
+    "takeaways": [
+      "接口参数与字段来自契约，不从服务商名称推断。"
+    ]
+  },
+  {
+    "page": 27,
+    "title": "AWS 服务与价格示例",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "计算服务、实例与收费方式用于说明云能力；旧价格和机型不用记，也不视作当前报价。",
+    "explanation": [
+      "计算服务、实例与收费方式用于说明云能力；旧价格和机型不用记，也不视作当前报价。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 28,
+    "title": "商品服务的调用者",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "联盟站点、商家和开发者说明不同 API 消费者，产品名称与旧参与流程只作背景。",
+    "explanation": [
+      "联盟站点、商家和开发者说明不同 API 消费者，产品名称与旧参与流程只作背景。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 29,
+    "title": "商品服务数据流",
+    "section": "地图与商品案例：读请求和数据结构",
+    "priority": "core",
+    "summary": "分清客户端、消息处理与数据存储；XML 加 HTTP 不自动等于完全遵守 REST。",
+    "explanation": [
+      "分清客户端、消息处理与数据存储；XML 加 HTTP 不自动等于完全遵守 REST。",
+      "地图例子区分地址查坐标（geocoding）、坐标查地址（reverse geocoding）及其它资源查询。掌握“输入参数 → 服务处理 → 结构化响应”，不用背旧服务 URL、产品 key 或固定参数列表；实际接入时另查当时接口契约。",
+      "第 29 页的数据流把客户端、消息处理层和数据层分开，第 30 页展示商品相关实体关系。XML/HTTP 只是消息格式与传输组合，图上的标签不能证明它满足 REST 全部约束。响应字段要按层级读取，不能把实体 ID 与展示名称混淆。"
+    ],
+    "takeaways": [
+      "接口参数与字段来自契约，不从服务商名称推断。"
+    ]
+  },
+  {
+    "page": 30,
+    "title": "商品数据模型",
+    "section": "地图与商品案例：读请求和数据结构",
+    "priority": "core",
+    "summary": "实体之间有 ID 与关联，读取嵌套响应先沿正确字段路径定位，不用背完整商品字段树。",
+    "explanation": [
+      "实体之间有 ID 与关联，读取嵌套响应先沿正确字段路径定位，不用背完整商品字段树。",
+      "地图例子区分地址查坐标（geocoding）、坐标查地址（reverse geocoding）及其它资源查询。掌握“输入参数 → 服务处理 → 结构化响应”，不用背旧服务 URL、产品 key 或固定参数列表；实际接入时另查当时接口契约。",
+      "第 29 页的数据流把客户端、消息处理层和数据层分开，第 30 页展示商品相关实体关系。XML/HTTP 只是消息格式与传输组合，图上的标签不能证明它满足 REST 全部约束。响应字段要按层级读取，不能把实体 ID 与展示名称混淆。"
+    ],
+    "takeaways": [
+      "接口参数与字段来自契约，不从服务商名称推断。"
+    ]
+  },
+  {
+    "page": 31,
+    "title": "Google API 目录",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "目录展示可调用能力的范围，不是本章需要记忆的产品清单。",
+    "explanation": [
+      "目录展示可调用能力的范围，不是本章需要记忆的产品清单。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 32,
+    "title": "App Engine 托管",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "平台负责运行应用，开发者仍需实现请求处理；调用 API 与把应用托管在云端是不同动作。",
+    "explanation": [
+      "平台负责运行应用，开发者仍需实现请求处理；调用 API 与把应用托管在云端是不同动作。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 33,
+    "title": "托管配额截图",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "旧配额、版本和收费表会变化，作为背景即可，不用于推断考试题量或当前平台限制。",
+    "explanation": [
+      "旧配额、版本和收费表会变化，作为背景即可，不用于推断考试题量或当前平台限制。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 34,
+    "title": "可编程搜索集成",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "外部搜索服务可以嵌入自己的页面；重点是调用与展示的分工，不是配置界面的旧名称。",
+    "explanation": [
+      "外部搜索服务可以嵌入自己的页面；重点是调用与展示的分工，不是配置界面的旧名称。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 35,
+    "title": "iCloud 开发者能力",
+    "section": "云平台、目录与产品配额：背景阅读",
+    "priority": "skim",
+    "summary": "云同步与存储说明另一类服务场景，历史操作系统和套餐规格不列入核心记忆。",
+    "explanation": [
+      "云同步与存储说明另一类服务场景，历史操作系统和套餐规格不列入核心记忆。",
+      "这些页展示计算托管、存储、内容交付、商品 API、搜索与云同步等应用。云平台提供运行或服务能力，SDK 让程序调用服务，REST 描述接口设计；三者不互相替代。“无需自己维护服务器”也不等于没有服务器在执行。",
+      "App Engine 的旧配额、EC2 的示例价格、支持语言/操作系统与产品目录会变化，不作为背诵清单，也不当成当前服务承诺。第 34 页的可编程搜索重在理解把外部能力集成到自己页面。"
+    ],
+    "takeaways": [
+      "保留“托管应用”和“调用 API”的区别，跳过产品榜单、价格和历史版本。"
+    ]
+  },
+  {
+    "page": 36,
+    "title": "REST 设计原则",
+    "section": "URI 与输入位置：让请求意图清楚",
+    "priority": "core",
+    "summary": "用逻辑资源 URI、正确方法和可跟随链接表达操作；query 可用于筛选，GET 不应用于删除等修改动作。",
+    "explanation": [
+      "用逻辑资源 URI、正确方法和可跟随链接表达操作；query 可用于筛选，GET 不应用于删除等修改动作。",
+      "优先用逻辑资源名：GET /books/7 读书，POST /orders 建订单，DELETE /orders/42 删订单；不要把实现文件名或动词堆进 URL。GET /deleteOrder?id=42 会让预取或爬虫误触发修改，不应这样设计。",
+      "Query string 很适合筛选、排序、分页，例如 /books?author=Ada&page=2；“减少 query”不等于禁止 query。资源读取通常用 GET，但复杂搜索也可能按接口约定用 POST 携带较大的条件，课件第 16 页已提到这种例外，不把第 36 页的 always 机械套到所有 API。"
+    ],
+    "takeaways": [
+      "路径标识资源，query 表达筛选等参数，body 放约定的提交内容。",
+      "路径中有名词只是设计线索，不足以证明完全遵守 REST。"
+    ],
+    "example": {
+      "lang": "js",
+      "code": "const url = new URL('/books', 'https://api.example');\nurl.searchParams.set('author', 'Ada & Bob');\nurl.searchParams.set('page', '2');\nconsole.log(url.href);\n// https://api.example/books?author=Ada+%26+Bob&page=2\nconsole.log(url.searchParams.get('author')); // Ada & Bob",
+      "explanation": "URLSearchParams 对单个参数编码，& 被写为 %26，不会把作者名拆成新参数。不要先把值编码一次，再交给 searchParams 重复编码。"
+    },
+    "question": {
+      "prompt": "GET /books?author=Ada&page=2 是否因为使用 query string 就不符合资源化设计？",
+      "answer": "不是。query 可表达集合筛选与分页；要判断请求的语义和资源接口，而不是看到问号就否定。"
+    }
+  }
+]

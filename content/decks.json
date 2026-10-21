@@ -24,6 +24,22 @@
     "phase": "new"
   },
   {
+    "id": "cookies",
+    "file": "Cookies-and-Privacy.pdf",
+    "title": "Cookies 与 Privacy",
+    "description": "Cookie 收发与作用域、跨站状态、Session 与 JWT",
+    "count": 54,
+    "phase": "new"
+  },
+  {
+    "id": "rest",
+    "file": "WebServices.pdf",
+    "title": "Web Services 与 REST",
+    "description": "资源与表示、HTTP 方法、无状态请求与 API 设计",
+    "count": 36,
+    "phase": "new"
+  },
+  {
     "id": "intro",
     "file": "CourseIntro.pdf",
     "title": "课程导览",

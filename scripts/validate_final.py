@@ -20,6 +20,11 @@ for d in decks:
   assert len(all_pages)==len(set(all_pages))
   assert all(1<=p<=d['count'] for p in all_pages)
   chars=sum(len(x) for s in data['sections'] for x in s['paragraphs'])
+  if d['phase']=='new':
+   assert sorted(all_pages)==list(range(1,d['count']+1)),'New lectures must cover every PDF page'
+   notes=read(f'content/{slug}.json')
+   assert [p['question'] for p in notes if p.get('question')]==[s['question'] for s in sorted(data['sections'],key=lambda s:s.get('anchor',s['pages'][0])) if s.get('question')],'Reader and summary quizzes must agree'
+   assert questions,'New lectures need review questions'
   if d['phase']=='foundation':
    assert sorted(all_pages)==d['corePages']
    assert len(questions)==1,'Exactly one core question per old chapter'
@@ -31,7 +36,7 @@ for d in decks:
    assert not history.intersection(all_pages),'History must not become core'
   stats.append(dict(id=slug,sections=len(data['sections']),pages=len(all_pages),questions=len(questions),chars=chars))
  except Exception as e:errors.append(f"{d['id']}: {e}")
-assert sum(d['count'] for d in decks if d['phase']=='new')==139
+assert {'responsive':59,'react':45,'node':35,'cookies':54,'rest':36}.items() <= {d['id']:d['count'] for d in decks if d['phase']=='new'}.items()
 assert sum(d['phase']=='foundation' for d in decks)==13
 print(json.dumps(dict(stats=stats,errors=errors),ensure_ascii=False,indent=2))
 raise SystemExit(bool(errors))

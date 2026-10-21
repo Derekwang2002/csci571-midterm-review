@@ -78,3 +78,24 @@ test('final edition preserves legacy marks and new lecture / full-summary bookma
   assert.equal(restored.getQuiz().edition,'final');
   assert(!restored.validRoute('#/interpretations/html/unexpected'));
 });
+
+test('adding Cookie and REST preserves previous progress and roundtrips new page IDs',()=>{
+  const storage=new Storage();
+  const previous=create(storage);
+  previous.setMark('html:14','done');previous.saveQuiz(quiz);
+  const newDecks=[...decks,{id:'cookies',count:54},{id:'rest',count:36}];
+  const expanded=create(storage,{decks:newDecks});
+  assert(expanded.readMarks().done.has('html:14'));
+  assert.deepEqual(expanded.getQuiz(),quiz);
+  expanded.setMark('cookies:54','done');expanded.setMark('rest:36','weak');
+  expanded.saveReading({...bookmark,route:'#/interpretations/cookies'});
+  expanded.saveReading({...bookmark,route:'#/deck/rest/36'});
+  const restored=create(new Storage(),{decks:newDecks});
+  restored.importData(expanded.exportData());
+  assert(restored.readMarks().done.has('html:14'));
+  assert(restored.readMarks().done.has('cookies:54'));
+  assert(restored.readMarks().weak.has('rest:36'));
+  assert(restored.getReading('#/interpretations/cookies'));
+  assert.equal(restored.lastReading().route,'#/deck/rest/36');
+  assert.deepEqual(restored.getQuiz(),quiz);
+});

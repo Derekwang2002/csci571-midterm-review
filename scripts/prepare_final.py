@@ -1,9 +1,11 @@
-"""Prepare only the three new lecture PDFs; preserve existing slide assets and IDs."""
+"""Prepare final lecture PDFs (or selected IDs); preserve existing assets and phases."""
 from pathlib import Path
-import subprocess,json,concurrent.futures
+import subprocess,json,concurrent.futures,sys
 from PIL import Image,ImageDraw
 SITE=Path(__file__).resolve().parents[1];ROOT=SITE.parent
-NEW=[('responsive','responsive.pdf','Responsive Web Design','视口、媒体查询、弹性布局与 Bootstrap 栅格'),('react','React.pdf','React','组件、props/state、生命周期与 React Native'),('node','Node.pdf','Node.js','异步 I/O、模块、HTTP 与后端路由')]
+NEW=[('responsive','responsive.pdf','Responsive Web Design','视口、媒体查询、弹性布局与 Bootstrap 栅格'),('react','React.pdf','React','组件、props/state、生命周期与 React Native'),('node','Node.pdf','Node.js','异步 I/O、模块、HTTP 与后端路由'),('cookies','Cookies-and-Privacy.pdf','Cookies 与 Privacy','Cookie 收发与作用域、跨站状态、Session 与 JWT'),('rest','WebServices.pdf','Web Services 与 REST','资源与表示、HTTP 方法、无状态请求与 API 设计')]
+selected=set(sys.argv[1:]) or {row[0] for row in NEW}
+assert selected <= {row[0] for row in NEW},'Unknown lecture ID'
 TEMP=ROOT/'tmp/final-source';TEMP.mkdir(parents=True,exist_ok=True)
 def prepare(row):
  slug,file,title,description=row;dest=SITE/'assets/slides'/slug;dest.mkdir(parents=True,exist_ok=True)
@@ -21,10 +23,12 @@ def prepare(row):
    sheet.paste(pic,(x,y));draw.text((j%3*500+8,j//3*320+6),f'{slug} PDF {n+1}',fill='black')
   sheet.save(TEMP/f'{slug}-contact-{start//9+1:02}.jpg',quality=90)
  return dict(id=slug,file=file,title=title,description=description,count=len(pages),phase='new'),records
-with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:results=list(pool.map(prepare,NEW))
-decks=json.loads((SITE/'content/decks.json').read_text());sources=json.loads((SITE/'content/sources.json').read_text());newids={r[0]['id'] for r in results}
-old=[dict(d,phase='admin' if d['id']=='syllabus' else 'foundation') for d in decks if d['id'] not in newids]
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:results=list(pool.map(prepare,[row for row in NEW if row[0] in selected]))
+decks=json.loads((SITE/'content/decks.json').read_text());sources=json.loads((SITE/'content/sources.json').read_text())
+by_id={d['id']:d for d in decks}
+for d,_ in results:by_id[d['id']]=d
+ordered=[by_id[row[0]] for row in NEW if row[0] in by_id]+[d for d in decks if d['id'] not in {row[0] for row in NEW}]
 for d,records in results:sources[d['id']]=records
-(SITE/'content/decks.json').write_text(json.dumps([r[0] for r in results]+old,ensure_ascii=False,indent=2)+'\n')
+(SITE/'content/decks.json').write_text(json.dumps(ordered,ensure_ascii=False,indent=2)+'\n')
 (SITE/'content/sources.json').write_text(json.dumps(sources,ensure_ascii=False))
 print([(d['id'],d['count']) for d,_ in results])
