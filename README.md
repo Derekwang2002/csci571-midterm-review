@@ -6,7 +6,7 @@ Fall 2026 中文复习网站，部署到 [GitHub Pages](https://derekwang2002.gi
 - 旧 13 章默认显示核心回顾，每章 1–2 节、一例和一道自测。完整旧讲解仍可按需展开，不再作为期末通读任务。
 - 全部资料共 1045 页（18 份讲义 1035 页 + syllabus 10 页）。页码均为 PDF 阅读器页序。
 - 默认自测题池：新增 50 题 + 旧章 13 题，每轮随机最多 20 题；比例不代表正式考试分布。旧题库仍可选择。
-- 28 个交互实验、58 道实验挑战、169 个课件页面映射。Responsive、React、Node 各新增 3 个实验，旧 19 个实验保留。
+- 34 个交互实验、71 道实验挑战、200 个课件页面映射。Responsive、React、Node、Cookie、REST 各 3 个实验，旧 19 个实验保留。
 - 已掌握/待复习、阅读位置、展开状态和自测进度保存于当前浏览器；支持导出和合并导入。继续使用原存储命名空间与页面 ID。
 
 ## 范围依据
@@ -25,7 +25,7 @@ python3 scripts/validate.py
 python3 scripts/validate_interpretations.py
 python3 scripts/validate_final.py
 node scripts/validate_labs.mjs
-node --test scripts/progress.test.mjs scripts/final-labs.test.mjs
+node --test scripts/progress.test.mjs scripts/final-labs.test.mjs scripts/protocol-labs.test.mjs
 node --check app.js
 node --check interpretations.js
 ```
@@ -53,6 +53,12 @@ node --check interpretations.js
 | Responsive | 媒体查询与隐藏、Bootstrap 断点与嵌套、百分比与弹性图片 | iframe 中实际 CSS 布局；可改视口、选项和媒体查询实验的 CSS；缩放预览不改变 CSS 视口宽度 |
 | React | 快照与更新队列、props 与共享状态、Effect 依赖与清理 | 本地 React 19 / React DOM 真正渲染；参数、组件结果和代码联动 |
 | Node | 异步读取、Buffer 编码、Express 请求链 | Worker 实际执行 JS；文件等待和 Express 为明确标注的浏览器模型，编码由浏览器 API 实际计算 |
+| Cookie | 收发与作用域、写入删除与过期、SameSite 与第三方分区 | 可编辑 Set-Cookie / document.cookie 语句、切换请求环境；教学 Cookie 容器逐项显示接收、发送、脚本读取条件 |
+| REST | HTTP 方法与资源变化、表示格式与协商、客户端响应处理 | 可改方法、路径、JSON 请求体、Accept 和解析方式；资源服务为本地模型，响应解析使用实际 Response / Promise API |
+
+Cookie 实验不会读写网站的真实 Cookie。作用域实验固定为同站点请求；跨站实验使用已保存的 Cookie 比较 SameSite、第三方策略与嵌入场景的分区键。仅支持页面列出的测试域名与属性子集，不模拟完整浏览器策略。生命周期实验可推进时钟、保留不同 Path 的同名 Cookie，并检查删除时的作用域匹配。
+
+REST 实验的资源只保存在当前实验内，可连续发送两次并比较资源前后状态；`PATCH {"increment":1}` 是本实验 API 自定义语义。格式实验展示 HTTP 状态、Content-Type、原始正文和解析结果；客户端实验区分 HTTP 错误、网络失败和 JSON 解析失败。当前选项变化时同步解释，需手动执行的实验先清除旧结果。新增自动检查覆盖 Cookie 路径边界、过期、HttpOnly、SameSite / 分区规则，以及 HTTP 方法、状态码、表示协商和响应解析。
 
 Node 实验不启动服务器、不读取本机文件。配套代码展示对应的 Node 用法；Express 模型支持本页列出的路由与选项。自动检查将 160 组模型请求与真实 Express 对照，将 Unicode 编码及截断结果与原生 Buffer 对照。实验修改参数后会更新解释，需手动运行的实验先清除旧结果。
 

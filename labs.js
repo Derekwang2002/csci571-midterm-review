@@ -4,13 +4,15 @@ import {dataLabs} from './labs-data.js?v=20261006-feedback';
 import {responsiveLabs} from './labs-responsive.js?v=20261020-labs';
 import {reactLabs} from './labs-react.js?v=20261020-labs';
 import {nodeLabs} from './labs-node.js?v=20261020-labs';
+import {cookieLabs} from './labs-cookies.js?v=20261021-protocol-labs';
+import {restLabs} from './labs-rest.js?v=20261021-protocol-labs';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const categories = ['Responsive', 'React', 'Node', 'HTML', 'CSS', 'JavaScript', 'DOM', '数据与网络'];
-export const labs = [...responsiveLabs, ...reactLabs, ...nodeLabs, ...markupLabs, ...javascriptLabs, ...dataLabs].sort((a,b) => categories.indexOf(a.category)-categories.indexOf(b.category));
+const categories = ['Responsive', 'React', 'Node', 'Cookie', 'REST', 'HTML', 'CSS', 'JavaScript', 'DOM', '数据与网络'];
+export const labs = [...responsiveLabs, ...reactLabs, ...nodeLabs, ...cookieLabs, ...restLabs, ...markupLabs, ...javascriptLabs, ...dataLabs].sort((a,b) => categories.indexOf(a.category)-categories.indexOf(b.category));
 const labHref = id => `#/lab/${id}`;
 const pageHref = (deck,page) => `#/deck/${deck}/${page}`;
-const deckNames = {responsive:'Responsive',react:'React',node:'Node',html:'HTML',css:'CSS',jsbasics:'JavaScript Basics',jsadvanced:'JavaScript Advanced',dom:'DOM',forms:'HTML Forms',json:'JSON',http:'HTTP',web:'Web Basics'};
+const deckNames = {responsive:'Responsive',react:'React',node:'Node',cookies:'Cookie',rest:'REST',html:'HTML',css:'CSS',jsbasics:'JavaScript Basics',jsadvanced:'JavaScript Advanced',dom:'DOM',forms:'HTML Forms',json:'JSON',http:'HTTP',web:'Web Basics'};
 const pageRange = ref => `P${ref.start}${ref.end && ref.end!==ref.start ? '–'+ref.end : ''}`;
 
 export function relatedLabLinks(deck,page) {
@@ -21,10 +23,10 @@ export function relatedLabLinks(deck,page) {
 
 function labIndex(main) {
   document.title = '交互实验室 · CSCI 571';
-  const path = ['responsive-media','responsive-grid','react-state','react-effects','node-async','node-express'].map(id => labs.find(lab => lab.id===id)).filter(Boolean);
+  const path = ['responsive-media','react-state','node-express','cookie-scope','cookie-samesite','rest-methods'].map(id => labs.find(lab => lab.id===id)).filter(Boolean);
   main.innerHTML = `<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>交互实验室</div>
-    <header class="laboratory-head"><div><span class="eyebrow">THE FINAL EXPERIMENT WORKBOOK</span><h1>让代码里的规则变得可见</h1><p>先预测，改一个条件，再用结果解释原因。${labs.length} 个实验，把课件中的知识点变成可以亲手验证的问题。新增 Responsive、React、Node 各 3 个实验。</p></div><div class="laboratory-count">${labs.length}<small>INTERACTIVE LABS</small></div></header>
-    <section class="lab-path"><div><span class="block-label">期末优先路线</span><p>从响应式布局，到组件状态，再到服务器请求。每个实验约 5–10 分钟；旧章实验保留，按薄弱点补做。</p></div><ol>${path.map(lab => `<li><a href="${labHref(lab.id)}">${esc(lab.title)}</a></li>`).join('')}</ol></section>
+    <header class="laboratory-head"><div><span class="eyebrow">THE FINAL EXPERIMENT WORKBOOK</span><h1>让代码里的规则变得可见</h1><p>先预测，改一个条件，再用结果解释原因。${labs.length} 个实验，把课件中的知识点变成可以亲手验证的问题。Responsive、React、Node、Cookie、REST 各有 3 个实验。</p></div><div class="laboratory-count">${labs.length}<small>INTERACTIVE LABS</small></div></header>
+    <section class="lab-path"><div><span class="block-label">期末优先路线</span><p>从响应式布局、组件状态，到服务器请求、Cookie 与资源接口。每个实验约 5–10 分钟；旧章实验按薄弱点补做。</p></div><ol>${path.map(lab => `<li><a href="${labHref(lab.id)}">${esc(lab.title)}</a></li>`).join('')}</ol></section>
     <div class="lab-index-tools"><div class="lab-filters" role="group" aria-label="按技术筛选实验">${['全部',...categories].map((category,i) => `<button type="button" data-category="${esc(category)}" aria-pressed="${i===0}" class="${i===0?'selected':''}">${esc(category)} <small>${i===0?labs.length:labs.filter(lab=>lab.category===category).length}</small></button>`).join('')}</div><label class="lab-search">查找实验<input id="lab-search" type="search" placeholder="例如：作用域、表单、选择器" autocomplete="off"></label></div>
     <p class="lab-match-count" role="status" aria-live="polite"></p><div class="laboratory-list"></div>
     <p class="lab-scope-note">课件页码均为 PDF 页序。实验围绕语法、原理与代码分析编写；发展历史按教授说明无需复习。标注“拓展”的部分用于帮助理解，不代表额外考试范围。</p>`;

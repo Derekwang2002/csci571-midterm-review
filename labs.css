@@ -142,3 +142,20 @@
 .lab-raw-result {margin-top:16px;min-width:0;border-top:1px solid var(--line);padding-top:12px}
 .lab-raw-result>summary {cursor:pointer;color:var(--accent);font-size:12px;line-height:1.8}
 @media(max-width:700px){.lab-verdict{padding:13px 17px;display:block}.lab-verdict>span{display:block;margin-bottom:4px}.lab-verdict strong{font-size:13px}.lab-feedback-head{display:none}.lab-feedback-row{grid-template-columns:1fr;gap:9px;padding:16px}.lab-feedback-row small{display:block;font-size:10px;color:var(--muted);margin-bottom:2px}.lab-feedback h3{padding:14px 16px}}
+
+/* Protocol labs keep the message flow, storage and current result visible. */
+.protocol-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0;margin:0 0 18px;list-style:none}
+.protocol-stages li{min-width:0;border:1px solid var(--line);border-top:3px solid var(--accent);padding:12px;background:#fff}
+.protocol-stages small{display:block;font-size:11px;color:var(--muted);margin-bottom:8px}
+.protocol-stages strong{font-size:13px;font-weight:500;overflow-wrap:anywhere}
+.protocol-table{max-width:100%;overflow:auto;margin:15px 0;border:1px solid var(--line);border-radius:4px}
+.protocol-table table{border-collapse:collapse;width:100%;min-width:420px;font-size:12px;line-height:1.8}
+.protocol-table th,.protocol-table td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:10px;overflow-wrap:anywhere}
+.protocol-table th{font-weight:500;background:var(--paper)}
+.protocol-table td{max-width:220px}
+.protocol-pass{color:#2e633e;font-weight:600}.protocol-fail{color:#a03135;font-weight:600}
+.protocol-notice{padding:12px 15px;background:#f7f4eb;border-left:3px solid #a48c4b;overflow-wrap:anywhere}
+.protocol-state-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.protocol-state-pair>div{min-width:0}
+.protocol-history{padding-left:22px;max-height:320px;overflow:auto}.protocol-history li{padding:9px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.protocol-history span{display:block;color:var(--muted);font-size:11px}.protocol-history strong{font-size:12px;font-weight:500}
+@media(max-width:700px){.protocol-stages,.protocol-state-pair{grid-template-columns:1fr}.protocol-stages li{padding:10px}.protocol-stages small{margin-bottom:3px}}
