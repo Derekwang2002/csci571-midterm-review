@@ -4,8 +4,8 @@ import {dataLabs} from './labs-data.js?v=20261006-feedback';
 import {responsiveLabs} from './labs-responsive.js?v=20261020-labs';
 import {reactLabs} from './labs-react.js?v=20261020-labs';
 import {nodeLabs} from './labs-node.js?v=20261020-labs';
-import {cookieLabs} from './labs-cookies.js?v=20261021-protocol-labs';
-import {restLabs} from './labs-rest.js?v=20261021-protocol-labs';
+import {cookieLabs} from './labs-cookies.js?v=20261021-protocol-labs2';
+import {restLabs} from './labs-rest.js?v=20261021-protocol-labs2';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const categories = ['Responsive', 'React', 'Node', 'Cookie', 'REST', 'HTML', 'CSS', 'JavaScript', 'DOM', '数据与网络'];

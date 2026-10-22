@@ -1,5 +1,5 @@
 import {bench,ref,report,pending,invalid,esc,selectControl,metrics,links} from './labs-final-shared.js?v=20261020-labs';
-import {initialResources,METHOD_INFO,resourceRequest,representation,readSimulatedResponse,responseText} from './labs-rest-model.js?v=20261021-protocol-labs';
+import {initialResources,METHOD_INFO,resourceRequest,representation,readSimulatedResponse,responseText} from './labs-rest-model.js?v=20261021-protocol-labs2';
 const output=(name,label)=>`<h3>${label}</h3><pre class="lab-code" data-${name} aria-label="${label}"></pre>`;
 const json=value=>JSON.stringify(value,null,2);
 const methods=Object.entries(METHOD_INFO).map(([method,[label]])=>[method,`${method} · ${label}`]);
@@ -39,7 +39,15 @@ function methodLab(root) {
       ui.$('[data-history]').innerHTML=`<h3>最近请求（最多 8 条）</h3><ol class="protocol-history">${history.slice(-8).map(h=>`<li><strong>${esc(h.method+' '+h.path)} → ${h.status}</strong><span>${h.count} 条资源${h.body?'；body '+esc(h.body):''}</span></li>`).join('')}</ol>`;
       report(root,`${p.method} ${p.path} × ${times} → ${results.map(r=>r.status).join(' → ')}`,[[`方法 ${p.method}`,`Safe=${info[1]}；方法幂等保证=${info[2]}`,'REST PDF 16：safe 看是否要求修改；幂等看重复操作的预期资源效果，不看状态码是否相同。'],
         [`路径 ${p.path}`,out.headers.Location?`新资源 ${out.headers.Location}`:out.headers.Allow?`Allow: ${out.headers.Allow}`:`${out.status}`,out.why],
-        [['POST','PUT','PATCH'].includes(p.method)?`${p.type}；body ${p.body}`:'当前方法不使用请求体',out.status>=400?`请求被拒绝（${out.status}）`:changed?'资源已变化':'资源保持不变','本例 PUT 需要完整字段，PATCH 可只给 price；增量操作会累加。解析失败、校验失败和路由失败都不会修改资源。'],
+        [['POST','PUT','PATCH'].includes(p.method)?`${p.type}；body ${p.body}`:'当前方法不使用请求体',`本次状态：${results.map(r=>r.status).join(' → ')}`,{
+          GET:'按 URL 读取当前资源；请求体不会参与本实验的 GET 路由。',
+          HEAD:'按 URL 取得元信息，响应正文为空；请求体不会参与本实验的 HEAD 路由。',
+          OPTIONS:'按路径查询 Allow；本实验不使用请求体，也不修改资源。',
+          DELETE:'按 URL 定位并删除资源，不需要 JSON 请求体。资源删除后，再次请求可返回 404。',
+          POST:'本例要求 application/json 和完整 title、price；合法请求每次分配新 ID。类型、语法或字段不合法时不创建资源。',
+          PUT:'本例要求完整 title、price，并以 URL 指定 ID；缺少字段返回 422，不修改原资源。',
+          PATCH:'本例接受 title/price 的非空子集，或单独的 increment。固定值修改与增量修改有不同的重复效果；无效输入不改变资源。'
+        }[p.method]],
         [`连续发送 ${times} 次`,`${json(before)} → ${json(state.books)}`,times===2?'比较两次响应和当前资源。POST 可重复创建，增量 PATCH 可重复累加；PUT / DELETE 即使响应不同，重复效果仍可能相同。':'可点击“同样请求连续发送两次”，从当前状态继续比较；要从相同起点比较不同方法，先重置资源数据。']
       ]);
     }catch(error){ui.$('[data-response]').textContent='没有执行：'+error.message;invalid(root,error.message)}
@@ -99,7 +107,7 @@ function clientLab(root) {
     ui.$('[data-metrics]').innerHTML=metrics([['Response',p.network?'未取得':result.status],['response.ok',p.network?'不存在':String(result.ok)],['Promise',result.fulfilled?'fulfilled':'rejected']]);
     report(root,`${p.network?'网络失败':p.status} → ${result.fulfilled?'fulfilled':'rejected'}`,[[`请求结果 ${p.network?'网络失败':p.status}`,p.network?'没有 Response':`ok=${result.ok}`,p.network?'在解析正文之前就拒绝；这与服务器返回 404 不同。':'REST PDF 6 / Node PDF 26：fetch 收到 404 仍可取得 Response，必须自行判断 HTTP 成功与否。'],
       [`检查 ok：${p.guard?'是':'否'}`,p.network?'未到达此步骤':p.guard&&!result.ok?'主动抛出 HTTP 错误':'继续处理正文',p.network?'前一阶段失败，后面的选项没有执行。':p.guard?'只允许 200–299 的 ok 状态继续。':'错误响应如果带合法 JSON，仍可能被成功解析；不要把这当作业务成功。'],
-      [`正文读取 ${p.reader}`,p.network||p.guard&&!result.ok?'未执行':result.fulfilled?'读取成功或按选择跳过':result.error,p.status===204?'204 没有正文；调用 json() 会因空文本而失败，选择跳过正文可正常结束。':p.reader==='json'?'json() 按 JSON 语法解析，合法性取决于正文，而不是只看状态或 Content-Type。':'text() 交付字符串；跳过读取则得到 undefined。']
+      [`正文读取 ${p.reader}`,p.network||p.guard&&!result.ok?'未执行':result.fulfilled?'读取成功或按选择跳过':result.error,p.network?'没有取得 Response，所以未进入正文读取；当前解析选项不会影响这次网络失败。':p.guard&&!result.ok?'response.ok 检查已抛错，正文读取被跳过；当前正文是否合法尚未检查。':p.status===204?'204 没有正文；调用 json() 会因空文本而失败，选择跳过正文可正常结束。':p.reader==='json'?'json() 按 JSON 语法解析，合法性取决于正文，而不是只看状态或 Content-Type。':p.reader==='text'?'本次 text() 交付字符串，不检查 JSON 语法。':'按当前选择跳过读取，data 为 undefined。']
     ]);
   });
   for(const field of ['status','body','reader','guard'])ui.on(ui.$(`[data-${field}]`),'input',update);

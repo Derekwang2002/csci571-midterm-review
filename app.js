@@ -1,7 +1,7 @@
 import {createProgressStore, PROGRESS_PREFIX} from './progress.js?v=20261018-final';
 import {createReadingTracker} from './reading-progress.js?v=20261018-final';
 import {resumeBanner, showProgress} from './progress-view.js';
-import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261021-protocol-labs';
+import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261021-protocol-labs2';
 import {interpretationHref, interpretationIndex, showInterpretation, interpretationBanner, markHistoricalPage, studyGroups, finalScopeNotice} from './interpretations.js?v=20261021-cookies-rest';
 const $ = (s, root=document) => root.querySelector(s);
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -1,5 +1,5 @@
 import {bench,ref,report,invalid,esc,selectControl,metrics,links} from './labs-final-shared.js?v=20261020-labs';
-import {COOKIE_CLOCK,parseCookie,storeCookie,liveCookies,cookieChecks,cookieString,siteOf} from './labs-cookie-model.js?v=20261021-protocol-labs';
+import {COOKIE_CLOCK,parseCookie,storeCookie,liveCookies,cookieChecks,cookieString,siteOf} from './labs-cookie-model.js?v=20261021-protocol-labs2';
 const textControl=(name,label,value)=>`<label>${label}<input data-${name} value="${esc(value)}" maxlength="100"></label>`;
 const checkControl=(name,label,checked=false)=>`<label class="lab-inline"><input data-${name} type="checkbox" ${checked?'checked':''}>${label}</label>`;
 const output=(name,label)=>`<h3>${label}</h3><pre class="lab-code" data-${name} aria-label="${label}"></pre>`;
