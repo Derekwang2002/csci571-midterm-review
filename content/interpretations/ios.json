@@ -1,0 +1,422 @@
+{
+  "id": "ios",
+  "title": "iOS 移动设计 · 重点串讲",
+  "intro": "用相同的一台计算器对照 UIKit 与 SwiftUI。按键、模型与标签之间的数据流讲清楚后，切换历史页、解码网络数据也能循线分析。",
+  "goals": [
+    "用 Swift 的类型和可选值预测程序输出。",
+    "画出 UIKit MVC 与 SwiftUI MVVM 中一次按键的去向。",
+    "分别解释导航、数据传递和 JSON 解码。"
+  ],
+  "sections": [
+    {
+      "title": "同一部手机上，网页与原生应用怎样运行",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kind": "background",
+      "paragraphs": [
+        "在 Safari 打开餐厅菜单，浏览器解释 HTML、CSS 和 JavaScript。直接打开用 iOS SDK 写的餐厅应用，系统把手势交给它的原生界面。两条路径可以查同一家餐厅，却有不同的运行环境。",
+        "早期产品、收购与市场图解释平台怎样形成。读图先看统计对象是手机品牌还是操作系统，再把注意力放回 SDK、应用与系统的关系。"
+      ],
+      "takeaways": [
+        "按运行环境辨认 Web 与原生应用，历史年份可略读。"
+      ]
+    },
+    {
+      "title": "从屏幕向下读 iOS 平台",
+      "pages": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "按『附近餐厅』会得到一个位置，再把结果画成可触摸的列表。定位、网络、绘图和界面控件各需不同能力。应用可调用系统接口，各层再与底层硬件和操作系统协作。",
+        "课件按 Core OS、Core Services、Media、Cocoa Touch 分层。Xcode 是开发工具，Swift 是语言，UIKit 与 SwiftUI 是界面框架，MVC 与 MVVM 描述程序中各部分的分工。"
+      ],
+      "takeaways": [
+        "看到技术名先判断它是工具、语言、框架还是架构模式。"
+      ],
+      "question": {
+        "prompt": "要实现一张能点的餐厅地图，Swift、MapKit 和 Xcode 各负责什么？",
+        "answer": "用 Swift 描述逻辑，用 MapKit 取得地图相关界面与能力，在 Xcode 中编辑、构建和运行工程。"
+      }
+    },
+    {
+      "title": "用 Swift 表达有值、缺值和变化",
+      "pages": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "餐厅的评分可能尚未公布。让数值类型写成 Int?，就能明确区分零分和缺值；if let 只在确实有值时把它解出。用 ! 强制解包遇到 nil 会在运行时失败。",
+        "var 使绑定可重新赋值，let 固定绑定。数组靠位置找元素，字典靠键。读类的例子时先看初始化需要什么，再看方法返回什么；子类可覆盖继承的方法，实现自己的描述。"
+      ],
+      "takeaways": [
+        "用 optional 表示缺失，先解包再参与需要具体值的运算。"
+      ],
+      "example": {
+        "lang": "Swift",
+        "code": "let scores: [Int?] = [0, 4, nil]\nfor score in scores {\n    if let value = score { print(value) }\n}",
+        "explanation": "控制台依次输出 0 与 4。若业务把 0 当成未知，就丢失了本来能区分的两种状态。"
+      },
+      "question": {
+        "prompt": "三家店的评分是 0、4 和 nil，哪两个会进入 if let score = rating 分支？",
+        "answer": "0 和 4。if let 检查有没有值，不是判断数字大小；nil 对应缺少评分。"
+      }
+    },
+    {
+      "title": "Storyboard 先摆好界面，再接好线",
+      "pages": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "把计算器屏幕当作一块面板。Storyboard 里的标签和按键有位置、有外观，但还需要把它们接到控制器。IBOutlet 让代码可以找到标签并改字；IBAction 让界面的点击能找到某个方法。",
+        "控制器装载自己的视图后收到 viewDidLoad。进入、离开屏幕会触发相应的出现和消失回调；同一个控制器返回前台时可能再次出现，而无需重新加载视图。"
+      ],
+      "takeaways": [
+        "标签要能被代码找到，按钮要能把事件交给代码，这两根线方向相反。"
+      ],
+      "figure": {
+        "title": "从一次点击到屏幕变字",
+        "steps": [
+          {
+            "label": "数字按钮",
+            "detail": "发出触摸事件"
+          },
+          {
+            "label": "IBAction",
+            "detail": "控制器读取 sender 的数字"
+          },
+          {
+            "label": "IBOutlet",
+            "detail": "控制器找到显示标签并更新字样"
+          }
+        ],
+        "caption": "Storyboard 负责保存连接关系，计算规则可以交给独立模型。"
+      },
+      "question": {
+        "prompt": "九个数字键可否共用一个 IBAction？该怎样知道按了哪个？",
+        "answer": "可以。把按钮连到同一方法，从 sender 取得发送者的数字或标记，再更新当前输入。"
+      }
+    },
+    {
+      "title": "MVC 中谁算出 12 + 3",
+      "pages": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "计算器换成语音按钮，12 + 3 的答案仍应是 15。把这部分规则放进 Model，显示框与按键放在 View，Controller 将按键解释成数字或指令，再把结果写回显示框。",
+        "课件模型保存 accumulator 和可选的 pending。读 12 按 + 后，暂存第一个数和加法；读 3 按 = 时才把两数合并。连续输入 1、2 拼成 12 的界面逻辑，与两数相加的模型规则分别处理。"
+      ],
+      "takeaways": [
+        "Model 记运算状态，Controller 翻译事件，View 展示结果。"
+      ],
+      "figure": {
+        "title": "计算过程如何穿过 MVC",
+        "steps": [
+          {
+            "label": "View",
+            "detail": "把等号点击送给 Controller"
+          },
+          {
+            "label": "Controller",
+            "detail": "提交第二个数 3，并请求执行 ="
+          },
+          {
+            "label": "Model",
+            "detail": "用之前保存的 12 算出 15"
+          },
+          {
+            "label": "Controller → View",
+            "detail": "将 15 转成显示文字"
+          }
+        ],
+        "caption": "模型只需数字和运算符，因此可以在单元测试里直接验证 12 + 3。"
+      },
+      "question": {
+        "prompt": "按 1、+、2、+、3、=。第二个加号按下时，模型须保存什么？",
+        "answer": "先把等候中的 1 + 2 算成 3，再把这个 3 和下一次加法保存为 pending；最终与最后输入的 3 相加得 6。"
+      }
+    },
+    {
+      "title": "SwiftUI 把界面写成状态的结果",
+      "pages": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "想象把数字键的外观写成一张配方：给定一个数字，就展示一个灰色方块和这段文字。调用这份小视图九次，就有九个不同的数字键。形状与布局可以共享，点击哪个键由传入的值决定。",
+        "SwiftUI 的 body 描述当前界面。容器组合子视图，修饰符调整布局与表现，按钮的 action 响应交互。状态发生变化后，框架决定更新哪些显示内容。"
+      ],
+      "takeaways": [
+        "从界面树认出数据、布局、动作三部分。"
+      ],
+      "question": {
+        "prompt": "相同按钮样式只想把 1 改成 2，需要复制整份代码吗？",
+        "answer": "可提取接收 digit 的子视图；外观共用，显示文字和 action 读取传入的 digit。"
+      }
+    },
+    {
+      "title": "状态放在哪里，谁应收到更新",
+      "pages": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "两块屏幕都显示同一算式。若两个屏幕各自复制一个模型，第一块按下数字后，第二块仍显示旧值。若它们观察同一个模型，按键修改可观察的显示值，依赖它的界面就能更新。",
+        "本讲采用 ObservableObject 与 @Published。@State 保存视图拥有的局部值；@Binding 让子视图读写上层状态；@StateObject 让视图拥有一个可观察对象；@ObservedObject 观察外部传入的对象；@EnvironmentObject 从祖先注入的环境取对象。",
+        "MVVM 中，Model 保存规则，ViewModel 把规则和数据转成可展示的状态，View 读取它。SwiftUI 也有视图身份与出现、消失等生命周期事件，避免把 body 执行次数当成页面出现次数。"
+      ],
+      "takeaways": [
+        "状态来源、谁能修改，以及谁观察变化，决定一次操作能更新哪些视图。"
+      ],
+      "example": {
+        "lang": "Swift",
+        "code": "struct HistoryToggle: View {\n    @Binding var isOpen: Bool\n    var body: some View { Toggle(\"显示历史\", isOn: $isOpen) }\n}",
+        "explanation": "SwiftUI 片段。若父视图拥有 @State private var show = false 并创建 HistoryToggle(isOpen: $show)，打开子视图中的开关会让父视图的 show 也变为 true。"
+      },
+      "figure": {
+        "title": "数字键按下后谁负责刷新",
+        "steps": [
+          {
+            "label": "View",
+            "detail": "用户点 4，调用 ViewModel 的动作"
+          },
+          {
+            "label": "ViewModel / Model",
+            "detail": "处理输入与计算，更新显示状态"
+          },
+          {
+            "label": "SwiftUI",
+            "detail": "读取新状态，更新受影响的 View"
+          }
+        ],
+        "caption": "两处都读同一份显示值，就能在同一笔状态变化后显示一致的结果。"
+      },
+      "links": [
+        {
+          "label": "Apple · SwiftUI Model data",
+          "url": "https://developer.apple.com/documentation/swiftui/model-data"
+        }
+      ],
+      "question": {
+        "prompt": "父视图拥有是否显示历史的布尔值，子视图有开关可以直接改它。子视图需要一份新的 @State 吗？",
+        "answer": "应接收 @Binding，与父视图共用那份值。另建本地状态会引入第二份可能不一致的数据。"
+      }
+    },
+    {
+      "title": "UIKit 页面切换，还要把历史带过去",
+      "pages": [
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "从计算器按『看历史』，segue 解决『去哪一页』，并不会猜测那一页需要的记录。准备切换时，原控制器从模型取历史，传给目的控制器，后者的数据源才有内容可显示。",
+        "若目的变成导航控制器，直接把 segue.destination 转为历史控制器会失败。先取出容器中真正的历史页，再执行相同的数据交接。空白列表未必是表格没有画好。"
+      ],
+      "takeaways": [
+        "先确认目的对象的真实类型，再确认数据源手上有几行。"
+      ],
+      "question": {
+        "prompt": "历史数组有 3 条，嵌入导航控制器后页面标题正确却显示 0 行，先检查哪里？",
+        "answer": "看 prepare 是否还把外层导航控制器直接转成历史页。若转换失败，历史数组没传入，行数自然是 0。"
+      }
+    },
+    {
+      "title": "SwiftUI 导航的数据怎样传",
+      "pages": [
+        69,
+        70,
+        71,
+        72,
+        73,
+        74
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "列表上有 15 道菜，点击第二道应看到第二道的详情。NavigationLink 连接入口与目标视图，可以把所选菜品作为参数传入；返回上一级依赖导航栈。",
+        "只与一个详情相关的值适合直接传，整个子树需要的共享模型可由祖先注入环境。LazyVStack 等惰性容器按需创建内容，不能替代『把正确菜品给详情』这一步。"
+      ],
+      "takeaways": [
+        "画导航栈说明去哪，沿参数或环境说明数据从哪来。"
+      ],
+      "question": {
+        "prompt": "详情页只收到当前订单，另一个徽标却要跟踪所有订单数量，适合各用哪种传递方式？",
+        "answer": "单笔订单可显式传给详情；徽标可以观察由上层提供的共享订单模型，模型变动时再计算总数。"
+      }
+    },
+    {
+      "title": "收到字节之后，如何得到 Swift 对象",
+      "pages": [
+        75,
+        76,
+        77,
+        78
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "URLSession 交付一包数据，首先要确认传输是否成功，再看 HTTP 状态，最后检查 JSON 是否符合模型。网络超时、404、字段类型错属于三种不同结果。",
+        "将菜单解码为 Decodable 模型时，价格若声明为 Int，收到字符串就可能触发 typeMismatch。课件也展示 Alamofire 和 SwiftyJSON；库可以简化写法，但数据与目标类型仍要对齐。"
+      ],
+      "takeaways": [
+        "HTTP 200 说明服务器成功返回响应，对正文能否按目标类型解码还要单独验证。"
+      ],
+      "example": {
+        "lang": "Swift",
+        "code": "import Foundation\nstruct Dish: Decodable { let price: Int }\nlet bytes = Data(#\"{\"price\":12}\"#.utf8)\nlet dish = try JSONDecoder().decode(Dish.self, from: bytes)\nprint(dish.price)",
+        "explanation": "在 Swift 脚本中运行会输出 12。若把 JSON 里的 12 改为带引号的字符串，默认的 Int 解码会抛出类型错误。"
+      },
+      "figure": {
+        "title": "响应为什么可能在三处出错",
+        "steps": [
+          {
+            "label": "传输",
+            "detail": "有没有收到 HTTP 响应及数据"
+          },
+          {
+            "label": "协议",
+            "detail": "这个状态码代表业务预期的成功吗"
+          },
+          {
+            "label": "解码",
+            "detail": "键、值和类型能否构造目标对象"
+          }
+        ],
+        "caption": "找出哪道检查失败，才知道该修网络、接口还是模型。"
+      },
+      "question": {
+        "prompt": "服务器返回 200 和 {\"price\":\"12\"}，模型要求 price: Int。问题出现在哪一步？",
+        "answer": "传输和状态码均可成功，JSONDecoder 按模型解码字段时才会发现字符串与 Int 不匹配。"
+      }
+    },
+    {
+      "title": "把外部库纳入构建",
+      "pages": [
+        79,
+        80,
+        81,
+        82
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "Podfile 像项目的配料表。CocoaPods 根据声明解析直接与间接依赖，组织应用与库一起构建的 workspace；打开孤立的项目文件可能看不到一致的依赖环境。",
+        "Swift Package Manager 同样让项目声明要使用的包。加入依赖、在源文件导入模块、实际调用库功能是不同步骤。"
+      ],
+      "takeaways": [
+        "库出现在配料表里，不代表应用已调用它。"
+      ],
+      "question": {
+        "prompt": "用 CocoaPods 安装后，为什么课件让你打开 .xcworkspace？",
+        "answer": "workspace 把应用工程和依赖工程放在同一个构建上下文中，单开 .xcodeproj 可能漏掉依赖。"
+      }
+    },
+    {
+      "title": "用状态选择控件、反馈和图表",
+      "pages": [
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "点文字框时才展开选项，确认后再写回选择；提交请求时显示进度，收到结果后切换成内容或错误。先定义界面可能处于哪些状态，再选适合的组件。",
+        "不知道总字节数时转圈表示『仍在工作』，知道总数才适合画百分比。图表可嵌入网页或使用平台库，网络图片可以缓存。withAnimation 则让可动画属性在状态变化前后平滑过渡。"
+      ],
+      "takeaways": [
+        "按可用信息决定反馈，只有总工作量已知时才能算出可信百分比。"
+      ],
+      "question": {
+        "prompt": "下载图片收到 3 MB，总大小未知。应显示 30% 还是不定进度？",
+        "answer": "应选不定进度。缺少分母无法计算百分比；若服务端给出总大小，才能由已完成量除以总量。"
+      }
+    },
+    {
+      "title": "回到语言与框架的资料",
+      "pages": [
+        91
+      ],
+      "kind": "background",
+      "paragraphs": [
+        "查 Swift 类型、可选值与语言规则时看语言文档；查视图状态、生命周期或导航时看相应框架。课件中的旧教程便于理解 Storyboard 示例。"
+      ],
+      "takeaways": [
+        "先确定问题属于语言还是框架，再查相应的参考资料。"
+      ]
+    }
+  ],
+  "connections": [
+    "与 Android 对照，Activity 和 UIViewController 都有系统回调，具体触发点并不相同。",
+    "与 React 对照，声明式视图都需要明确状态由谁拥有。"
+  ],
+  "examChecklist": [
+    "用 12 + 3 解释控制器和模型各记住什么。",
+    "用表格显示零行解释导航成功与数据传递成功的区别。",
+    "区分缺少 HTTP 响应、错误状态码与 Codable 解码失败。"
+  ]
+}

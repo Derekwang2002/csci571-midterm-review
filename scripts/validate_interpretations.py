@@ -20,6 +20,11 @@ for deck in json.loads((ROOT/'content/decks.json').read_text()):
             counter.update(section['pages'])
             for field in ('paragraphs','takeaways'):
                 assert section[field] and all(isinstance(p,str) and p.strip() for p in section[field]),f'section {n}: {field}'
+            if 'figure' in section:
+                figure=section['figure']
+                assert figure['title'].strip() and figure['caption'].strip(),f'section {n}: figure text'
+                assert len(figure['steps'])>=2,f'section {n}: figure steps'
+                assert all(step['label'].strip() and step['detail'].strip() for step in figure['steps']),f'section {n}: figure labels'
             if section.get('example'):
                 for field in ('lang','code','explanation'):assert section['example'][field].strip(),f'section {n}: example {field}'
         assert sorted(counter)==list(range(1,deck['count']+1)),'Page coverage differs from original'

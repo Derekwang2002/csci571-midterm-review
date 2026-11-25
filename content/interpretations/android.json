@@ -1,0 +1,415 @@
+{
+  "id": "android",
+  "title": "Android 移动设计 · 重点串讲",
+  "intro": "从一台能按数字、能翻历史的计算器出发，顺着一次点击理解 Android 如何组织界面、调度组件、请求数据。",
+  "goals": [
+    "预测页面切换会触发哪些生命周期回调。",
+    "从用户需求选择组件并追踪事件的接收者。",
+    "把网络、解析、缓存与图表放回各自的执行步骤。"
+  ],
+  "sections": [
+    {
+      "title": "同一套平台如何服务不同手机",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "kind": "background",
+      "paragraphs": [
+        "想象你写了一个天气应用。屏幕大小、芯片和系统版本各不相同，如果每部手机都要重写一遍，连一个搜索框都很难维护。Android 给开发者一组共同接口，设备厂商再让接口背后的系统适配硬件。",
+        "版本表适合查 API level。应用需要某个系统能力时，先看设备能否提供，再决定是否启用。市场新闻、产品截图和甜点代号作为背景略读。"
+      ],
+      "takeaways": [
+        "能安装、能调用某个接口、适合这块屏幕，是三个不同的问题。"
+      ]
+    },
+    {
+      "title": "从点击屏幕到内核，分层各管什么",
+      "pages": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "触摸屏发来的原始信号，不能直接告诉计算器『用户按了 7』。内核与驱动接触硬件，系统框架把输入交给窗口和控件，应用监听按钮后才把 7 写入显示区。",
+        "另一条线看代码怎样运行。应用用框架 API 描述工作，ART 负责执行应用的 DEX 代码，平台库提供图形、数据等通用能力。架构图并不表示每个调用都按同一条直线穿过所有方框。"
+      ],
+      "takeaways": [
+        "遇到分层题，先问该层处理的是设备信号、代码执行、系统服务，还是用户任务。"
+      ],
+      "figure": {
+        "title": "一根手指怎样输入数字 7",
+        "steps": [
+          {
+            "label": "硬件与驱动",
+            "detail": "读取触摸位置"
+          },
+          {
+            "label": "系统与界面框架",
+            "detail": "把触摸交给对应控件"
+          },
+          {
+            "label": "应用回调",
+            "detail": "把 7 加入当前输入"
+          }
+        ],
+        "caption": "同一次触摸可以是数字键、地图标记或提交按钮，含义来自应用。"
+      },
+      "question": {
+        "prompt": "用户轻触 7 后，谁知道这是计算器的数字键？",
+        "answer": "驱动负责底层输入，界面框架把事件分派给控件。计算器自己的点击处理逻辑才知道数字 7 要用于计算。"
+      }
+    },
+    {
+      "title": "源代码怎样变成设备能运行的应用",
+      "pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "编译发生在开发机。课程里的 Java / Kotlin 源代码通常先变成 JVM 字节码，再由 Android 工具转换为 DEX，连同布局、图片等资源打包。设备上的 ART 负责运行 DEX。",
+        "布局和文字也是输入。以按钮标题为例，给同一资源名准备不同语言的文本，系统可按设备配置挑选。R.drawable 指图片资源，R.id 标记布局中某个控件，二者回答的问题不同。"
+      ],
+      "takeaways": [
+        "区分开发机上的 Studio、构建产物 DEX 和设备上的 ART。"
+      ],
+      "figure": {
+        "title": "从编辑器到手机",
+        "steps": [
+          {
+            "label": "开发机",
+            "detail": "编写代码与布局资源"
+          },
+          {
+            "label": "构建工具",
+            "detail": "把字节码转换为 DEX 并打包资源"
+          },
+          {
+            "label": "设备",
+            "detail": "ART 执行代码，系统按配置选资源"
+          }
+        ],
+        "caption": "资源和 DEX 都随应用交付。资源不会被 ART 当作 Java 代码执行。"
+      },
+      "question": {
+        "prompt": "替换中文按钮文字，必须改一份 Activity 逻辑吗？",
+        "answer": "若用同名字符串资源，可在相应语言的资源目录提供另一份值，Activity 继续引用原资源 ID。"
+      }
+    },
+    {
+      "title": "Activity 是谁通知你屏幕看得见",
+      "pages": [
+        19,
+        20
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "打开天气页时，系统先创建 Activity，随后让它可见、可交互。接着切到别的全屏应用，这一页会逐步失去前台状态并变得不可见。页面还可能留在内存里，回来时不必从头创建。",
+        "按课件中的单窗口场景推演，首次打开通常经过 onCreate → onStart → onResume。完全遮住通常经过 onPause → onStop；若实例还在，返回会经过 onRestart → onStart → onResume。onPause 回调仍能执行代码，进程被系统终止时也不能依赖 onDestroy 做唯一一次保存。"
+      ],
+      "takeaways": [
+        "创建、可见、前台交互是不同时间点，后退与再次创建也要分开。"
+      ],
+      "links": [
+        {
+          "label": "Android Developers · Activity 生命周期",
+          "url": "https://developer.android.com/guide/components/activities/activity-lifecycle"
+        }
+      ],
+      "question": {
+        "prompt": "天气页完全被别的应用盖住，再返回同一个仍存活的 Activity，哪一个初始化回调通常无需再走？",
+        "answer": "无需再调用 onCreate。实例还在，会从停止状态经 onRestart、onStart、onResume 返回。"
+      }
+    },
+    {
+      "title": "有工作要做时，该交给哪个组件",
+      "pages": [
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "音乐播放器里，选歌页面由 Activity 承载，一块可复用的歌单界面可以做成 Fragment。用户离开页面后仍然播放音乐，需要适合这种工作的 Service。Service 自身不会自动创建工作线程，也会受后台执行限制。",
+        "设备发出广播时，Receiver 接收事件并做短处理。通讯录应用想有控制地让其他应用查询联系人，可以通过 Content Provider 提供统一入口。Fragment 的视图有自己的生命周期，平板可以同时展示列表和详情。"
+      ],
+      "takeaways": [
+        "界面、持续工作、外来事件、受控共享数据分别需要不同入口。"
+      ],
+      "table": {
+        "headers": [
+          "需求",
+          "组件",
+          "示例"
+        ],
+        "rows": [
+          [
+            "呈现界面",
+            "Activity / Fragment",
+            "同屏放歌单和歌曲详情"
+          ],
+          [
+            "在界面之外工作",
+            "Service",
+            "用户切屏后继续播放"
+          ],
+          [
+            "接收事件",
+            "BroadcastReceiver",
+            "按注册的广播触发回调"
+          ],
+          [
+            "共享数据",
+            "ContentProvider",
+            "允许有权限的客户端查询联系人"
+          ]
+        ]
+      },
+      "question": {
+        "prompt": "应用需要在收到系统广播时作出短暂响应，同时向获准的其他应用提供联系人查询。这两件事各用什么？",
+        "answer": "前者用 BroadcastReceiver 接收事件，后者通过 ContentProvider 暴露数据接口；事件通知与数据查询的方向不同。"
+      }
+    },
+    {
+      "title": "Intent 是一张写明目的的任务单",
+      "pages": [
+        26,
+        27
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "『打开本应用的结账页』已经知道收件人，可以直接指名组件。『找一个能显示此地址的应用』只描述动作与数据，系统会查谁声明了相应的 intent filter。",
+        "目标组件、action、data 帮助确定要做什么；extras 可以携带订单号之类的附加数据，flags 影响启动行为。课件的显式 Intent 构造函数直接接收类名，省略 action 也能表达明确请求。"
+      ],
+      "takeaways": [
+        "显式请求先知道收件人，隐式请求靠描述与过滤条件匹配。"
+      ],
+      "example": {
+        "lang": "Java",
+        "code": "Intent next = new Intent(this, HistoryActivity.class);\nnext.putExtra(\"orderId\", 42);\nstartActivity(next);",
+        "explanation": "Activity 内的片段，假设 HistoryActivity 已在清单声明。目标由类名确定；42 是给接收者的订单号。"
+      },
+      "links": [
+        {
+          "label": "Android Developers · Intents and intent filters",
+          "url": "https://developer.android.com/guide/components/intents-filters"
+        }
+      ],
+      "question": {
+        "prompt": "把订单号放进 extras，能靠这个订单号找到地图应用吗？",
+        "answer": "不能靠它做常规隐式匹配。系统按 action、data 和 category 等匹配过滤器；extras 用来给接收方传附加值。"
+      }
+    },
+    {
+      "title": "布局管位置，监听器管点击后的动作",
+      "pages": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "先摆一台没有通电的计算器。XML 说明按钮和显示框的父子关系、尺寸与排列；加载布局后，代码才能找到这一棵 View 树上的实际数字键。",
+        "事件有两步：安装监听器时只是登记『将来找谁』，真正按下后系统才调用处理函数。截屏中把方法名写在 XML 里也是把事件连接到代码的一种写法。"
+      ],
+      "takeaways": [
+        "同一个按钮既可以出现在布局里，又可以由于没接监听器而毫无反应。"
+      ],
+      "example": {
+        "lang": "Java",
+        "code": "Button key = findViewById(R.id.seven);\nkey.setOnClickListener(view -> display.setText(\"7\"));",
+        "explanation": "片段位于布局已加载的 Activity 中，display 引用已有的 TextView。注册后首次点击才把显示值改成 7。"
+      },
+      "question": {
+        "prompt": "setOnClickListener 执行完，计数器一定已加一吗？",
+        "answer": "这里只是注册。只有稍后点击触发回调，并且回调真的执行加一，计数才更新。"
+      }
+    },
+    {
+      "title": "手算一遍计算器的状态",
+      "pages": [
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "界面网格负责告诉 Activity『按了哪格』。若当前数是 1，下一个数字是 2，就做 1 × 10 + 2 = 12。遇到加号保存这一项，等号才结算并写入历史。",
+        "显示的文字、尚未结算的数、已完成算式的记录用途不同。点历史页时能看到本次会话的记录，并不能说明进程被清理后它们仍在。Manifest 指定系统从哪个入口打开应用，模拟器再验证实际操作。"
+      ],
+      "takeaways": [
+        "用 1、2、+、3、= 追踪当前输入与已保存的操作数。"
+      ],
+      "figure": {
+        "title": "按键如何改变状态",
+        "steps": [
+          {
+            "label": "1 → 2",
+            "detail": "当前操作数从 1 变成 12"
+          },
+          {
+            "label": "+",
+            "detail": "保存 12，开始输入下一项"
+          },
+          {
+            "label": "3 → =",
+            "detail": "合并 12 与 3，显示 15 并记录算式"
+          }
+        ],
+        "caption": "界面每一步都可显示数字，等号才产生本次完整算式。"
+      },
+      "question": {
+        "prompt": "依次按 1、2、+、3、=，为什么答案是 15，而不是 6？",
+        "answer": "前两个数字在同一个操作数里，用旧值乘 10 再加新数字得到 12。加号分隔操作数，最后做 12 + 3。"
+      }
+    },
+    {
+      "title": "请求入队与收到响应是两个时刻",
+      "pages": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "写一张取餐单交给队列时，饭还没有送到。Volley 也是先建立请求，约定成功与失败的处理方式，再把请求加入队列。成功结果只能在响应回来后使用。",
+        "Gradle 在构建时把库纳入应用。Manifest 中的 INTERNET 声明允许应用联网。它们分别解决『代码是否可用』和『允许做什么』，都无法保证远端一定返回有效数据。"
+      ],
+      "takeaways": [
+        "声明依赖、允许联网、安排请求、处理响应，属于不同阶段。"
+      ],
+      "question": {
+        "prompt": "调用 queue.add 后立刻读取『本次返回的新联系人』可靠吗？",
+        "answer": "请求可能仍在等待。应在完成回调拿到数据后更新展示，并为失败路径安排状态。"
+      }
+    },
+    {
+      "title": "一张菜品照片如何避免反复下载",
+      "pages": [
+        49,
+        50,
+        51,
+        52
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "菜品列表出现一行时可以先放占位图。图片库根据 URL 取图、解码，并把得到的位图交给这一行。如果之前有可复用的缓存，就能避免再次完成相同的工作。",
+        "向下滚动时，显示旧菜品的控件可能换去显示新菜品。图片任务要跟着显示目标更新，否则较慢返回的旧照片可能盖住新菜品。Picasso 和 Glide 都用加载目标把这些工作连起来。"
+      ],
+      "takeaways": [
+        "列表滚动很快时，除了速度，还要核对结果属于当前哪一个控件。"
+      ],
+      "question": {
+        "prompt": "列表已滚到下一道菜，上一张图才返回。仅有缓存能解决错图吗？",
+        "answer": "缓存可以减少取图工作，但仍需取消、替换旧请求或核对目标，防止过时结果写进复用后的行。"
+      }
+    },
+    {
+      "title": "Gson 把 JSON 文本还原成对象",
+      "pages": [
+        53,
+        54,
+        55,
+        56
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "服务返回的是字符，例如一条名片上写着 name 和 email_id。业务代码想读的是 Contact 的字段。Gson 按目标类型和字段映射把前者转成后者；反方向把对象输出为 JSON 叫序列化。",
+        "先看最外层是对象还是数组，再选目标类型。例如一串方括号内含两条联系人，就应读成 Contact[]。课件把不同 Volley 响应类型写在了一起，实际代码要让请求类型、回调参数和 JSON 形状互相吻合。"
+      ],
+      "takeaways": [
+        "传输库收到数据，解析库解释结构；看到 HTTP 成功也要检查数据是否符合模型。"
+      ],
+      "example": {
+        "lang": "Java",
+        "code": "class Contact {\n    @SerializedName(\"email_id\") String emailID;\n}\nContact[] items = new Gson().fromJson(\n    \"[{\\\"email_id\\\":\\\"a@example.org\\\"}]\", Contact[].class);",
+        "explanation": "已引入 Gson 和 SerializedName。items 的长度为 1，items[0].emailID 为 a@example.org。"
+      },
+      "question": {
+        "prompt": "JSON 以 [ 开头，每项是联系人；Java 属性 emailID，而 JSON 键是 email_id。要说明哪两件事？",
+        "answer": "最外层按联系人数组解析，字段用 @SerializedName(\"email_id\") 等方式明确对应关系。"
+      }
+    },
+    {
+      "title": "从天气数据推导出两条曲线",
+      "pages": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "同一天最低温和最高温共用一个横坐标。每一天生成两个点，分别归入最低温与最高温两组，再为每组画一条线。若错把所有点接成一组，图上的折线就表达了别的关系。",
+        "MPAndroidChart 把点装入 DataSet，再将数据交给图表重绘。Highcharts 的例子经由 options 描述图的种类、标题与 series，再将整套配置交给图表视图。"
+      ],
+      "takeaways": [
+        "视觉上有几条独立走势，数据中就要标识几组序列。"
+      ],
+      "question": {
+        "prompt": "三天每天有一个最低温和一个最高温，应准备几组、每组几个点？",
+        "answer": "两组，每组三个点。横坐标使用同样的三天，才能逐日比较两个系列。"
+      }
+    },
+    {
+      "title": "Kotlin 和 Compose 分别改变什么",
+      "pages": [
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "把餐名从 A 改为 B。用传统 View，可以找到 TextView 后设置 text。用 Compose，可让文字读取可观察的状态，状态变成 B 时框架重新计算依赖它的界面。",
+        "Kotlin 是语言，Compose 是界面工具，XML 是描述传统布局的方式。一个 Kotlin 应用完全可以继续加载 XML；同一项目也可以逐步采用 Compose。"
+      ],
+      "takeaways": [
+        "代码写成 Kotlin 并不能单独证明界面使用了 Compose。"
+      ],
+      "question": {
+        "prompt": "一段 Kotlin 代码调用 setContentView 加载 XML。它是否已经使用声明式 Compose？",
+        "answer": "没有这项证据。Kotlin 可操作传统 View；判断 Compose 要看可组合函数等 UI 表达方式和状态驱动更新。"
+      }
+    }
+  ],
+  "connections": [
+    "与 React 对照，Compose 也通过状态描述界面。",
+    "与 REST 对照，Volley 处理传输，Gson 解释 JSON 结构。"
+  ],
+  "examChecklist": [
+    "描述 Activity 从打开、完全被遮住到再次显示的两条可能路径。",
+    "说明显式 Intent 与隐式 Intent 各需要哪些信息。",
+    "给定连续按键，手算当前操作数和最终结果。"
+  ]
+}

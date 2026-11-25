@@ -1,0 +1,421 @@
+{
+  "id": "html5",
+  "title": "HTML5 与浏览器能力 · 重点串讲",
+  "intro": "从一篇新闻、一段视频和一颗会移动的红点出发，解释浏览器保存了什么、如何画出来、何时需要设备授权，以及耗时计算放在哪里。",
+  "goals": [
+    "能为页面内容选择语义标签，并区分媒体容器与编码。",
+    "能预测 Canvas 指令、存储读写及标签切换的具体结果。",
+    "能拆解视频通话、无密码登录与后台计算各自依赖的能力。"
+  ],
+  "sections": [
+    {
+      "title": "浏览器怎么知道一段内容的角色",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "把页面想成一份校园报纸。只看三块同样大小的方框，你无法知道哪块是目录、哪块是新闻。标记成 nav、article 和 aside 后，即使关掉样式，机器仍可理解主要导航、自成一篇的报道和旁注。",
+        "判断标签先问用途。一篇可以单独转载的影评适合 article；影评内部讨论摄影的一节适合带标题的 section；只想把图片和文字排成两栏可用 div 加 CSS。标签表达意义，具体画在左边还是右边由样式决定。",
+        "读旧课件的删除清单时要看元素和属性的上下文。font 和 center 等呈现元素已过时，s 与 u 在现行 HTML 中有具体语义。旧表把一些名称笼统列为删除，例如 input 的 size、ol 的 type 在适用情形仍有定义。"
+      ],
+      "takeaways": [
+        "把 CSS 去掉后，还能分清导航、正文和小节，就是语义结构发挥了作用。"
+      ],
+      "example": {
+        "lang": "HTML",
+        "code": "<nav><a href=\"#coffee\">校园专栏</a></nav>\n<article id=\"coffee\">\n  <h1>图书馆旁的咖啡店</h1>\n  <section><h2>营业时间</h2><p>周一至周五。</p></section>\n</article>",
+        "explanation": "文章可以独立分享；营业时间是这篇文章内具有主题的小节。把它排成几栏取决于 CSS。"
+      },
+      "links": [
+        {
+          "label": "WHATWG · 页面分区与标题",
+          "url": "https://html.spec.whatwg.org/multipage/sections.html"
+        },
+        {
+          "label": "WHATWG · 文本文义",
+          "url": "https://html.spec.whatwg.org/multipage/text-level-semantics.html"
+        }
+      ],
+      "question": {
+        "prompt": "一块区域里有三条跳往别处的引用链接，另一块是全站主菜单。两块是否都必须用 nav？",
+        "answer": "主菜单适合 nav。正文引用有链接并不足以构成主要导航，仍可放在相应的正文结构里。"
+      }
+    },
+    {
+      "title": "浏览器如何把一个视频文件播出来",
+      "pages": [
+        12,
+        13,
+        14
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "视频容器像一个能装多条轨道的盒子。MP4 或 WebM 描述如何把视频、声音等数据放在一起。codec 规定怎样把一幅幅画面或一段声音压缩、再解码；H.264 是视频编码，AAC 是音频编码。",
+        "即使两个文件后缀都是 .mp4，里面的编码也可能不同。播放器先识别容器，再解出需要的轨道，才能展示画面并发声。有损编码通过丢弃部分信息换取体积，无损编码要求能还原原始信息。"
+      ],
+      "takeaways": [
+        "扩展名、容器和里面每条轨道的编码，需要分层判断。"
+      ],
+      "figure": {
+        "title": "一次播放要经过哪些关口",
+        "steps": [
+          {
+            "label": "容器",
+            "detail": "读取 MP4 中有哪些轨道"
+          },
+          {
+            "label": "解码器",
+            "detail": "视频轨还原为画面，音轨还原为声音采样"
+          },
+          {
+            "label": "输出",
+            "detail": "按时间同步显示和播放"
+          }
+        ],
+        "caption": "同一个 MP4 可以装不同编码的轨道；能识别盒子只是第一关。"
+      },
+      "question": {
+        "prompt": "播放器能打开 MP4，为什么某个 MP4 仍可能播不出画面？",
+        "answer": "它可能能读容器，却缺少视频轨所用编码的解码能力。音频与视频轨还可能分别成功或失败。"
+      }
+    },
+    {
+      "title": "怎么看编码发展史与比例图",
+      "pages": [
+        15,
+        16
+      ],
+      "kind": "history",
+      "paragraphs": [
+        "编码是否普及与浏览器支持、设备解码能力、带宽和授权等多方选择有关。这两页提供课程背景。图中的比例代表课件引用的数据；若题目要解释能否播放，仍应回到实际容器与编码。"
+      ],
+      "takeaways": [
+        "饼图里的占比无法替某一台设备判断播放能力。"
+      ]
+    },
+    {
+      "title": "播放控件、预载与候选来源",
+      "pages": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "网页刚打开就显示一张海报，不代表视频已经下载或播放。poster 是预览图，controls 提供控制界面，preload 是加载提示，autoplay 表达启动意图，仍受浏览器策略影响。布尔属性看是否出现，例如 controls=\"false\" 仍表示启用。",
+        "同一个 video 或 audio 可有多个 source，由浏览器选择能使用的候选；track 可配字幕。音频也有编码之分。MP3 和 AAC 是不同编码，文件名的后缀无法把一个变成另一个。"
+      ],
+      "takeaways": [
+        "分别解释『显示控件』『加载媒体』『开始播放』三个动作。"
+      ],
+      "example": {
+        "lang": "HTML",
+        "code": "<video controls preload=\"metadata\" poster=\"cover.jpg\">\n  <source src=\"tour.webm\" type=\"video/webm\">\n  <source src=\"tour.mp4\" type=\"video/mp4\">\n  <track kind=\"captions\" src=\"tour.vtt\" srclang=\"en\">\n</video>",
+        "explanation": "海报、候选媒体和文字轨承担三项不同任务。浏览器选择可用媒体，用户仍可决定何时播放。"
+      },
+      "question": {
+        "prompt": "页面里有 controls、preload=\"metadata\"，没有 autoplay。打开后可合理预期什么？",
+        "answer": "可看到浏览器提供的控件；服务端与浏览器条件允许时可读时长等元数据。两个属性都没有要求立即开始播放。"
+      }
+    },
+    {
+      "title": "Canvas 记像素，SVG 保留形状",
+      "pages": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "把一个圆盖章在纸上，纸留下颜色，却没有一个可随时选中的『圆对象』。Canvas 2D 也以绘图命令改变像素；之后要挪圆，程序通常要自己记位置并清除、重画。SVG 则保存 circle 等形状节点，可以定位它并修改属性。",
+        "Canvas 的默认坐标原点在左上，x 向右、y 向下。moveTo 设起点，lineTo 加一段路径，stroke 才描出线。fillRect 直接按当前 fillStyle 填矩形，四个参数表达起点与宽高。"
+      ],
+      "takeaways": [
+        "看效果相同的图时，问浏览器还保留每个形状，还是只保留画出的像素。"
+      ],
+      "figure": {
+        "title": "移动一颗红点的两种做法",
+        "steps": [
+          {
+            "label": "共同输入",
+            "detail": "圆心从 x=20 改到 x=80"
+          },
+          {
+            "label": "Canvas 分支",
+            "detail": "清旧像素，在新位置重画"
+          },
+          {
+            "label": "SVG 分支",
+            "detail": "更新圆节点的 cx 属性"
+          }
+        ],
+        "caption": "两种画面都能响应指针；Canvas 上命中某个图形通常由应用自己判断。"
+      },
+      "example": {
+        "lang": "JavaScript",
+        "code": "const ctx = document.querySelector(\"canvas\").getContext(\"2d\");\nctx.beginPath();\nctx.moveTo(20, 20);\nctx.lineTo(20, 100);\nctx.lineTo(70, 100);\nctx.stroke();",
+        "explanation": "假设页面已有至少 100 × 110 的 canvas。第一段向下 80 个单位，第二段向右 50 个单位，最后一次 stroke 画出折线。"
+      },
+      "question": {
+        "prompt": "在 Canvas 把圆画在 x=20，随后把自己保存的 x 改成 80。原图会自动移动吗？SVG 呢？",
+        "answer": "Canvas 上已有像素不会随变量改变，通常需清除并重画。SVG 可更新现有圆节点的 cx 属性，浏览器据此重新呈现。"
+      }
+    },
+    {
+      "title": "3D 场景与头显各提供什么",
+      "pages": [
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "游戏每一帧都有同一个问题：给定物体、相机和光，屏幕每个位置该呈现什么颜色？WebGL 提供可用 GPU 的绘图接口，通过 canvas 显示结果。Three.js 等库在上面组织场景和相机，游戏引擎再加入物理、输入等功能。",
+        "戴上头显时还要知道头正朝哪里、何时提交视图。WebXR 负责和 XR 设备建立会话并提供姿态等数据，应用据此为虚拟或增强现实绘制相应画面。运行能力要结合设备、浏览器、会话模式和授权判断。"
+      ],
+      "takeaways": [
+        "区分『怎么算出画面』与『根据哪个观察位置来画』。"
+      ],
+      "question": {
+        "prompt": "桌面浏览器能画一个 WebGL 立方体，能据此保证支持沉浸式 VR 吗？",
+        "answer": "不能。画立方体说明具备相应绘图能力；沉浸式 VR 还要求支持相应 WebXR 会话的浏览器和设备。"
+      }
+    },
+    {
+      "title": "刷新、开新标签、关浏览器，谁还能记住",
+      "pages": [
+        36,
+        37,
+        38
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "一个订票网站有两张表：大家共用的深色偏好，还有仅属于本次订票的勾选项。同源页面通常可用 localStorage 保存前者；同源且同一顶层标签的 sessionStorage 适合后者，刷新本页仍在，正常结束该标签会话后清除。",
+        "两者都按字符串存值，也不会像 Cookie 那样自动随 HTTP 发送。普通独立标签的 sessionStorage 分开；有 opener 的新页可能先复制初始值，后续各自变化。复杂的结构化记录与索引查询可用 IndexedDB。"
+      ],
+      "takeaways": [
+        "判断存储题先圈出 origin、标签会话和过期边界，再看存入的类型。"
+      ],
+      "example": {
+        "lang": "JavaScript",
+        "code": "localStorage.setItem(\"clicks\", 9);\nconst old = localStorage.getItem(\"clicks\");\nconsole.log(old + 1, Number(old) + 1);",
+        "explanation": "允许同源存储的普通网页上，控制台依次输出字符串 91 与数值 10。每次演示先覆盖 clicks，因此可以重复推演。"
+      },
+      "table": {
+        "headers": [
+          "操作",
+          "localStorage",
+          "sessionStorage"
+        ],
+        "rows": [
+          [
+            "刷新同一页",
+            "通常保留",
+            "通常保留"
+          ],
+          [
+            "另开同源独立标签",
+            "通常可共享",
+            "另有会话"
+          ],
+          [
+            "正常关闭后再打开新会话",
+            "通常保留，用户可清除",
+            "旧会话结束"
+          ],
+          [
+            "存储复杂对象",
+            "先转为字符串",
+            "先转为字符串"
+          ]
+        ]
+      },
+      "links": [
+        {
+          "label": "MDN · sessionStorage 的标签会话",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
+        }
+      ],
+      "question": {
+        "prompt": "将 9 写进 localStorage，再取出来直接 + 1，会得到什么？另一独立新标签会读到吗？",
+        "answer": "getItem 返回字符串，\"9\" + 1 得到 \"91\"。同源、同一浏览器存储环境的新标签通常能读该 localStorage；转成 Number 后再加才得到 10。"
+      }
+    },
+    {
+      "title": "网页如何接触文件与外部设备",
+      "pages": [
+        39,
+        40
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "网页编辑器不会一打开就知道桌面上有哪些文档。通过文件选择界面，用户明确选择文件，浏览器可以把对应句柄交给网页；可否写回取决于具体接口和权限。不同浏览器提供的接口可能不同。",
+        "串口也是受控入口。用户选中可访问的串口后，Web Serial 才能与连接在该端口上的设备交换串行数据；USB 接线并不意味着任意 USB 设备都提供串口。"
+      ],
+      "takeaways": [
+        "设备接口的共同限制是作用范围与用户授权。"
+      ],
+      "question": {
+        "prompt": "网页编辑器已获准打开一个文件，能据此自动读取整个 Documents 文件夹吗？",
+        "answer": "不能。应以所获文件或目录句柄及其权限为范围。选中单个文件不能推出获得整个目录访问权。"
+      }
+    },
+    {
+      "title": "视频通话里，采集和传输分别做什么",
+      "pages": [
+        41,
+        42
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "本地预览能看到自己的脸，说明摄像头采集和本地显示已经工作。要让同学看到，还要把音视频轨放进 WebRTC 连接，并交换建立连接所需的信息。摄像头和麦克风可作为同一 MediaStream 中的不同 track。",
+        "WebRTC 会尝试可用的连接路径。如果直连不可行，TURN 可以转发数据；即使媒体能直连，双方仍通常依靠信令服务交换连接信息。关麦克风只需处理对应音轨，并不必停掉视频。"
+      ],
+      "takeaways": [
+        "采集、显示、信令与传输是四个可以分别成功或失败的环节。"
+      ],
+      "figure": {
+        "title": "一帧画面怎样抵达同学的屏幕",
+        "steps": [
+          {
+            "label": "采集",
+            "detail": "授权后从摄像头取得视频轨"
+          },
+          {
+            "label": "建立连接",
+            "detail": "双方交换会话和候选路径信息"
+          },
+          {
+            "label": "传递与显示",
+            "detail": "经可用直连或 TURN 中继抵达对端，由远端播放"
+          }
+        ],
+        "caption": "本地 video 预览可直接读取采集流，它成功不会证明远端链路已经建立。"
+      },
+      "links": [
+        {
+          "label": "MDN · WebRTC 的连接协议",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols"
+        }
+      ],
+      "question": {
+        "prompt": "本地预览正常，但同伴收不到画面。能据此排除哪些问题，哪些还要检查？",
+        "answer": "摄像头采集到本地显示的这段已工作。仍要确认视频轨是否加入连接、信令是否完成，以及协商到的网络路径能否传输。"
+      }
+    },
+    {
+      "title": "到货通知与无密码登录",
+      "pages": [
+        43,
+        44
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "页面关着，服务端怎样告诉你预订已确认？用户订阅后，推送服务可把消息递给站点的 Service Worker。要让人看见，还需在取得相应许可后通过通知接口展示。这分别是消息到达与信息呈现。",
+        "登录还有另一个问题：服务器如何确认是持有凭据的人？WebAuthn 中服务器给出一次性挑战，认证器用与站点关联的凭据私钥产生签名，服务器用公钥等信息验证。指纹或面容可在本地解锁使用凭据，网站无需取得指纹图像。"
+      ],
+      "takeaways": [
+        "Push 负责递消息，Notification 负责显示；WebAuthn 的证明来自对挑战的签名。"
+      ],
+      "links": [
+        {
+          "label": "W3C · Web Authentication",
+          "url": "https://www.w3.org/TR/webauthn-2/"
+        }
+      ],
+      "question": {
+        "prompt": "用户用指纹完成 WebAuthn 登录，服务器收到指纹后比对吗？",
+        "answer": "不会。认证器可在本地验证用户，服务器验证返回的签名、挑战及站点相关信息；注册时得到的是凭据公钥等信息。"
+      }
+    },
+    {
+      "title": "页面卡顿时，该换线程还是换执行格式",
+      "pages": [
+        45,
+        46
+      ],
+      "kind": "concept",
+      "paragraphs": [
+        "把一百万个像素逐个染色的工作交给同一个处理点击的线程，会让按钮等很久。Web Worker 把计算移到独立的执行环境，以消息返回结果；普通 Worker 不能直接修改页面 DOM，主线程负责把结果显示出来。",
+        "WebAssembly 是可执行的低级指令格式，适合运行编译来的计算模块。它解决如何表示和执行程序，不会因为文件叫 .wasm 就自动离开主线程。两种机制可以组合，在 Worker 中运行 Wasm，再把结果送回界面。"
+      ],
+      "takeaways": [
+        "线程决定工作在哪里做，Wasm 描述运行的代码形式。"
+      ],
+      "figure": {
+        "title": "用后台计算保持按钮可点",
+        "steps": [
+          {
+            "label": "主线程",
+            "detail": "把像素数据交给 Worker，继续接收点击"
+          },
+          {
+            "label": "Worker",
+            "detail": "计算并返回结果"
+          },
+          {
+            "label": "主线程",
+            "detail": "收到消息，把结果画到页面上"
+          }
+        ],
+        "caption": "耗时算法可以写成 JavaScript 或 Wasm，线程分工独立于语言选择。"
+      },
+      "links": [
+        {
+          "label": "MDN · Web Workers 的消息与线程",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers"
+        }
+      ],
+      "question": {
+        "prompt": "把一个长计算改写成 Wasm 后，仍在主线程同步调用。页面还可能卡吗？",
+        "answer": "会。即使计算变快，长时间占据主线程仍会延迟输入与绘制。可将适合的计算移入 Worker，再用消息回传。"
+      }
+    },
+    {
+      "title": "从作品看回浏览器能力",
+      "pages": [
+        47,
+        48
+      ],
+      "kind": "background",
+      "paragraphs": [
+        "看到一个带动画和声音的网页，可以练习拆解：哪些部分用文档语义就能表达，哪些需要媒体播放、绘图、存储或后台计算？作品链接用于观察，元素的实际属性可回到 HTML 标准查。"
+      ],
+      "takeaways": [
+        "能解释一项效果依赖哪些浏览器能力，比记住作品名称更重要。"
+      ]
+    }
+  ],
+  "connections": [
+    "与 DOM 对照，SVG 形状保存在 DOM 中，Canvas 2D 绘制命令改变像素。",
+    "与 Cookie 对照，Web Storage 由脚本读取，不自动附在 HTTP 请求上。",
+    "与性能章节对照，Worker 关注主线程是否有空响应，而 Wasm 关注计算模块的执行。"
+  ],
+  "examChecklist": [
+    "给定具体区域说明为什么选 article、section、nav 或 div。",
+    "手算从 (20,20) 开始的两条 lineTo 路径。",
+    "解释本地预览成功为何不能证明远端已收到画面。",
+    "从线程与执行格式两个维度分析一段耗时任务。"
+  ]
+}

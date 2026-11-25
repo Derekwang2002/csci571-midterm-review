@@ -40,6 +40,87 @@
     "phase": "new"
   },
   {
+    "id": "ajax",
+    "file": "ajax.pdf",
+    "title": "AJAX 与局部更新",
+    "description": "从点击到局部刷新，读懂 XHR、Fetch 与跨源响应",
+    "count": 51,
+    "phase": "new"
+  },
+  {
+    "id": "servers",
+    "file": "WebServers.pdf",
+    "title": "Web 服务器",
+    "description": "从 URL 找到资源，理解虚拟主机、访问控制与日志",
+    "count": 65,
+    "phase": "new"
+  },
+  {
+    "id": "performance",
+    "file": "WebPerformance.pdf",
+    "title": "安全通信与服务器性能",
+    "description": "TLS 怎样建立信任，负载均衡与缓存怎样减少等待",
+    "count": 62,
+    "phase": "new"
+  },
+  {
+    "id": "android",
+    "file": "AndroidMobileDesign.pdf",
+    "title": "Android 移动应用",
+    "description": "从屏幕到组件，理解 Activity、Intent 与界面生命周期",
+    "count": 67,
+    "phase": "new"
+  },
+  {
+    "id": "ios",
+    "file": "iOSMobileDesign.pdf",
+    "title": "iOS 移动应用",
+    "description": "跟踪 Swift、UIKit 和 SwiftUI 中用户动作与界面状态",
+    "count": 91,
+    "phase": "new"
+  },
+  {
+    "id": "highperformance",
+    "file": "HighPerformanceWebsites.pdf",
+    "title": "高性能网站",
+    "description": "读请求瀑布图，判断请求数、缓存、压缩与加载顺序的影响",
+    "count": 56,
+    "phase": "new"
+  },
+  {
+    "id": "lambda",
+    "file": "Serverless-Lambda.pdf",
+    "title": "Serverless 与 AWS Lambda",
+    "description": "从常驻服务器到按事件执行，串起网关、函数与存储",
+    "count": 51,
+    "phase": "new"
+  },
+  {
+    "id": "functions",
+    "file": "Serverless-Functions.pdf",
+    "title": "Google Cloud Run functions",
+    "description": "跟踪一次 HTTP 调用如何触发函数，区分部署、运行与计费",
+    "count": 26,
+    "phase": "new"
+  },
+  {
+    "id": "html5",
+    "file": "HTML5.pdf",
+    "title": "HTML5 与浏览器能力",
+    "description": "语义、媒体、图形、存储与 Web API 各解决什么问题",
+    "count": 48,
+    "phase": "new"
+  },
+  {
+    "id": "intrusion",
+    "file": "Web Intrusion.pdf",
+    "title": "Web Intrusion · Web 安全",
+    "description": "从账户、浏览器到数据库，判断信任边界与防护位置",
+    "count": 107,
+    "phase": "new",
+    "sourceMode": "study"
+  },
+  {
     "id": "intro",
     "file": "CourseIntro.pdf",
     "title": "课程导览",

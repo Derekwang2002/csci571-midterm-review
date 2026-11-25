@@ -36,7 +36,10 @@ for d in decks:
    assert not history.intersection(all_pages),'History must not become core'
   stats.append(dict(id=slug,sections=len(data['sections']),pages=len(all_pages),questions=len(questions),chars=chars))
  except Exception as e:errors.append(f"{d['id']}: {e}")
-assert {'responsive':59,'react':45,'node':35,'cookies':54,'rest':36}.items() <= {d['id']:d['count'] for d in decks if d['phase']=='new'}.items()
+expected={'responsive':59,'react':45,'node':35,'cookies':54,'rest':36,'ajax':51,'servers':65,
+          'performance':62,'android':67,'ios':91,'highperformance':56,'lambda':51,
+          'functions':26,'html5':48,'intrusion':107}
+assert [(d['id'],d['count']) for d in decks if d['phase']=='new']==list(expected.items())
 assert sum(d['phase']=='foundation' for d in decks)==13
 print(json.dumps(dict(stats=stats,errors=errors),ensure_ascii=False,indent=2))
 raise SystemExit(bool(errors))

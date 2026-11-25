@@ -8,14 +8,17 @@ for d in decks:
  if not file.exists(): errors.append(f'Missing {file}');continue
  rows=json.loads(file.read_text())
  if [p['page'] for p in rows]!=list(range(1,d['count']+1)):errors.append(f"{d['id']}: incomplete/duplicate page sequence")
- if len(sources[d['id']])!=d['count']:errors.append(f"{d['id']}: missing source text pages")
+ study_card=d.get('sourceMode')=='study'
+ if study_card:
+  if d['id'] in sources or (root/'assets/slides'/d['id']).exists():errors.append(f"{d['id']}: expected original study cards")
+ elif len(sources.get(d['id'],[]))!=d['count']:errors.append(f"{d['id']}: missing source text pages")
  for p in rows:
   ident=f"{d['id']}:{p['page']}"
   for f in ['title','section','priority','summary','explanation','takeaways']:
    if not p.get(f):errors.append(f'{ident}: missing {f}')
   if p.get('priority') not in ['core','support','skim','admin']:errors.append(f'{ident}: bad priority')
   if not isinstance(p.get('explanation'),list) or not all(isinstance(s,str) and s.strip() for s in p['explanation']):errors.append(f'{ident}: bad paragraphs')
-  if not (root/'assets/slides'/d['id']/f"{p['page']:03}.jpg").exists():errors.append(f'{ident}: missing image')
+  if not study_card and not (root/'assets/slides'/d['id']/f"{p['page']:03}.jpg").exists():errors.append(f'{ident}: missing image')
   if p.get('example'):
    for f in ['lang','code','explanation']:
     if not p['example'].get(f):errors.append(f'{ident}: example missing {f}')
