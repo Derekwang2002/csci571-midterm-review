@@ -1,4 +1,4 @@
-import {predictionByDeck} from './prediction-labs.js?v=20261126';
+import {predictionByDeck} from './prediction-labs.js?v=20261126-blue';
 import {renderFlow, renderScenario} from './study-figures.js?v=20261125';
 const VERSION = '20261125';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

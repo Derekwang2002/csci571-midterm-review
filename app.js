@@ -1,11 +1,11 @@
-import {initNavigation} from './navigation.js?v=20261126-labs';
-import {renderCatalog, bindCatalog} from './catalog.js?v=20261126-labs';
+import {initNavigation} from './navigation.js?v=20261126-blue';
+import {renderCatalog, bindCatalog} from './catalog.js?v=20261126-blue';
 import {createProgressStore, PROGRESS_PREFIX} from './progress.js?v=20261018-final';
 import {createReadingTracker} from './reading-progress.js?v=20261018-final';
 import {resumeBanner, showProgress} from './progress-view.js?v=20261125-ui';
-import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261126-labs';
+import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261126-blue';
 import {renderFlow, renderScenario, selectScenario} from './study-figures.js?v=20261125';
-import {getInterpretation, interpretationHref, interpretationIndex, showInterpretation, interpretationBanner, markHistoricalPage, studyGroups} from './interpretations.js?v=20261126-labs';
+import {getInterpretation, interpretationHref, interpretationIndex, showInterpretation, interpretationBanner, markHistoricalPage, studyGroups} from './interpretations.js?v=20261126-blue';
 const $ = (s, root=document) => root.querySelector(s);
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rich = s => esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');

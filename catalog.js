@@ -1,4 +1,4 @@
-import {interpretationHref} from './interpretations.js?v=20261126-labs';
+import {interpretationHref} from './interpretations.js?v=20261126-blue';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g,
   char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[char]));

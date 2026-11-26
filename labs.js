@@ -1,4 +1,4 @@
-import {predictionLabs} from './prediction-labs.js?v=20261126';
+import {predictionLabs} from './prediction-labs.js?v=20261126-blue';
 import {markupLabs} from './labs-markup.js?v=20261006-feedback';
 import {javascriptLabs} from './labs-javascript.js?v=20261006-feedback';
 import {dataLabs} from './labs-data.js?v=20261006-feedback';

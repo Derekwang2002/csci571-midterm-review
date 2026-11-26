@@ -66,7 +66,7 @@ function mountPrediction(root, spec) {
     const current = {conditions, answer};
     outcome.innerHTML = `<section class="prediction-result" data-correct="${correct}">
       <h3><span aria-hidden="true">${correct ? '✓' : '≠'}</span>${verdict}</h3>
-      <p>${correct ? '' : `你的预测是「${esc(labels.get(guess))}」。`}实际结果是<strong>「${esc(labels.get(answer))}」</strong>。</p>
+      <p>${correct ? '' : `你选了<strong>${esc(labels.get(guess))}</strong>。<br>`}实际结果是<strong>${esc(labels.get(answer))}</strong>。</p>
       ${renderTimeline(timeline)}<ol class="prediction-trace" aria-label="推导过程">${rows.map(([step, result, reason]) =>
         `<li><small>${esc(step)}</small><strong>${esc(result)}</strong><p>${esc(reason)}</p></li>`).join('')}</ol>
     </section>`;
