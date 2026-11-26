@@ -580,7 +580,7 @@
     "summary": "本页把媒体类型与宽度条件组合，说明 link 的 media 与 CSS 内部 @media 都可限制规则适用环境。",
     "explanation": [
       "@media all and (min-width:500px) 与 @media (min-width:500px) 在此条件下等价，省略的类型默认为 all。min-width 包含边界值500，所以宽度正好500 CSS px 时也满足条件。",
-      "旧 max-device-width 关注设备宽度，现代响应式布局通常更适合 viewport 的 width，因为用户可缩放窗口、分屏或使用不同浏览环境。媒体查询只是是否应用规则，不会自动把固定宽度布局变得灵活，布局本身仍要能适应空间。"
+      "旧 max-device-width 关注设备宽度，现代响应式布局通常更适合 viewport 的 width，因为用户可缩放窗口、分屏或使用不同浏览环境。媒体查询只决定是否应用规则，不会自动把固定宽度布局变得灵活，布局本身仍要能适应空间。"
     ],
     "takeaways": [
       "min/max 包含边界",

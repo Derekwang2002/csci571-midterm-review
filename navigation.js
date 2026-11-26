@@ -1,5 +1,47 @@
 const mobile = window.matchMedia('(max-width: 840px)');
 
+/* Calendar days from the viewer's today to the exam date (2026-12-03); negative once it has passed. */
+export function daysUntilExam(now = new Date()) {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((new Date(2026, 11, 3) - today) / 86400000);
+}
+
+function showExamCountdown() {
+  const chip = document.querySelector('[data-exam-countdown]');
+  if (!chip) return;
+  const days = daysUntilExam();
+  chip.hidden = days < 0;
+  chip.textContent = days === 0 ? '今天' : `${days} 天`;
+  chip.closest('a')?.setAttribute('aria-label', days < 0 ? '查看期末考试安排' : `查看 12 月 3 日期末考试安排，${days === 0 ? '就在今天' : `还有 ${days} 天`}`);
+}
+
+/* Thin reading-progress bar under the top bar and a back-to-top button for long pages. */
+function initScrollAids(main) {
+  const bar = document.querySelector('.scroll-progress');
+  const fill = bar?.firstElementChild;
+  const top = document.querySelector('#to-top');
+  if (!bar || !top) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let frame = 0;
+  function measure() {
+    frame = 0;
+    const room = document.documentElement.scrollHeight - window.innerHeight;
+    const long = room > window.innerHeight * .6;
+    bar.classList.toggle('is-active', long);
+    if (long) fill.style.transform = `scaleX(${Math.min(1, Math.max(0, window.scrollY / room))})`;
+    top.hidden = !(long && window.scrollY > window.innerHeight * 1.1);
+  }
+  const schedule = () => { if (!frame) frame = requestAnimationFrame(measure); };
+  window.addEventListener('scroll', schedule, {passive: true});
+  window.addEventListener('resize', schedule);
+  new ResizeObserver(schedule).observe(main);
+  top.addEventListener('click', () => {
+    window.scrollTo({top: 0, behavior: reduce.matches ? 'instant' : 'smooth'});
+    main.focus({preventScroll: true});
+  });
+  schedule();
+}
+
 export function initNavigation() {
   const rail = document.querySelector('#navigation');
   const menu = document.querySelector('#menu');
@@ -10,6 +52,8 @@ export function initNavigation() {
   let collapsed = false;
   let drawer = false;
   try { collapsed = localStorage.getItem('571-ui-rail') === 'collapsed'; } catch {}
+  showExamCountdown();
+  initScrollAids(main);
 
   function update() {
     const compact = mobile.matches;

@@ -1,4 +1,4 @@
-import {predictionByDeck} from './prediction-labs.js?v=20261126-blue';
+import {predictionByDeck} from './prediction-labs.js?v=20261126-ux';
 import {renderFlow, renderScenario} from './study-figures.js?v=20261125';
 const VERSION = '20261125';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -80,7 +80,7 @@ function bindChapterNavigation(main, side) {
   let current=null, frame=0;
   function update(){
     frame=0;
-    const boundary=(document.querySelector('.topbar')?.getBoundingClientRect().bottom??80)+26;
+    const boundary=Math.max((document.querySelector('.topbar')?.getBoundingClientRect().bottom??80)+26,window.innerHeight*.3);
     const atEnd=window.scrollY>0 && window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-2;
     const index=atEnd?sections.length-1:sections.findLastIndex((section,i)=>i===0||section.getBoundingClientRect().top<=boundary);
     const next=buttons[index];

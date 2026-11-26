@@ -1,19 +1,22 @@
-import {interpretationHref} from './interpretations.js?v=20261126-blue';
+import {interpretationHref} from './interpretations.js?v=20261126-ux';
+import {daysUntilExam} from './navigation.js?v=20261126-ux';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g,
   char => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[char]));
 
-function chapterRow(deck, mastered) {
+function chapterRow(deck, mastered, index) {
   const page = deck.corePages?.[0] || 1;
+  const share = deck.count ? Math.min(100, Math.round(mastered / deck.count * 100)) : 0;
   const pageLabel = deck.sourceMode === 'study' ? '逐页图解' : '逐页对照';
   const title = escapeHtml(deck.title);
   return `<li class="catalog-chapter">
+    <span class="catalog-chapter-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
     <div class="catalog-chapter-copy">
       <a class="catalog-chapter-title" href="${interpretationHref(deck.id)}">${title}</a>
       <p>${escapeHtml(deck.description)}</p>
     </div>
     <div class="catalog-chapter-pages">
-      ${mastered ? `<span class="catalog-page-mark" title="本机已掌握页数">已掌握 ${mastered} 页</span>` : ''}
+      ${mastered ? `<span class="catalog-page-mark" title="本机已掌握页数">已掌握 ${mastered} 页<span class="catalog-meter" aria-hidden="true"><i style="width:${share}%"></i></span></span>` : ''}
       <a class="catalog-page-link" href="#/deck/${encodeURIComponent(deck.id)}/${page}"
         aria-label="${title}，${pageLabel}，共 ${deck.count} 页">${pageLabel} <span>${deck.count} 页</span><i aria-hidden="true">›</i></a>
     </div>
@@ -46,15 +49,22 @@ export function renderCatalog({decks, groups, last, done, totalPages}) {
     <div class="catalog-group-head">
       <p>${escapeHtml(group.note)}</p><span>${group.decks.length} 份讲义</span>
     </div>
-    <ul class="catalog-chapters">${group.decks.map(deck => chapterRow(deck, marked.get(deck.id) || 0)).join('')}</ul>
+    <ul class="catalog-chapters">${group.decks.map((deck, i) => chapterRow(deck, marked.get(deck.id) || 0, i)).join('')}</ul>
   </section>`).join('');
+
+  const days = daysUntilExam();
+  const share = totalPages ? Math.min(100, done.size / totalPages * 100) : 0;
+  const countdown = days > 0 ? `<span class="catalog-countdown"><b>${days}</b><small>天后考试</small></span>`
+    : days === 0 ? '<span class="catalog-countdown is-today"><b>今天</b><small>考试</small></span>' : '';
 
   return `<article class="catalog">
     <header class="catalog-head">
-      <div><h1>期末复习目录</h1>
-        <p>CSCI 571 · Web Technologies</p></div>
-      <div class="catalog-exam"><time datetime="2026-12-03T17:00:00-08:00">12 月 3 日 17:00</time>
-        <a href="${interpretationHref('syllabus')}">考试安排与范围 <i aria-hidden="true">›</i></a></div>
+      <div><p class="catalog-kicker">CSCI 571 · Web Technologies</p>
+        <h1>期末复习目录</h1>
+        <p>从串讲读起，再逐页对照课件、做自测和交互实验。</p></div>
+      <div class="catalog-exam">${countdown}
+        <div><time datetime="2026-12-03T17:00:00-08:00">12 月 3 日 17:00</time>
+        <a href="${interpretationHref('syllabus')}">考试安排与范围 <i aria-hidden="true">›</i></a></div></div>
     </header>
     <div class="catalog-reading">
       <div class="catalog-reading-location">
@@ -65,6 +75,7 @@ export function renderCatalog({decks, groups, last, done, totalPages}) {
       <a href="#/progress" class="catalog-progress" aria-label="查看本机学习进度，已掌握 ${done.size} 页，共 ${totalPages} 页">
         <span class="catalog-small-label">本机已掌握</span>
         <span><b>${done.size}</b> / ${totalPages} 页 <i aria-hidden="true">›</i></span>
+        <span class="catalog-meter" aria-hidden="true"><i style="width:${share.toFixed(1)}%"></i></span>
       </a>
     </div>
     <section class="catalog-directory" aria-labelledby="catalog-directory-title">
