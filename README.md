@@ -6,7 +6,7 @@ Fall 2026 中文复习网站，部署到 [GitHub Pages](https://derekwang2002.gi
 - 每讲有分组串讲和页码索引。后十讲包括 104 节串讲、36 张中文原理图、21 个代码或报文等示例、84 道自测，另可切换菜单刷新、缓存验证、云函数初始化和订单权限的情境。Web Intrusion 使用原创中文复习卡标明每个 PDF 页码。
 - 期中 13 章保留核心回顾和原有详解。全站共 28 份讲义、1,659 页，另有 syllabus 10 页。
 - 默认自测题池共 147 题，包含期末讲义的 134 道核心题与旧 13 章各一道，单轮最多 20 题。可以按讲义选择，既有练习继续保存在浏览器。
-- 34 个交互实验、71 道实验挑战、200 个课件页面映射。Responsive、React、Node、Cookie、REST 各 3 个实验，旧 19 个实验保留。
+- 44 个交互实验、84 道实验挑战，关联 240 个课件页面。[AJAX 至 Web Intrusion 预测实验](https://derekwang2002.github.io/csci571-midterm-review/#/lab/final) 覆盖后半程 10 章，每章可以先预测，运行后改条件、对照两次结果。
 - 已掌握/待复习、阅读位置、展开状态和自测进度保存于当前浏览器；支持导出和合并导入。继续使用原存储命名空间与页面 ID。
 
 ## 范围依据
@@ -25,7 +25,7 @@ python3 scripts/validate.py
 python3 scripts/validate_interpretations.py
 python3 scripts/validate_final.py
 node scripts/validate_labs.mjs
-node --test scripts/progress.test.mjs scripts/final-labs.test.mjs scripts/protocol-labs.test.mjs
+node --test scripts/*.test.mjs
 node --check app.js
 node --check interpretations.js
 ```
@@ -46,6 +46,7 @@ node --check interpretations.js
 - `study-figures.js`：分步原理图与可切换条件的例题。
 - `interpretations.js` / `final.css`：分组目录、摘要、表格、自测与官方链接。
 - `progress.js` / `reading-progress.js` / `progress-view.js`：持久化、备份及恢复。
+- `prediction-labs.js` 与 `labs-late-*.js` 负责后半程 10 章的预测、条件计算和两轮对照。
 - `labs*.js` / `labs.css` / `lab-feedback.js`：实验与按当前选项联动的实测结果、解释和课件映射。
 
 ## 新增交互实验

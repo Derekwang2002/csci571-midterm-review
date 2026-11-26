@@ -1,3 +1,4 @@
+import {predictionLabs} from './prediction-labs.js?v=20261126';
 import {markupLabs} from './labs-markup.js?v=20261006-feedback';
 import {javascriptLabs} from './labs-javascript.js?v=20261006-feedback';
 import {dataLabs} from './labs-data.js?v=20261006-feedback';
@@ -8,11 +9,11 @@ import {cookieLabs} from './labs-cookies.js?v=20261021-protocol-labs2';
 import {restLabs} from './labs-rest.js?v=20261021-protocol-labs2';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const categories = ['Responsive', 'React', 'Node', 'Cookie', 'REST', 'HTML', 'CSS', 'JavaScript', 'DOM', '数据与网络'];
-export const labs = [...responsiveLabs, ...reactLabs, ...nodeLabs, ...cookieLabs, ...restLabs, ...markupLabs, ...javascriptLabs, ...dataLabs].sort((a,b) => categories.indexOf(a.category)-categories.indexOf(b.category));
+const categories = ['Responsive', 'React', 'Node', 'Cookie', 'REST', ...predictionLabs.map(lab => lab.category), 'HTML', 'CSS', 'JavaScript', 'DOM', '数据与网络'];
+export const labs = [...responsiveLabs, ...reactLabs, ...nodeLabs, ...cookieLabs, ...restLabs, ...predictionLabs, ...markupLabs, ...javascriptLabs, ...dataLabs].sort((a,b) => categories.indexOf(a.category)-categories.indexOf(b.category));
 const labHref = id => `#/lab/${id}`;
 const pageHref = (deck,page) => `#/deck/${deck}/${page}`;
-const deckNames = {responsive:'Responsive',react:'React',node:'Node',cookies:'Cookie',rest:'REST',html:'HTML',css:'CSS',jsbasics:'JavaScript Basics',jsadvanced:'JavaScript Advanced',dom:'DOM',forms:'HTML Forms',json:'JSON',http:'HTTP',web:'Web Basics'};
+const deckNames = {responsive:'Responsive',react:'React',node:'Node',cookies:'Cookie',rest:'REST',html:'HTML',css:'CSS',jsbasics:'JavaScript Basics',jsadvanced:'JavaScript Advanced',dom:'DOM',forms:'HTML Forms',json:'JSON',http:'HTTP',web:'Web Basics',...Object.fromEntries(predictionLabs.map(lab => [lab.refs[0].deck, lab.category]))};
 const pageRange = ref => `P${ref.start}${ref.end && ref.end!==ref.start ? '–'+ref.end : ''}`;
 
 export function relatedLabLinks(deck,page) {
@@ -21,29 +22,33 @@ export function relatedLabLinks(deck,page) {
   return `<aside class="related-labs"><span class="block-label">动手验证本页知识点</span>${matches.map(lab => `<a href="${labHref(lab.id)}">${esc(lab.title)} <span>进入实验 →</span></a>`).join('')}</aside>`;
 }
 
-function labIndex(main) {
-  document.title = '交互实验室 · CSCI 571';
+function labIndex(main, finalOnly) {
+  const collection = finalOnly ? predictionLabs : labs;
+  document.title = (finalOnly ? 'AJAX 至 Web Intrusion · ' : '') + '交互实验室 · CSCI 571';
   const path = ['responsive-media','react-state','node-express','cookie-scope','cookie-samesite','rest-methods'].map(id => labs.find(lab => lab.id===id)).filter(Boolean);
   main.innerHTML = `<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>交互实验室</div>
     <header class="laboratory-head">
       <h1>交互实验室</h1>
       <p>先预测结果，再改一个参数，观察浏览器或程序怎样响应。</p>
     </header>
-    <details class="lab-path">
+    <nav class="lab-collections" aria-label="实验集合">
+      <a href="#/lab" ${finalOnly?'':'aria-current="page"'}>所有实验 <small>${labs.length}</small></a>
+      <a href="#/lab/final" ${finalOnly?'aria-current="page"':''}>AJAX 至 Web Intrusion <small>${predictionLabs.length}</small></a></nav>
+    ${finalOnly?'':`<details class="lab-path">
       <summary>期末优先练习 <small>${path.length} 个实验</small></summary>
       <ol>${path.map(lab => `<li><a href="${labHref(lab.id)}">${esc(lab.title)}</a></li>`).join('')}</ol>
-    </details>
+    </details>`}
     <div class="lab-index-tools">
       <label class="lab-search" for="lab-search">查找实验<input id="lab-search" type="search" placeholder="搜索名称或知识点" autocomplete="off"></label>
-      <div class="lab-filters" role="group" aria-label="按技术筛选实验">${['全部',...categories].map((category,i) => `<button type="button" data-category="${esc(category)}" aria-pressed="${i===0}" class="${i===0?'selected':''}">${esc(category)}<small>${i===0?labs.length:labs.filter(lab=>lab.category===category).length}</small></button>`).join('')}</div>
+      ${finalOnly?'':`<div class="lab-filters" role="group" aria-label="按技术筛选实验">${['全部',...categories].map((category,i) => `<button type="button" data-category="${esc(category)}" aria-pressed="${i===0}" class="${i===0?'selected':''}">${esc(category)}<small>${i===0?labs.length:labs.filter(lab=>lab.category===category).length}</small></button>`).join('')}</div>`}
     </div>
     <p class="lab-match-count" role="status" aria-live="polite"></p><div class="laboratory-list"></div>
     <p class="lab-scope-note">页码按 PDF 页序标注。“拓展”实验用于辅助理解。</p>`;
   let selected = '全部';
   const render = () => {
     const words = main.querySelector('#lab-search').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const visible = labs.filter(lab => (selected==='全部'||lab.category===selected) && words.every(word => [lab.title,lab.category,lab.summary,lab.goal,...lab.refs.map(ref=>ref.label)].join(' ').toLowerCase().includes(word)));
-    main.querySelector('.lab-match-count').textContent = `显示 ${visible.length} / ${labs.length} 个实验`;
+    const visible = collection.filter(lab => (selected==='全部'||lab.category===selected) && words.every(word => [lab.title,lab.category,lab.summary,lab.goal,...lab.refs.map(ref=>ref.label)].join(' ').toLowerCase().includes(word)));
+    main.querySelector('.lab-match-count').textContent = `显示 ${visible.length} / ${collection.length} 个实验`;
     main.querySelector('.laboratory-list').innerHTML = visible.length ? visible.map(lab => `
       <a class="laboratory-card" href="${labHref(lab.id)}">
         <div class="laboratory-card-meta"><span>${esc(lab.category)}</span><small>${lab.minutes} 分钟</small></div>
@@ -61,20 +66,23 @@ function labIndex(main) {
 }
 
 export function renderLab(main,id) {
-  if (!id) {labIndex(main);return () => {}}
+  if (!id || id === 'final') {labIndex(main, id === 'final');return () => {}}
   const lab = labs.find(item => item.id===id);
   if (!lab) {main.innerHTML='<div class="empty"><h1>没有找到这个实验</h1><a href="#/lab">返回实验目录 →</a></div>';return () => {}}
-  const index = labs.indexOf(lab);
+  const prediction = predictionLabs.includes(lab);
+  const sequence = prediction ? predictionLabs : labs;
+  const index = sequence.indexOf(lab);
+  const directory = prediction ? '#/lab/final' : '#/lab';
   document.title = `${lab.title} · 交互实验室 · CSCI 571`;
   main.innerHTML = `<div class="breadcrumb"><a href="#/lab">交互实验室</a><span>/</span>${esc(lab.category)}</div>
-    <div class="lab-workspace-nav"><a href="#/lab">‹ 所有实验</a><label for="lab-jump">切换实验</label><select id="lab-jump">${categories.map(category=>`<optgroup label="${esc(category)}">${labs.filter(item=>item.category===category).map(item=>`<option value="${esc(item.id)}" ${item.id===id?'selected':''}>${esc(item.title)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+    <div class="lab-workspace-nav"><a href="${directory}">‹ ${prediction ? 'AJAX 至 Web Intrusion' : '所有实验'}</a><label for="lab-jump">切换实验</label><select id="lab-jump">${categories.map(category=>`<optgroup label="${esc(category)}">${labs.filter(item=>item.category===category).map(item=>`<option value="${esc(item.id)}" ${item.id===id?'selected':''}>${esc(item.title)}</option>`).join('')}</optgroup>`).join('')}</select></div>
     <header class="experiment-head"><h1>${esc(lab.title)}</h1><p>${esc(lab.summary)}</p></header>
     <details class="lab-mapping"><summary><span>对应课件</span> ${esc([...new Set(lab.refs.map(ref=>`${deckNames[ref.deck] || ref.deck} ${pageRange(ref)}`))].join(' · '))}<b>展开逐页对照</b></summary><div>${lab.refs.map(ref => `<section><strong>${esc(deckNames[ref.deck] || ref.deck)} · ${esc(ref.label)}</strong><div class="lab-page-links">${Array.from({length:(ref.end||ref.start)-ref.start+1},(_,i)=>ref.start+i).map(page=>`<a href="${pageHref(ref.deck,page)}" aria-label="${esc(deckNames[ref.deck] || ref.deck)} PDF 第 ${page} 页">P${page}</a>`).join('')}<a class="lab-summary-link" href="#/interpretations/${ref.deck}">本讲整体总结 →</a></div></section>`).join('')}</div></details>
-    <div class="experiment-brief"><div><span class="block-label">这次要弄懂</span><p>${esc(lab.goal)}</p></div><div><span class="block-label">动手前，先预测</span><p>${esc(lab.predict)}</p></div></div>
-    <section class="experiment-stage" aria-label="${esc(lab.title)}操作区"><div class="experiment-stage-head"><h2>实验操作</h2><button id="reset-experiment" type="button">重置实验 ↺</button></div><div class="lab-verdicts" aria-live="polite" aria-atomic="true"></div><div id="experiment-slot" class="lab experiment-workbench"></div><span id="lab-reset-status" class="visually-hidden" role="status"></span></section>
-    <section class="experiment-explanation"><h2>结果解释</h2><div class="lab-current-explanation"></div><details class="lab-general-rules"><summary>通用规则与补充</summary>${lab.explanation.map(paragraph=>`<p>${esc(paragraph)}</p>`).join('')}</details></section>
+    ${prediction ? '' : `<div class="experiment-brief"><div><span class="block-label">这次要弄懂</span><p>${esc(lab.goal)}</p></div><div><span class="block-label">动手前，先预测</span><p>${esc(lab.predict)}</p></div></div>`}
+    <section class="experiment-stage" aria-label="${esc(lab.title)}操作区"><div class="experiment-stage-head"><h2>${prediction ? '预测实验' : '实验操作'}</h2><button id="reset-experiment" type="button">重置实验 ↺</button></div><div class="lab-verdicts" aria-live="polite" aria-atomic="true"></div><div id="experiment-slot" class="lab experiment-workbench"></div><span id="lab-reset-status" class="visually-hidden" role="status"></span></section>
+    <section class="experiment-explanation">${prediction ? '' : '<h2>结果解释</h2>'}<div class="lab-current-explanation"></div><details class="lab-general-rules"><summary>通用规则与补充</summary>${lab.explanation.map(paragraph=>`<p>${esc(paragraph)}</p>`).join('')}</details></section>
     <section class="experiment-challenges"><h2>自测</h2>${lab.challenges.map((challenge,i)=>`<div class="experiment-challenge"><p><span>${String(i+1).padStart(2,'0')}</span>${esc(challenge.prompt)}</p><details><summary>核对答案与原因</summary><p>${esc(challenge.answer)}</p></details></div>`).join('')}</section>
-    <nav class="pager" aria-label="前后实验">${index>0?`<a href="${labHref(labs[index-1].id)}"><small>上一个实验</small>${esc(labs[index-1].title)}</a>`:'<a href="#/lab"><small>实验目录</small>返回实验目录</a>'}${index<labs.length-1?`<a href="${labHref(labs[index+1].id)}"><small>下一个实验</small>${esc(labs[index+1].title)}</a>`:'<a href="#/lab"><small>实验目录</small>返回实验目录</a>'}</nav>
+    <nav class="pager" aria-label="前后实验">${index>0?`<a href="${labHref(sequence[index-1].id)}"><small>上一个实验</small>${esc(sequence[index-1].title)}</a>`:`<a href="${directory}"><small>实验目录</small>返回实验目录</a>`}${index<sequence.length-1?`<a href="${labHref(sequence[index+1].id)}"><small>下一个实验</small>${esc(sequence[index+1].title)}</a>`:`<a href="${directory}"><small>实验目录</small>返回实验目录</a>`}</nav>
     <footer>页码采用 PDF 页序。可返回原页对照，也可从原页直接进入相关实验。</footer>`;
   let cleanup;
   const reports = new Map();

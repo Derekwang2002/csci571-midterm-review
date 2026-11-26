@@ -1,3 +1,4 @@
+import {predictionByDeck} from './prediction-labs.js?v=20261126';
 import {renderFlow, renderScenario} from './study-figures.js?v=20261125';
 const VERSION = '20261125';
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -43,7 +44,7 @@ export function interpretationIndex(decks){
     <div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>期末复习</div>
     <header class="directory-header"><h1>期末复习手册</h1>
     <p class="interpretation-intro">从浏览器里的一次点击，读到服务器怎样返回数据、缓存省下哪段等待，以及谁有权查看私人订单。</p>
-    <nav class="continue-chapters" aria-label="后半程复习入口"><a href="#/interpretations/ajax">从 AJAX 接着读 ${icon('arrow')}</a><a href="#/interpretations/intrusion">最后一讲 · Web Intrusion ${icon('chevron')}</a></nav></header>
+    <nav class="continue-chapters" aria-label="后半程复习入口"><a href="#/interpretations/ajax">从 AJAX 接着读 ${icon('arrow')}</a><a href="#/lab/final">做这 10 章的预测实验 ${icon('chevron')}</a><a href="#/interpretations/intrusion">最后一讲 · Web Intrusion ${icon('chevron')}</a></nav></header>
     ${groups.map(group=>`<section class="study-group"><div class="section-top"><h2>${esc(group.title)}</h2><span>${group.decks.length} 份讲义</span></div>
     <div class="interpretation-index ${group.phase==='new'?'new-lectures':''}">${group.decks.map(d=>`<a href="${interpretationHref(d.id)}"><div><h3>${esc(d.title)}</h3><p>${esc(d.description)}</p></div><span class="directory-page-count">${d.phase==='foundation'?'核心回顾':d.count+' 页'}</span><span class="interpretation-arrow" aria-hidden="true">${icon('chevron')}</span></a>`).join('')}</div></section>`).join('')}
     ${finalScopeNotice()}${historyNotice()}</div>`;
@@ -113,6 +114,7 @@ export async function showInterpretation(id,{decks,main,side,loadDeck,navBase,is
   const sections=summary.sections;
   const pageMap=new Map(sections.flatMap(s=>s.pages.map(n=>[n,s])));
   const original=deck.sourceMode==='study'?'逐页防护图解':'对照原始课件';
+  const experiment = predictionByDeck.get(id);
   const originalHref=`#/deck/${id}/${deck.corePages?.[0]||1}`;
   document.title=`${deck.title} · Final 复习 · CSCI 571`;
   side.innerHTML=navBase('interpretations')+`<label class="side-heading" for="interpretation-select">切换复习章节</label><select class="course-select" id="interpretation-select">${decks.map(d=>`<option value="${d.id}" ${d.id===id?'selected':''}>${d.phase==='new'?'新增 · ':d.phase==='foundation'?'核心 · ':''}${esc(d.title)}</option>`).join('')}</select>
@@ -131,7 +133,7 @@ export async function showInterpretation(id,{decks,main,side,loadDeck,navBase,is
     <header class="chapter-header"><div class="breadcrumb"><a href="#/interpretations">期末复习</a><span>/</span>${esc(deck.title)}</div>
     <h1>${esc(summary.title)}</h1><p class="interpretation-intro">${rich(summary.intro)}</p>
     <div class="chapter-toolbar"><ul class="chapter-facts" aria-label="章节信息"><li>${pageMap.size} 页${compact?'精选':''}</li><li>${sections.length} 节</li>${quizCount?`<li>${quizCount} 道自测</li>`:''}</ul>
-    <div class="interpretation-actions"><a href="${originalHref}" class="summary-open-original">${icon('book')}${original}</a><button id="print-interpretation">${icon('print')}打印本章</button>
+    <div class="interpretation-actions">${experiment?`<a class="summary-open-original" href="#/lab/${esc(experiment.id)}">本章预测实验 ${icon('arrow')}</a>`:''}<a href="${originalHref}" class="summary-open-original">${icon('book')}${original}</a><button id="print-interpretation">${icon('print')}打印本章</button>
     ${deck.phase==='foundation'?`<a class="summary-open-original" href="${interpretationHref(id)}${compact?'/full':''}">${compact?'完整串讲':'核心回顾'} ${icon('chevron')}</a>`:''}</div></div>
     ${full&&deck.phase==='foundation'?'<div class="notice">这里保留原有完整串讲，期末可优先阅读核心回顾。</div>':''}
     ${guide}</header>

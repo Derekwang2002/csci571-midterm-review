@@ -85,7 +85,7 @@ export function initNavigation() {
     const deck = decks.find(item => item.id===id);
     if (deck && (kind==='interpretations' || kind==='deck')) parts.push([deck.title,'#/interpretations/'+id]);
     if (kind==='deck' && page) parts.push(['P'+page]);
-    if (kind==='lab' && id) parts.push(['实验详情']);
+    if (kind==='lab' && id) parts.push([id==='final' ? 'AJAX 至 Web Intrusion' : '实验详情']);
     const pathNav=document.querySelector('#location-path');
     pathNav.replaceChildren();
     for (const [i,[title,url]] of parts.entries()) {
