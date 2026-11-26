@@ -1,9 +1,11 @@
+import {initNavigation} from './navigation.js?v=20261125-ui';
+import {renderCatalog, bindCatalog} from './catalog.js?v=20261125-ui';
 import {createProgressStore, PROGRESS_PREFIX} from './progress.js?v=20261018-final';
 import {createReadingTracker} from './reading-progress.js?v=20261018-final';
-import {resumeBanner, showProgress} from './progress-view.js';
-import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261021-protocol-labs2';
+import {resumeBanner, showProgress} from './progress-view.js?v=20261125-ui';
+import {renderLab, relatedLabLinks, labs} from './labs.js?v=20261125-ui';
 import {renderFlow, renderScenario, selectScenario} from './study-figures.js?v=20261125';
-import {getInterpretation, interpretationHref, interpretationIndex, showInterpretation, interpretationBanner, markHistoricalPage, studyGroups, finalScopeNotice} from './interpretations.js?v=20261125';
+import {getInterpretation, interpretationHref, interpretationIndex, showInterpretation, interpretationBanner, markHistoricalPage, studyGroups} from './interpretations.js?v=20261125-ui';
 const $ = (s, root=document) => root.querySelector(s);
 const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rich = s => esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
@@ -15,6 +17,7 @@ const savedLabel=()=>progress?.isAvailable()?'进度自动保存 · 备份与恢
 let decks=[],cache={},sources=null,routeVersion=0,activeDeck=null,activePage=0,allPromise;
 let disposeLab=()=>{};
 const main=$('#main'),side=$('#sidebar');
+const showLocation=initNavigation();
 const labels={core:'核心理解',support:'补充理解',skim:'背景速览',admin:'课程安排'};
 const resource={html:['HTML 元素参考','https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements'],css:['CSS 层叠与优先级','https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Cascade'],jsbasics:['JavaScript Guide','https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide'],jsadvanced:['JavaScript Guide','https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide'],json:['JSON 格式标准','https://www.rfc-editor.org/rfc/rfc8259'],python:['Python 官方教程','https://docs.python.org/3/tutorial/'],dom:['DOM 官方概述','https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model'],forms:['HTML 表单','https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms'],http:['HTTP 概述','https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview'],web:['URL API','https://developer.mozilla.org/en-US/docs/Web/API/URL'],vibe:['JavaScript 错误处理','https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling'],ai:['NASA 航天器热控制','https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/']};
 const href=(id,page=1)=>`#/deck/${id}/${page}`;
@@ -28,17 +31,33 @@ async function fetchJSON(path){const r=await fetch(`${path}?v=20261125`);if(!r.o
 async function loadDeck(id){return cache[id]??(cache[id]=await fetchJSON(`content/${id}.json`))}
 async function loadAll(){return allPromise??(allPromise=Promise.all(decks.map(d=>loadDeck(d.id))).catch(error=>{allPromise=null;throw error}))}
 function toast(s){$('#toast').textContent=s;$('#toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').classList.remove('show'),2500)}
-function navBase(active){return `<nav class="side-nav"><a href="#/interpretations" class="${active==='interpretations'?'active':''}"><span class="nav-icon">≡</span>整体总结</a><a href="#/" class="${active==='home'?'active':''}"><span class="nav-icon">▤</span>课程目录</a><a href="#/review" class="${active==='review'?'active':''}"><span class="nav-icon">◇</span>重点与待复习</a><a href="#/quiz" class="${active==='quiz'?'active':''}"><span class="nav-icon">?</span>自测练习</a><a href="#/lab" class="${active==='lab'?'active':''}"><span class="nav-icon">⌘</span>交互实验室</a><a href="#/progress" class="${active==='progress'?'active':''}"><span class="nav-icon">✓</span>学习进度</a></nav>`}
+const destinations=[
+ ['home','课程目录','#/','catalog'],['interpretations','讲义串讲','#/interpretations','book'],
+ ['review','重点与待复习','#/review','bookmark'],['quiz','自测练习','#/quiz','quiz'],
+ ['lab','交互实验室','#/lab','lab'],['progress','学习进度','#/progress','chart']
+];
+function navBase(active){
+ return '<nav class="side-nav" aria-label="复习工具">'+destinations.map(([id,name,url,icon])=>
+  `<a href="${url}" ${active===id?'class="active" aria-current="page"':''}><svg class="icon" aria-hidden="true"><use href="assets/interface.svg#${icon}"/></svg>${name}</a>`
+ ).join('')+'</nav>';
+}
 function sidebar(active='home',deck=null,pages=[],page=0){
  if(deck){side.innerHTML=`<a href="#/" class="side-back">‹ 返回课程目录</a><a href="${interpretationHref(deck.id)}" class="side-summary-link">本讲整体总结与串讲 →</a><label class="side-heading" for="course-select">切换讲义</label><select id="course-select" class="course-select">${decks.map(d=>`<option value="${d.id}" ${d.id===deck.id?'selected':''}>${esc(d.title)} · ${d.count} 页</option>`).join('')}</select><div class="side-progress" style="margin:0;padding:10px 8px">本讲已掌握 ${pct(deck)}%<div class="progress"><i style="width:${pct(deck)}%"></i></div><a class="save-status" href="#/progress" data-saved-label>${savedLabel()}</a></div><nav class="nav-pages" aria-label="逐页目录">${pages.map((p,i)=>`${i===0||p.section!==pages[i-1].section?`<div class="section-label">${esc(p.section)}</div>`:''}<a href="${href(deck.id,p.page)}" class="page-nav ${page===p.page?'active':''} ${state.done.has(key(deck.id,p.page))?'done':''}" ${page===p.page?'aria-current="page"':''}><span class="num">${state.done.has(key(deck.id,p.page))?'✓':String(p.page).padStart(2,'0')}</span><span>${esc(p.title)}</span></a>`).join('')}</nav>`;
  $('#course-select').addEventListener('change',e=>location.hash=href(e.target.value));
  const item=$('.page-nav.active',side);if(item)side.scrollTop=Math.max(0,item.offsetTop-side.clientHeight/2);
- }else{side.innerHTML=navBase(active)+`<div class="side-heading">讲义 · LECTURES</div>${decks.map((d,i)=>`<a class="deck-nav" href="${interpretationHref(d.id)}"><span class="deck-num">${String(i+1).padStart(2,'0')}</span><span>${esc(d.title)}</span><small>${d.count}</small></a>`).join('')}<div class="side-progress">总体掌握进度 <strong>${state.done.size} / ${totalPages()}</strong><div class="progress"><i style="width:${state.done.size/totalPages()*100}%"></i></div><a class="save-status" href="#/progress" data-saved-label>${savedLabel()}</a></div>`}
+ }else{
+  const sets=[['期末讲义','new'],['期中核心回顾','foundation'],['考试安排','admin']];
+  side.innerHTML=navBase(active)+sets.map(([title,phase])=>{
+   const group=decks.filter(d=>d.phase===phase);
+   return `<details class="deck-group" ${phase==='new'?'open':''}><summary>${title}<small>${group.length}</small></summary><nav aria-label="${title}">${group.map(d=>`<a class="deck-nav" href="${interpretationHref(d.id)}"><span>${esc(d.title)}</span><small>${d.count} 页</small></a>`).join('')}</nav></details>`;
+  }).join('')+`<a class="side-save" href="#/progress" data-saved-label>${savedLabel()}</a>`;
+  side.scrollTop=0;
+ }
 }
-function home(){sidebar();activeDeck=null;document.title='CSCI 571 · Final 复习手册';
- const last=progress.lastReading();const continueHref=last?.route||interpretationHref('responsive');
- const newPages=decks.filter(d=>d.phase==='new').reduce((sum,d)=>sum+d.count,0);
- main.innerHTML=`<div class="breadcrumb">CSCI 571 <span>/</span> Fall 2026 <span>/</span> Exam 02</div><section class="home-head"><div><span class="eyebrow">THE FINAL STUDY EDITION</span><h1>Final 复习手册</h1><p>新增课件抓重点，旧章只留核心。读例子，推结果，再自测。</p></div><div class="edition">02<small>WEB TECHNOLOGIES</small></div></section><section class="overview-strip"><div><small>下一段复习</small><a class="resume" href="${continueHref}">${last?'继续 '+esc(last.title):'从 Responsive Web Design 开始'} <span>›</span></a></div><div><small>新增讲义</small><strong>${newPages}<span>页 / ${decks.filter(d=>d.phase==='new').length} 份讲义</span></strong></div><div><small>已掌握 · 全部资料</small><strong>${state.done.size}<span>/ ${totalPages()} 页（含 syllabus）</span></strong></div></section><section class="interpretation-home-entry"><div><span class="eyebrow">AJAX · MOBILE · CLOUD · SECURITY</span><h2>从一次点击跟到服务器</h2><p>上次读到 REST，可以从 AJAX 接着学。跟着一次菜单刷新，看浏览器如何取数据、手机怎样更新画面、缓存省下哪段等待，以及服务器如何判断谁能读订单。</p></div><a href="#/interpretations/ajax">从 AJAX 接着读 →</a></section>${finalScopeNotice()}${studyGroups(decks).map(group=>`<section class="study-group"><div class="section-top"><div><h2>${group.title}</h2><p>${group.note}</p></div></div><div class="course-grid">${group.decks.map(d=>`<div class="course-card"><a class="course-main-link" href="${interpretationHref(d.id)}"><div class="card-line"><span class="course-index">${d.phase==='new'?'NEW':d.phase==='foundation'?'CORE':'INFO'}</span><div><h3>${esc(d.title)}</h3><p>${esc(d.description)}</p></div></div><div class="course-meta"><span>${d.phase==='new'?d.count+' 页重点串讲':d.phase==='foundation'?'核心回顾 · 1 道自测':'范围依据'}</span><span>原页掌握 ${pct(d)}%</span></div><div class="progress"><i style="width:${pct(d)}%"></i></div></a><div class="course-reading-links"><a href="${interpretationHref(d.id)}">${d.phase==='foundation'?'阅读核心回顾':'阅读重点串讲'} →</a><a href="${href(d.id,d.corePages?.[0]||1)}">${d.sourceMode==='study'?'逐页复习卡':'原页对照'}</a></div></div>`).join('')}</div></section>`).join('')}<footer>新增课件逐页覆盖 · 旧章核心摘要 · 学习进度继续保留<br>页码采用 PDF 阅读器页序。核心标签表示复习取舍，不代表预测分值。</footer>`;
+function home(){
+ sidebar();activeDeck=null;document.title='课程目录 · CSCI 571';
+ main.innerHTML=renderCatalog({decks,groups:studyGroups(decks),last:progress.lastReading(),done:state.done,totalPages:totalPages()});
+ bindCatalog(main);
 }
 function sourcePanel(deck,p,section){
  if(deck.sourceMode==='study'){
@@ -60,8 +79,8 @@ async function reader(id,page,version){const d=decks.find(d=>d.id===id);if(!d)th
  if(example){$('#copy-code').onclick=async()=>{try{await navigator.clipboard.writeText(example.code);toast('代码已复制')}catch{toast('浏览器未允许复制，请在代码块中选取。')}};if($('#preview-code'))$('#preview-code').onclick=()=>{const f=document.createElement('iframe');f.className='preview-frame';f.title='HTML代码示例预览';f.setAttribute('sandbox','');f.srcdoc='<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{font-family:sans-serif;padding:12px}</style>'+example.code;$('#preview-slot').replaceChildren(f);toast('预览呈现 HTML/CSS；脚本和表单提交不会执行。')}}
 }
 function refreshMarkButtons(id,page,d){const k=key(id,page);$('#mark-done').textContent=state.done.has(k)?'✓ 已掌握':'标记已掌握';$('#mark-done').className=state.done.has(k)?'soft-button':'primary';$('#mark-weak').textContent=state.weak.has(k)?'◇ 已加入待复习':'加入待复习';$('#mark-weak').className=state.weak.has(k)?'soft-button':'';sidebar('reader',d,cache[id],page);toast(progress.isAvailable()?'复习进度已保存':'本页进度已更新，但浏览器未允许保存；请导出备份')}
-async function review(version){document.title='重点与待复习 · CSCI 571';sidebar('review');activeDeck=null;await loadAll();if(version!==routeVersion)return;main.innerHTML=`<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>重点与待复习</div><span class="eyebrow">FOCUS YOUR REVIEW</span><h1>把时间留给薄弱处</h1><p class="muted">期末核心只列新增课件重点与旧章精选页；待复习列表保留你自己的标记。</p><p class="teacher-scope-update">教授补充：发展历史无需复习或记忆。复习时请结合此说明；<a href="#/interpretations">整体总结中已单独标出可跳过部分 →</a></p><div class="toolbar"><label for="review-mode">查看</label><select id="review-mode"><option value="weak">我的待复习（${state.weak.size}）</option><option value="core" ${state.weak.size?'':'selected'}>期末核心（新增 + 旧章精选）</option><option value="unread">尚未掌握</option><option value="all">全部页面</option></select><label for="review-deck">讲义</label><select id="review-deck"><option value="all">全部讲义</option>${decks.map(d=>`<option value="${d.id}">${esc(d.title)}</option>`).join('')}</select></div><div id="review-list"></div>`;
- function render(){const mode=$('#review-mode').value,deck=$('#review-deck').value;let rows=[];for(const d of decks){if(deck!=='all'&&deck!==d.id)continue;for(const p of cache[d.id]){const k=key(d.id,p.page);if(mode==='weak'&&!state.weak.has(k)||mode==='core'&&!isFinalCore(d,p)||mode==='unread'&&state.done.has(k))continue;rows.push({d,p})}}$('#review-list').innerHTML=`<p class="muted" style="font-size:12px">${rows.length} 页</p>`+(rows.length?rows.map(({d,p})=>`<a class="list-row" href="${href(d.id,p.page)}"><span class="row-page">${String(p.page).padStart(2,'0')}</span><div><h3>${esc(p.title)}</h3><p>${esc(d.title)} · ${esc(p.section)}</p></div>${pill(p.priority)}</a>`).join(''):'<div class="empty">还没有待复习页面。阅读时点击“加入待复习”，就会出现在这里。</div>')}
+async function review(version){document.title='重点与待复习 · CSCI 571';sidebar('review');activeDeck=null;await loadAll();if(version!==routeVersion)return;main.innerHTML=`<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>重点与待复习</div><h1>重点与待复习</h1><p class="muted">按讲义筛选期末重点，或回到自己标记过的页面。</p><div class="toolbar"><label for="review-mode">查看</label><select id="review-mode"><option value="weak">我的待复习（${state.weak.size}）</option><option value="core" ${state.weak.size?'':'selected'}>期末核心（新增 + 旧章精选）</option><option value="unread">尚未掌握</option><option value="all">全部页面</option></select><label for="review-deck">讲义</label><select id="review-deck"><option value="all">全部讲义</option>${decks.map(d=>`<option value="${d.id}">${esc(d.title)}</option>`).join('')}</select></div><div id="review-list"></div>`;
+ function render(){const mode=$('#review-mode').value,deck=$('#review-deck').value;let rows=[];for(const d of decks){if(deck!=='all'&&deck!==d.id)continue;for(const p of cache[d.id]){const k=key(d.id,p.page);if(mode==='weak'&&!state.weak.has(k)||mode==='core'&&!isFinalCore(d,p)||mode==='unread'&&state.done.has(k))continue;rows.push({d,p})}}$('#review-list').innerHTML=`<p class="list-count">${rows.length} 页</p>`+(rows.length?rows.map(({d,p})=>`<a class="list-row" href="${href(d.id,p.page)}"><span class="row-page">${String(p.page).padStart(2,'0')}</span><div><h3>${esc(p.title)}</h3><p>${esc(d.title)} · ${esc(p.section)}</p></div>${pill(p.priority)}</a>`).join(''):`<div class="empty">${mode==='weak'?'这个范围内还没有待复习页面。阅读时可以选择「加入待复习」。':'当前范围没有符合条件的页面，可以切换讲义或查看方式。'}</div>`)}
  $('#review-mode').onchange=render;$('#review-deck').onchange=render;render();
 }
 async function quiz(version){
@@ -69,11 +88,11 @@ async function quiz(version){
  let session=progress.getQuiz();
  const entry=k=>{const [id,page]=k.split(':');const d=decks.find(d=>d.id===id),p=cache[id]?.find(p=>p.page===Number(page));return {d,p,q:p?(session?.mode==='core'&&session?.edition==='final'?finalQuizQuestion(d,p)||p.question:p.question):null}};
  if(session&&!session.pool.every(k=>entry(k).q))session=null;
- main.innerHTML=`<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>自测练习</div><span class="eyebrow">RECALL BEFORE REVEAL</span><h1>先回答，再看解释</h1><p class="muted">默认题池包含新增重点题与旧章每章一道核心题；每轮随机最多 20 题，抽题比例不代表考试比例。已有练习原样保留，重新开始才使用新题池。题目对应具体课件页。练习题为本站编写，不是历年真题或正式题量预测。题目顺序、已答题数和当前答案状态会自动保存，可刷新后继续。</p><div class="toolbar"><label for="quiz-deck">范围</label><select id="quiz-deck"><option value="all">全部讲义</option>${decks.map(d=>`<option value="${d.id}">${esc(d.title)}</option>`).join('')}</select><label for="quiz-mode">内容</label><select id="quiz-mode"><option value="core">期末重点（旧章每章一道）</option><option value="all">全部自测（含旧章详细题库）</option><option value="weak">我的待复习</option></select><button id="start-quiz" class="primary">${session?'重新开始 20 题练习':'开始 20 题练习'}</button></div><div id="quiz-slot"><div class="empty">选择范围后开始。先口述或写下答案，再展开解释。</div></div>`;
+ main.innerHTML=`<div class="breadcrumb"><a href="#/">课程目录</a><span>/</span>自测练习</div><h1>自测练习</h1><p class="muted">选好讲义后，每轮最多抽 20 题。先自己回答，再展开解释；离开后可以继续。</p><div class="toolbar"><label for="quiz-deck">范围</label><select id="quiz-deck"><option value="all">全部讲义</option>${decks.map(d=>`<option value="${d.id}">${esc(d.title)}</option>`).join('')}</select><label for="quiz-mode">内容</label><select id="quiz-mode"><option value="core">期末重点（旧章每章一道）</option><option value="all">全部自测（含旧章详细题库）</option><option value="weak">我的待复习</option></select><button id="start-quiz" class="primary">${session?'重新开始练习':'开始练习'}</button></div><div id="quiz-slot"><div class="empty">开始练习后，题目会显示在这里。</div></div>`;
  const save=()=>progress.saveQuiz(session);
  function show(){
   if(!session)return;
-  if(session.index===session.pool.length){$('#quiz-slot').innerHTML=`<div class="study-card"><span class="eyebrow">SESSION COMPLETE</span><h2>完成 ${session.pool.length} 题 · 自评掌握 ${session.correct} 题</h2><p>本轮结果已保存。没掌握的题目已加入待复习。</p><a class="resume" href="#/review">回到待复习列表 ›</a></div>`;return}
+  if(session.index===session.pool.length){$('#quiz-slot').innerHTML=`<div class="study-card"><h2>完成 ${session.pool.length} 题 · 自评掌握 ${session.correct} 题</h2><p>本轮结果已保存。没掌握的题目已加入待复习。</p><a class="resume" href="#/review">回到待复习列表 ›</a></div>`;return}
   const {d,p,q}=entry(session.pool[session.index]);
   $('#quiz-slot').innerHTML=`<section class="study-card"><div class="quiz-counter">${session.index+1} / ${session.pool.length} · ${esc(d.title)} · PDF ${p.page}</div><div class="study-question">${rich(q.prompt)}</div><button id="reveal" class="primary" ${session.revealed?'hidden':''}>我想好了，查看答案</button><div id="quiz-answer" ${session.revealed?'':'hidden'}><div class="answer">${rich(q.answer)}</div><a class="resume" href="${href(d.id,p.page)}" target="_blank" rel="noopener">回看本页讲解 ↗</a><div class="score-row"><button id="know" class="primary">答对且能解释</button><button id="unknown">还没掌握</button></div></div></section>`;
   $('#reveal').onclick=()=>{session.revealed=true;save();$('#quiz-answer').hidden=false;$('#reveal').hidden=true};
@@ -85,7 +104,7 @@ async function quiz(version){
   for(const d of decks){if(deck!=='all'&&d.id!==deck)continue;for(const p of cache[d.id])if((mode==='core'?finalQuizQuestion(d,p):p.question)&&(mode!=='weak'||state.weak.has(key(d.id,p.page))))pool.push(key(d.id,p.page))}
   if(!pool.length){toast('该范围没有自测题；当前练习保留，可切换范围再开始。');return}
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-  session={pool:pool.slice(0,20),index:0,correct:0,revealed:false,started:Date.now(),finishedAt:null,deck,mode,edition:'final'};save();$('#start-quiz').textContent='重新开始 20 题练习';show();
+  session={pool:pool.slice(0,20),index:0,correct:0,revealed:false,started:Date.now(),finishedAt:null,deck,mode,edition:'final'};save();$('#start-quiz').textContent='重新开始练习';show();
  };
  if(session){$('#quiz-deck').value=session.deck;$('#quiz-mode').value=session.mode;show()}
 }
@@ -107,7 +126,7 @@ function syncProgress(){
 async function route(){
  reading?.stop();disposeLab();disposeLab=()=>{};
  const version=++routeVersion,hash=location.hash||'#/',path=hash.replace(/^#\/?/,'').split('/');
- $('#sidebar').classList.remove('open');$('#menu').setAttribute('aria-expanded','false');$('#search-results').hidden=true;$('#search').value='';activeDeck=null;
+ showLocation(path,decks);searchVersion++;$('#search-results').hidden=true;$('#search').value='';activeDeck=null;
  main.innerHTML='<div class="loading">正在载入…</div>';window.scrollTo({top:0,behavior:'instant'});
  try{
   if(path[0]==='interpretations'){
@@ -127,9 +146,23 @@ async function route(){
 let searchVersion=0;$('#search').addEventListener('input',async e=>{const v=++searchVersion,q=e.target.value.trim().toLowerCase(),results=$('#search-results');if(!q){results.hidden=true;return}results.hidden=false;results.innerHTML='<div class="search-count">正在搜索全部讲义…</div>';try{await loadAll()}catch{if(v===searchVersion)results.innerHTML='<div class="empty">搜索内容暂时未能载入，请稍后重新输入关键词。</div>';return}if(v!==searchVersion)return;const words=q.split(/\s+/),found=[];for(const d of decks)for(const p of cache[d.id]){const text=[d.title,d.file,p.title,p.section,p.summary,...p.explanation,...p.takeaways,p.pitfall,p.example?.code,p.question?.prompt,'p'+p.page,'第'+p.page+'页'].filter(Boolean).join(' ').toLowerCase();if(words.every(w=>text.includes(w)))found.push({d,p})}results.innerHTML=`<div class="search-count">找到 ${found.length} 页${found.length>60?' · 显示前60条，请增加关键词':''}</div>`+found.slice(0,60).map(({d,p})=>`<a class="search-item" href="${href(d.id,p.page)}"><small>${esc(d.title)} · PDF ${p.page}</small><strong>${esc(p.title)}</strong><p>${esc(p.summary.slice(0,100))}</p></a>`).join('')+(found.length?'':'<div class="empty">没有找到匹配页。试试“作用域”“子网”“CORS”或“CSS 26”。</div>')});
 $('#search-results').addEventListener('click',e=>{if(e.target.closest('a')){$('#search-results').hidden=true;$('#search').value=''}});
 document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap')&&!e.target.closest('#search-results'))$('#search-results').hidden=true});
-$('#menu').onclick=()=>{const open=side.classList.toggle('open');$('#menu').setAttribute('aria-expanded',String(open))};
 $('#close-image').onclick=()=>$('#image-dialog').close();$('#image-dialog').onclick=e=>{if(e.target===$('#image-dialog'))$('#image-dialog').close()};
-document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;if(e.key==='/'){e.preventDefault();$('#search').focus()}if(e.key==='Escape'){$('#search-results').hidden=true;side.classList.remove('open');$('#menu').setAttribute('aria-expanded','false')}if($('#image-dialog').open)return;if(activeDeck&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){const d=decks.find(x=>x.id===activeDeck),next=activePage+(e.key==='ArrowRight'?1:-1);if(next>=1&&next<=d.count){e.preventDefault();location.hash=href(activeDeck,next)}}});
+document.addEventListener('keydown',e=>{
+ const results=$('#search-results');
+ if(e.key==='Escape'&&!results.hidden){
+  results.hidden=true;searchVersion++;$('#search').focus();return;
+ }
+ if(e.target===$('#search')&&e.key==='ArrowDown'&&!results.hidden){
+  const first=results.querySelector('a');
+  if(first){e.preventDefault();first.focus()}return;
+ }
+ if(results.contains(e.target)&&(e.key==='ArrowDown'||e.key==='ArrowUp')){
+  e.preventDefault();const link=e.key==='ArrowDown'?e.target.nextElementSibling:e.target.previousElementSibling;
+  if(link?.matches('a'))link.focus();else if(e.key==='ArrowUp')$('#search').focus();return;
+ }
+ if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)||document.documentElement.classList.contains('drawer-open'))return;
+ if(e.key==='/'&&!$('#image-dialog').open){e.preventDefault();$('#search').focus()}
+ if($('#image-dialog').open)return;if(activeDeck&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){const d=decks.find(x=>x.id===activeDeck),next=activePage+(e.key==='ArrowRight'?1:-1);if(next>=1&&next<=d.count){e.preventDefault();location.hash=href(activeDeck,next)}}});
 main.addEventListener('click',event=>{
  const button=event.target.closest('button[data-case]');
  if(button)selectScenario(button);

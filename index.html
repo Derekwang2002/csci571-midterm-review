@@ -1,16 +1,34 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="CSCI 571 期末中文复习手册。从 Responsive 到 Web Intrusion，包含逐页讲解、原理图、情境自测与 13 章期中核心回顾。">
-<meta name="theme-color" content="#922636"><title>CSCI 571 · Final 复习手册</title>
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="labs.css?v=20261021-protocol-labs2"><link rel="stylesheet" href="progress.css"><link rel="stylesheet" href="final.css?v=20261125">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CSCI 571 期末中文复习手册。从 Responsive 到 Web Intrusion，包含逐页讲解、原理图、情境自测与 13 章期中核心回顾。">
+  <meta name="theme-color" content="#f4f3f0">
+  <title>CSCI 571 · 期末复习</title>
+  <link rel="icon" href="assets/favicon.svg?v=paper" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20261125-ui">
+  <link rel="stylesheet" href="labs.css?v=20261125-ui">
+  <link rel="stylesheet" href="progress.css?v=20261125-ui">
+  <link rel="stylesheet" href="final.css?v=20261125-ui">
+  <link rel="stylesheet" href="catalog.css?v=20261125-ui">
 </head>
 <body>
-<a href="#main" class="skip">跳到正文</a>
-<header class="topbar"><a class="brand" href="#/" aria-label="CSCI571 复习首页"><span class="brand-symbol">571<span>WEB</span></span><span class="brand-name">Web Technologies<small>FINAL STUDY COMPANION</small></span></a><div class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索知识点、代码或课件页码…" aria-label="搜索全部讲义"><kbd>/</kbd></div><button class="menu-button" id="menu" aria-expanded="false">目录</button><a class="exam-label" href="#/interpretations/syllabus"><span>EXAM 02</span>12.03 · 17:00</a></header>
-<aside id="sidebar" class="sidebar" aria-label="课程导航"></aside><main id="main" tabindex="-1"><div class="loading">正在载入复习手册…</div></main>
-<div id="search-results" class="search-results" hidden></div><div id="toast" class="toast" role="status"></div>
-<dialog id="image-dialog"><button id="close-image" class="close-image">关闭原图 ×</button><img id="large-image" alt="放大的原始幻灯片"></dialog>
-<script type="module" src="app.js?v=20261125"></script>
+  <a href="#main" class="skip">跳到正文</a>
+  <header class="topbar">
+    <button class="icon-button" id="menu" type="button" aria-expanded="true" aria-controls="navigation" aria-label="收起侧栏" title="收起侧栏"><svg class="icon" aria-hidden="true"><use href="assets/interface.svg#panel"/></svg></button>
+    <nav id="location-path" class="location-path" aria-label="当前位置"><span>课程目录</span></nav>
+    <label class="search-wrap"><svg class="icon" aria-hidden="true"><use href="assets/interface.svg#search"/></svg><input id="search" type="search" placeholder="搜索讲义、知识点或页码" aria-label="搜索全部讲义" autocomplete="off" aria-controls="search-results"><kbd>/</kbd></label>
+    <a class="exam-label" href="#/interpretations/syllabus" aria-label="查看 12 月 3 日期末考试安排"><svg class="icon" aria-hidden="true"><use href="assets/interface.svg#date"/></svg><span>12 月 3 日<small>期末考试</small></span></a>
+  </header>
+  <button id="nav-shade" aria-label="关闭目录" tabindex="-1" type="button" hidden></button>
+  <aside id="navigation" class="rail" aria-label="课程导航">
+    <div class="rail-head"><a class="brand" href="#/"><span class="brand-dot" aria-hidden="true"></span><span><strong>CSCI 571</strong><small>Web Technologies</small></span></a><button id="nav-close" class="icon-button" type="button" aria-label="关闭目录"><svg class="icon" aria-hidden="true"><use href="assets/interface.svg#close"/></svg></button></div>
+    <div id="sidebar" class="sidebar"></div>
+  </aside>
+  <main id="main" tabindex="-1"><div class="loading">正在载入复习手册…</div></main>
+  <div id="search-results" class="search-results" aria-label="搜索结果" hidden></div>
+  <div id="toast" class="toast" role="status"></div>
+  <dialog id="image-dialog" aria-label="课件原图"><button id="close-image" class="close-image">关闭原图 ×</button><img id="large-image" alt="放大的原始幻灯片"></dialog>
+  <script type="module" src="app.js?v=20261125-ui"></script>
 </body></html>
